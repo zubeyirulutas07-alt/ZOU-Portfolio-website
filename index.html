@@ -5,1054 +5,1108 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Alex Chen — Cinematic Video Editor</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#050505;
-  --surface:#101010;
-  --card:#151515;
-  --gold:#FACC15;
-  --gold2:#F59E0B;
-  --white:#FFFFFF;
-  --muted:#A1A1AA;
-  --border:rgba(255,255,255,0.08);
-  --glow:rgba(250,204,21,0.15);
-  --glow2:rgba(250,204,21,0.06);
+  --bg:#050505;--surface:#0d0d0d;--card:#111111;--card2:#161616;
+  --gold:#FACC15;--gold2:#F59E0B;--gold3:#FDE68A;
+  --white:#FFFFFF;--muted:#71717A;--muted2:#A1A1AA;
+  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.1);
 }
 html{scroll-behavior:smooth}
-body{
-  background:#050505;
-  color:#fff;
-  font-family:'Inter',sans-serif;
-  overflow-x:hidden;
-  min-height:100vh;
-}
+body{background:var(--bg);color:#fff;font-family:'Inter',sans-serif;overflow-x:hidden}
 
-/* ===== CANVAS BG ===== */
-#bg-canvas{
-  position:fixed;
-  top:0;left:0;
-  width:100%;height:100%;
-  z-index:0;
-  pointer-events:none;
-}
+/* CANVAS */
+#bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
 
-/* ===== CURSOR GLOW ===== */
-#cursor-glow{
-  position:fixed;
-  width:800px;height:800px;
-  border-radius:50%;
-  background:radial-gradient(circle,rgba(250,204,21,0.09) 0%,rgba(245,158,11,0.04) 40%,transparent 70%);
-  pointer-events:none;
-  z-index:1;
-  transform:translate(-50%,-50%);
-  mix-blend-mode:screen;
-}
+/* CURSOR */
+#cur{position:fixed;width:900px;height:900px;border-radius:50%;background:radial-gradient(circle,rgba(250,204,21,0.07) 0%,rgba(245,158,11,0.03) 35%,transparent 65%);pointer-events:none;z-index:1;transform:translate(-50%,-50%);mix-blend-mode:screen}
 
-/* ===== NAV ===== */
+/* ===================== NAV ===================== */
 nav{
-  position:fixed;top:0;left:0;right:0;
-  z-index:100;
-  padding:20px 60px;
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  padding:0 48px;height:64px;
   display:flex;justify-content:space-between;align-items:center;
-  background:rgba(5,5,5,0.7);
-  backdrop-filter:blur(20px);
+  background:rgba(5,5,5,0.8);backdrop-filter:blur(24px);
   border-bottom:1px solid var(--border);
+  transition:all 0.3s;
 }
-.nav-logo{
-  font-family:'Syne',sans-serif;
-  font-weight:700;font-size:20px;
-  color:#fff;letter-spacing:-0.5px;
-}
+nav.scrolled{background:rgba(5,5,5,0.95);border-color:var(--border2)}
+.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:18px;letter-spacing:-0.5px;cursor:pointer}
 .nav-logo span{color:var(--gold)}
-.nav-links{display:flex;gap:36px;list-style:none}
-.nav-links a{
-  color:var(--muted);font-size:14px;
-  text-decoration:none;
-  transition:color 0.2s;
-  letter-spacing:0.2px;
+.nav-center{display:flex;gap:0;list-style:none}
+.nav-center li a{
+  display:block;padding:8px 20px;
+  font-size:13px;color:var(--muted);text-decoration:none;
+  letter-spacing:0.3px;transition:color 0.2s;position:relative;
 }
-.nav-links a:hover{color:#fff}
+.nav-center li a::after{
+  content:'';position:absolute;bottom:4px;left:20px;right:20px;height:1px;
+  background:var(--gold);transform:scaleX(0);transition:transform 0.3s;transform-origin:left;
+}
+.nav-center li a:hover{color:#fff}
+.nav-center li a:hover::after{transform:scaleX(1)}
+.nav-right{display:flex;align-items:center;gap:16px}
+.nav-avail{font-size:11px;color:var(--muted2);display:flex;align-items:center;gap:6px}
+.nav-avail::before{content:'';width:6px;height:6px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.4}}
 .nav-cta{
-  background:var(--gold);
-  color:#000;
-  border:none;
-  padding:10px 24px;
-  border-radius:100px;
-  font-weight:600;font-size:13px;
-  cursor:pointer;
-  transition:all 0.2s;
-  letter-spacing:0.3px;
+  background:var(--gold);color:#000;border:none;
+  padding:9px 22px;border-radius:6px;
+  font-weight:700;font-size:13px;cursor:pointer;
+  transition:all 0.2s;letter-spacing:0.2px;
 }
-.nav-cta:hover{background:#fff;transform:scale(1.03)}
+.nav-cta:hover{background:var(--gold3);transform:translateY(-1px)}
 
-/* ===== HERO ===== */
+/* ===================== HERO — ASYMMETRIC ===================== */
 #hero{
   position:relative;z-index:2;
   min-height:100vh;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  text-align:center;
-  padding:120px 60px 60px;
-}
-.hero-badge{
-  display:inline-flex;align-items:center;gap:8px;
-  background:rgba(250,204,21,0.1);
-  border:1px solid rgba(250,204,21,0.25);
-  border-radius:100px;
-  padding:6px 16px;
-  font-size:12px;font-weight:500;
-  color:var(--gold);
-  letter-spacing:0.5px;
-  margin-bottom:32px;
-  animation:fadeUp 0.8s ease both;
-}
-.hero-badge::before{
-  content:'';width:6px;height:6px;
-  border-radius:50%;background:var(--gold);
-  animation:pulse 2s infinite;
-}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.8)}}
-.hero-h1{
-  font-family:'Syne',sans-serif;
-  font-size:clamp(48px,6vw,88px);
-  font-weight:800;
-  line-height:1.05;
-  letter-spacing:-3px;
-  max-width:900px;
-  animation:fadeUp 0.8s 0.1s ease both;
-}
-.hero-h1 em{
-  font-style:normal;
-  color:var(--gold);
-  position:relative;
-}
-.hero-sub{
-  color:var(--muted);
-  font-size:clamp(15px,2vw,19px);
-  line-height:1.7;
-  max-width:560px;
-  margin:24px auto 0;
-  animation:fadeUp 0.8s 0.2s ease both;
-}
-.hero-btns{
-  display:flex;gap:16px;justify-content:center;
-  margin-top:40px;
-  animation:fadeUp 0.8s 0.3s ease both;
-  flex-wrap:wrap;
-}
-.btn-primary{
-  background:var(--gold);
-  color:#000;
-  border:none;
-  padding:14px 32px;
-  border-radius:100px;
-  font-weight:700;font-size:15px;
-  cursor:pointer;
-  transition:all 0.25s;
-  display:flex;align-items:center;gap:8px;
-}
-.btn-primary:hover{background:#fff;transform:translateY(-2px);box-shadow:0 0 40px rgba(250,204,21,0.4)}
-.btn-secondary{
-  background:transparent;
-  color:#fff;
-  border:1px solid var(--border);
-  padding:14px 32px;
-  border-radius:100px;
-  font-weight:500;font-size:15px;
-  cursor:pointer;
-  transition:all 0.25s;
-  backdrop-filter:blur(10px);
-}
-.btn-secondary:hover{border-color:rgba(255,255,255,0.3);background:rgba(255,255,255,0.05);transform:translateY(-2px)}
-
-/* ===== VSL CARD ===== */
-.vsl-wrap{
-  position:relative;z-index:2;
-  width:100%;max-width:900px;
-  margin:60px auto 0;
-  animation:fadeUp 0.8s 0.5s ease both;
-}
-.vsl-card{
-  position:relative;
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:24px;
-  overflow:hidden;
-  aspect-ratio:16/9;
-  cursor:pointer;
-  transition:all 0.4s;
-  box-shadow:0 0 80px rgba(250,204,21,0.08);
-}
-.vsl-card:hover{
-  border-color:rgba(250,204,21,0.3);
-  box-shadow:0 0 120px rgba(250,204,21,0.15);
-  transform:translateY(-4px);
-}
-.vsl-inner{
-  position:absolute;inset:0;
-  background:linear-gradient(135deg,#0d0d0d 0%,#1a1500 50%,#0d0d0d 100%);
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  gap:16px;
-}
-.vsl-play{
-  width:72px;height:72px;
-  border-radius:50%;
-  background:rgba(250,204,21,0.15);
-  border:1px solid rgba(250,204,21,0.4);
-  display:flex;align-items:center;justify-content:center;
-  transition:all 0.3s;
-  backdrop-filter:blur(10px);
-}
-.vsl-card:hover .vsl-play{
-  background:var(--gold);
-  transform:scale(1.1);
-  box-shadow:0 0 40px rgba(250,204,21,0.5);
-}
-.vsl-play svg{fill:var(--gold);transition:fill 0.3s;margin-left:4px}
-.vsl-card:hover .vsl-play svg{fill:#000}
-.vsl-label{
-  font-size:14px;color:var(--muted);letter-spacing:1px;
-  text-transform:uppercase;
-}
-.vsl-caption{
-  text-align:center;
-  margin-top:16px;
-  color:var(--muted);
-  font-size:13px;letter-spacing:0.3px;
-}
-.vsl-progress{
-  position:absolute;bottom:0;left:0;right:0;
-  height:2px;background:rgba(255,255,255,0.05);
-}
-.vsl-progress-fill{
-  height:100%;width:35%;
-  background:linear-gradient(90deg,var(--gold),var(--gold2));
-  animation:progressAnim 8s linear infinite;
-}
-@keyframes progressAnim{0%{width:0}100%{width:100%}}
-
-/* ===== SECTION WRAPPER ===== */
-section{position:relative;z-index:2}
-.section-inner{max-width:1200px;margin:0 auto;padding:100px 60px}
-.section-label{
-  font-size:11px;
-  font-weight:600;
-  letter-spacing:2.5px;
-  text-transform:uppercase;
-  color:var(--gold);
-  margin-bottom:16px;
-}
-.section-h2{
-  font-family:'Syne',sans-serif;
-  font-size:clamp(32px,4vw,56px);
-  font-weight:800;
-  letter-spacing:-2px;
-  line-height:1.1;
-}
-.section-sub{
-  color:var(--muted);
-  font-size:16px;line-height:1.7;
-  max-width:520px;
-  margin-top:16px;
-}
-.gold{color:var(--gold)}
-
-/* ===== TESTIMONIALS ===== */
-#testimonials{
-  border-top:1px solid var(--border);
-  border-bottom:1px solid var(--border);
-}
-.testimonials-header{text-align:center;margin-bottom:64px}
-.testimonials-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:24px;
-}
-.tcard{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:20px;
-  padding:32px;
-  position:relative;
-  overflow:hidden;
-  transition:all 0.4s;
-  cursor:default;
-}
-.tcard::before{
-  content:'';
-  position:absolute;inset:0;
-  border-radius:20px;
-  background:linear-gradient(135deg,rgba(250,204,21,0.06),transparent);
-  opacity:0;
-  transition:opacity 0.4s;
-}
-.tcard:hover{
-  border-color:rgba(250,204,21,0.25);
-  transform:translateY(-6px);
-  box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 40px rgba(250,204,21,0.08);
-}
-.tcard:hover::before{opacity:1}
-.tcard-quote{
-  font-size:15px;line-height:1.75;
-  color:rgba(255,255,255,0.85);
-  margin-bottom:24px;
-  position:relative;
-}
-.tcard-quote::before{
-  content:'"';
-  font-family:'Syne',sans-serif;
-  font-size:64px;font-weight:800;
-  color:rgba(250,204,21,0.15);
-  position:absolute;top:-20px;left:-8px;line-height:1;
-}
-.tcard-author{
-  display:flex;align-items:center;gap:12px;
-}
-.tcard-avatar{
-  width:44px;height:44px;border-radius:50%;
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
-  display:flex;align-items:center;justify-content:center;
-  font-weight:700;font-size:16px;color:#000;
-  flex-shrink:0;
-}
-.tcard-name{font-weight:600;font-size:14px;margin-bottom:2px}
-.tcard-role{font-size:12px;color:var(--muted)}
-.tcard-result{
-  display:inline-block;
-  background:rgba(250,204,21,0.1);
-  border:1px solid rgba(250,204,21,0.2);
-  color:var(--gold);
-  font-size:11px;font-weight:600;
-  letter-spacing:0.5px;
-  padding:4px 10px;border-radius:100px;
-  margin-top:16px;
-}
-.stars{color:var(--gold);font-size:13px;margin-bottom:16px;letter-spacing:2px}
-
-/* ===== CASE STUDY ===== */
-.cs-grid{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:32px;
-  align-items:start;
-}
-.cs-card{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:24px;
+  align-items:center;
+  padding:0 48px;
+  gap:0;
   overflow:hidden;
-  position:sticky;top:120px;
 }
-.cs-visual{
-  aspect-ratio:4/3;
-  background:linear-gradient(135deg,#0d1a00,#1a0d00,#001a0d);
+.hero-left{
+  padding:120px 60px 80px 0;
+  display:flex;flex-direction:column;
+  align-items:flex-start;
+}
+.hero-eyebrow{
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:36px;
+  opacity:0;animation:slideRight 0.9s 0.1s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+.hero-eyebrow-line{width:32px;height:1px;background:var(--gold)}
+.hero-eyebrow-text{
+  font-size:11px;font-weight:600;letter-spacing:3px;
+  text-transform:uppercase;color:var(--gold);
+}
+.hero-h1{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(52px,5.5vw,84px);
+  font-weight:800;line-height:0.97;
+  letter-spacing:-4px;
+  margin-bottom:32px;
+  opacity:0;animation:slideRight 0.9s 0.2s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+.hero-h1 .line2{
+  display:block;
+  color:transparent;
+  -webkit-text-stroke:1px rgba(255,255,255,0.25);
+  font-style:italic;
+  letter-spacing:-3px;
+}
+.hero-h1 .line3{display:block;color:var(--gold)}
+.hero-sub{
+  font-size:16px;line-height:1.75;color:var(--muted2);
+  max-width:420px;margin-bottom:48px;font-weight:300;
+  opacity:0;animation:slideRight 0.9s 0.3s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+.hero-btns{
+  display:flex;align-items:center;gap:20px;
+  opacity:0;animation:slideRight 0.9s 0.4s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+.btn-gold{
+  background:var(--gold);color:#000;border:none;
+  padding:16px 36px;border-radius:6px;
+  font-weight:700;font-size:14px;cursor:pointer;
+  transition:all 0.25s;display:flex;align-items:center;gap:10px;
+  position:relative;overflow:hidden;
+}
+.btn-gold::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.2),transparent);
+  opacity:0;transition:opacity 0.3s;
+}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 8px 40px rgba(250,204,21,0.35)}
+.btn-gold:hover::after{opacity:1}
+.btn-ghost{
+  background:transparent;color:var(--muted2);border:none;
+  font-size:14px;cursor:pointer;
+  display:flex;align-items:center;gap:8px;
+  transition:color 0.2s;padding:0;
+}
+.btn-ghost:hover{color:#fff}
+.btn-ghost .arrow{
+  width:36px;height:36px;border-radius:50%;
+  border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.2s;font-size:14px;
+}
+.btn-ghost:hover .arrow{border-color:rgba(255,255,255,0.3);transform:translateX(2px)}
+.hero-stats{
+  display:flex;gap:40px;margin-top:60px;
+  padding-top:40px;border-top:1px solid var(--border);
+  opacity:0;animation:slideRight 0.9s 0.5s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+.hero-stat-num{
+  font-family:'Syne',sans-serif;
+  font-size:36px;font-weight:800;letter-spacing:-2px;
+  color:var(--gold);line-height:1;margin-bottom:4px;
+}
+.hero-stat-label{font-size:12px;color:var(--muted);letter-spacing:0.3px}
+
+/* HERO RIGHT */
+.hero-right{
+  position:relative;height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;animation:fadeIn 1.2s 0.3s ease forwards;
+}
+.vsl-container{
+  width:100%;max-width:520px;
+  position:relative;
+}
+.vsl-card{
+  background:var(--card);
+  border:1px solid var(--border2);
+  border-radius:20px;
+  overflow:hidden;
+  aspect-ratio:9/14;
+  cursor:pointer;
+  transition:all 0.5s cubic-bezier(0.22,1,0.36,1);
+  box-shadow:0 0 100px rgba(250,204,21,0.06),0 40px 80px rgba(0,0,0,0.6);
+  position:relative;
+}
+.vsl-card:hover{
+  border-color:rgba(250,204,21,0.25);
+  box-shadow:0 0 120px rgba(250,204,21,0.12),0 40px 80px rgba(0,0,0,0.8);
+  transform:scale(1.01) translateY(-4px);
+}
+.vsl-bg{
+  position:absolute;inset:0;
+  background:linear-gradient(160deg,#0a0800 0%,#1a1200 40%,#0d0a00 100%);
+}
+.vsl-overlay{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:16px;
+}
+.vsl-play-ring{
+  width:80px;height:80px;border-radius:50%;
+  border:1px solid rgba(250,204,21,0.3);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;transition:all 0.3s;
+}
+.vsl-play-ring::before{
+  content:'';position:absolute;inset:-8px;border-radius:50%;
+  border:1px solid rgba(250,204,21,0.1);
+  animation:ringPulse 2.5s ease-in-out infinite;
+}
+@keyframes ringPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.15);opacity:0}}
+.vsl-card:hover .vsl-play-ring{background:var(--gold);border-color:var(--gold);box-shadow:0 0 50px rgba(250,204,21,0.5)}
+.vsl-play-icon{fill:var(--gold);margin-left:4px;transition:fill 0.3s}
+.vsl-card:hover .vsl-play-icon{fill:#000}
+.vsl-tag{
+  font-size:11px;letter-spacing:2px;text-transform:uppercase;
+  color:rgba(255,255,255,0.4);
+}
+.vsl-bottom{
+  position:absolute;bottom:0;left:0;right:0;
+  padding:32px 24px 24px;
+  background:linear-gradient(to top,rgba(5,5,5,0.95) 0%,transparent 100%);
+}
+.vsl-bottom-title{
+  font-family:'Syne',sans-serif;font-size:18px;
+  font-weight:700;margin-bottom:4px;
+}
+.vsl-bottom-sub{font-size:12px;color:var(--muted2)}
+.vsl-progress{position:absolute;bottom:0;left:0;right:0;height:2px;background:rgba(255,255,255,0.04)}
+.vsl-bar{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));animation:vslBar 10s linear infinite}
+@keyframes vslBar{from{width:0}to{width:100%}}
+
+/* Floating accent card */
+.vsl-float-card{
+  position:absolute;right:-32px;top:30%;
+  background:var(--card2);border:1px solid var(--border2);
+  border-radius:14px;padding:16px 20px;
+  backdrop-filter:blur(20px);
+  animation:float 5s ease-in-out infinite;
+  min-width:180px;
+}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.vfc-label{font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.vfc-val{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--gold);letter-spacing:-1px;line-height:1}
+.vfc-sub{font-size:11px;color:var(--muted2);margin-top:4px}
+
+.vsl-float-card2{
+  position:absolute;left:-28px;bottom:25%;
+  background:var(--card2);border:1px solid var(--border2);
+  border-radius:14px;padding:14px 18px;
+  animation:float 6s 1s ease-in-out infinite;
+  min-width:160px;
+}
+.vfc2-row{display:flex;align-items:center;gap:10px}
+.vfc2-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e}
+.vfc2-text{font-size:13px;font-weight:500}
+.vfc2-sub{font-size:11px;color:var(--muted);margin-top:2px;padding-left:18px}
+
+/* ===================== SOCIAL PROOF TICKER ===================== */
+#proof{
+  position:relative;z-index:2;
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:0;overflow:hidden;background:var(--surface);
+}
+.proof-track{
+  display:flex;gap:0;
+  animation:ticker 30s linear infinite;
+  white-space:nowrap;
+}
+.proof-track:hover{animation-play-state:paused}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.proof-item{
+  display:inline-flex;align-items:center;gap:16px;
+  padding:20px 48px;
+  border-right:1px solid var(--border);
+  flex-shrink:0;
+}
+.proof-num{
+  font-family:'Syne',sans-serif;font-size:22px;
+  font-weight:800;letter-spacing:-1px;color:var(--gold);
+}
+.proof-label{font-size:13px;color:var(--muted2)}
+.proof-sep{color:var(--border2);font-size:20px}
+
+/* ===================== TESTIMONIALS ===================== */
+#testimonials{position:relative;z-index:2;padding:120px 48px}
+.section-eyebrow{
+  display:flex;align-items:center;gap:12px;margin-bottom:20px;
+}
+.section-eyebrow-line{width:24px;height:1px;background:var(--gold)}
+.section-eyebrow-text{font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--gold)}
+.t-header{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  margin-bottom:64px;max-width:1200px;margin-left:auto;margin-right:auto;
+}
+.t-header-left{}
+.section-h2{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(36px,4vw,60px);font-weight:800;
+  letter-spacing:-3px;line-height:1;
+}
+.t-header-right{
+  max-width:320px;text-align:right;
+}
+.t-header-right p{font-size:14px;color:var(--muted2);line-height:1.7}
+.tgrid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:20px;
+  max-width:1200px;margin:0 auto;
+}
+.tcard{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:16px;padding:32px;
+  transition:all 0.4s cubic-bezier(0.22,1,0.36,1);
+  position:relative;overflow:hidden;
+}
+.tcard::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(250,204,21,0.4),transparent);
+  transform:scaleX(0);transition:transform 0.4s;
+}
+.tcard:hover{border-color:rgba(255,255,255,0.1);transform:translateY(-8px);box-shadow:0 32px 64px rgba(0,0,0,0.5)}
+.tcard:hover::before{transform:scaleX(1)}
+.stars{color:var(--gold);font-size:12px;letter-spacing:3px;margin-bottom:20px}
+.tquote{font-size:15px;line-height:1.8;color:rgba(255,255,255,0.8);margin-bottom:28px;font-weight:300}
+.tbottom{display:flex;align-items:center;justify-content:space-between}
+.tauthor{display:flex;align-items:center;gap:12px}
+.tavatar{
+  width:40px;height:40px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:14px;color:#000;flex-shrink:0;
+}
+.tname{font-size:13px;font-weight:600;margin-bottom:1px}
+.trole{font-size:11px;color:var(--muted)}
+.tresult{
+  font-size:11px;font-weight:700;letter-spacing:0.5px;
+  color:var(--gold);background:rgba(250,204,21,0.08);
+  border:1px solid rgba(250,204,21,0.15);
+  padding:5px 12px;border-radius:4px;
+}
+
+/* ===================== FEATURES GRID ===================== */
+#features{
+  position:relative;z-index:2;
+  padding:0 48px 120px;
+  max-width:1200px;margin:0 auto;
+}
+.feat-header{margin-bottom:64px}
+.feat-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  grid-template-rows:auto auto;
+  gap:20px;
+}
+.feat-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:16px;padding:36px;
+  transition:all 0.35s cubic-bezier(0.22,1,0.36,1);
+  position:relative;overflow:hidden;
+}
+.feat-card.large{grid-column:span 2}
+.feat-card::after{
+  content:'';position:absolute;
+  bottom:-60px;right:-60px;
+  width:120px;height:120px;border-radius:50%;
+  background:rgba(250,204,21,0.04);
+  transition:all 0.5s;
+}
+.feat-card:hover{border-color:rgba(255,255,255,0.1);transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.4)}
+.feat-card:hover::after{transform:scale(2.5);opacity:0}
+.feat-icon{
+  width:48px;height:48px;border-radius:12px;
+  background:rgba(250,204,21,0.08);border:1px solid rgba(250,204,21,0.15);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:24px;font-size:22px;
+}
+.feat-num{
+  font-size:10px;font-weight:600;letter-spacing:2px;
+  text-transform:uppercase;color:var(--muted);margin-bottom:12px;
+}
+.feat-title{
+  font-family:'Syne',sans-serif;font-size:20px;
+  font-weight:700;letter-spacing:-0.5px;margin-bottom:12px;
+}
+.feat-desc{font-size:14px;line-height:1.75;color:var(--muted2);font-weight:300}
+.feat-card.highlight{
+  background:linear-gradient(135deg,rgba(250,204,21,0.08) 0%,rgba(245,158,11,0.03) 100%);
+  border-color:rgba(250,204,21,0.15);
+}
+.feat-tag{
+  display:inline-block;margin-top:20px;
+  font-size:11px;font-weight:600;color:var(--gold);
+  letter-spacing:0.5px;
+}
+.feat-tag::before{content:'→ '}
+
+/* ===================== CASE STUDY ===================== */
+#casestudy{
+  position:relative;z-index:2;
+  padding:0 48px 120px;
+  max-width:1200px;margin:0 auto;
+}
+.cs-wrap{
+  display:grid;grid-template-columns:5fr 7fr;
+  gap:24px;align-items:start;
+}
+.cs-left{position:sticky;top:80px}
+.cs-left-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:20px;overflow:hidden;
+}
+.cs-vis{
+  aspect-ratio:1/1;
+  background:linear-gradient(145deg,#0a0800,#120f00,#080a00);
   display:flex;align-items:center;justify-content:center;
   position:relative;overflow:hidden;
 }
-.cs-badge{
-  position:absolute;top:20px;left:20px;
-  background:rgba(250,204,21,0.15);
-  border:1px solid rgba(250,204,21,0.35);
-  color:var(--gold);
-  padding:6px 14px;border-radius:100px;
-  font-size:11px;font-weight:600;letter-spacing:1px;
-  text-transform:uppercase;
-  backdrop-filter:blur(10px);
+.cs-vis-text{
+  font-family:'Syne',sans-serif;font-size:100px;
+  font-weight:800;letter-spacing:-8px;
+  color:rgba(250,204,21,0.08);
+  user-select:none;
 }
-.cs-logo-big{
-  font-family:'Syne',sans-serif;
-  font-size:64px;font-weight:800;
-  color:rgba(250,204,21,0.12);
-  letter-spacing:-4px;
+.cs-badge-wrap{position:absolute;top:20px;left:20px}
+.cs-badge{
+  background:rgba(250,204,21,0.12);border:1px solid rgba(250,204,21,0.3);
+  color:var(--gold);padding:5px 14px;border-radius:4px;
+  font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
 }
 .cs-info{padding:28px}
-.cs-client-name{
-  font-family:'Syne',sans-serif;
-  font-size:28px;font-weight:800;
-  letter-spacing:-1px;margin-bottom:4px;
+.cs-name{
+  font-family:'Syne',sans-serif;font-size:26px;
+  font-weight:800;letter-spacing:-1px;margin-bottom:4px;
 }
-.cs-client-type{font-size:13px;color:var(--muted)}
+.cs-type{font-size:12px;color:var(--muted);letter-spacing:0.5px}
 
-/* ===== RIGHT PANEL ===== */
 .cs-right{}
-.cs-section{
-  margin-bottom:24px;
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:16px;
-  padding:24px;
-  transition:all 0.3s;
+.cs-metrics{
+  display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;
 }
-.cs-section:hover{border-color:rgba(250,204,21,0.15)}
-.cs-sec-label{
-  font-size:10px;font-weight:600;letter-spacing:2px;
-  text-transform:uppercase;color:var(--gold);
-  margin-bottom:8px;
+.cs-metric{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:14px;padding:24px;text-align:center;
+  transition:all 0.3s;position:relative;overflow:hidden;
 }
-.cs-sec-text{
-  font-size:14px;line-height:1.7;
-  color:rgba(255,255,255,0.8);
-}
-.metrics-grid{
-  display:grid;grid-template-columns:1fr 1fr;gap:16px;
-  margin-bottom:24px;
-}
-.metric-card{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:16px;
-  padding:24px;
-  text-align:center;
-  transition:all 0.3s;
-  position:relative;overflow:hidden;
-}
-.metric-card::after{
-  content:'';
-  position:absolute;bottom:0;left:0;right:0;height:2px;
+.cs-metric::before{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
   background:linear-gradient(90deg,transparent,var(--gold),transparent);
   opacity:0;transition:opacity 0.3s;
 }
-.metric-card:hover{border-color:rgba(250,204,21,0.2);transform:translateY(-2px)}
-.metric-card:hover::after{opacity:1}
-.metric-num{
-  font-family:'Syne',sans-serif;
-  font-size:36px;font-weight:800;
-  letter-spacing:-2px;
-  color:var(--gold);
-  line-height:1;margin-bottom:6px;
+.cs-metric:hover{border-color:rgba(250,204,21,0.15);transform:translateY(-2px)}
+.cs-metric:hover::before{opacity:1}
+.cs-metric-val{
+  font-family:'Syne',sans-serif;font-size:40px;font-weight:800;
+  letter-spacing:-2px;color:var(--gold);line-height:1;margin-bottom:6px;
 }
-.metric-label{font-size:12px;color:var(--muted);letter-spacing:0.3px}
+.cs-metric-label{font-size:12px;color:var(--muted);letter-spacing:0.2px}
+.cs-block{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:14px;padding:24px;margin-bottom:16px;
+  transition:border-color 0.3s;
+}
+.cs-block:hover{border-color:rgba(255,255,255,0.1)}
+.cs-block-label{
+  font-size:10px;font-weight:700;letter-spacing:2.5px;
+  text-transform:uppercase;color:var(--gold);margin-bottom:10px;
+}
+.cs-block-text{font-size:14px;line-height:1.75;color:rgba(255,255,255,0.75);font-weight:300}
 
-/* ===== PHONE SECTION ===== */
+/* ===================== PHONE / VIDEOS ===================== */
 #videos{
+  position:relative;z-index:2;
   background:var(--surface);
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:120px 48px;
 }
-.phone-section-inner{
+.videos-inner{
   max-width:1200px;margin:0 auto;
-  padding:100px 60px;
+  display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;
+}
+.vtext{}
+.vtext-list{margin-top:48px;display:flex;flex-direction:column;gap:24px}
+.vtext-item{
+  display:flex;gap:20px;align-items:flex-start;
+  padding-bottom:24px;border-bottom:1px solid var(--border);
+}
+.vtext-item:last-child{border-bottom:none;padding-bottom:0}
+.vtext-num{
+  font-family:'Syne',sans-serif;font-size:13px;
+  font-weight:800;color:var(--gold);
+  opacity:0.4;flex-shrink:0;padding-top:2px;
+  letter-spacing:-0.5px;
+}
+.vtext-title{font-size:15px;font-weight:600;margin-bottom:4px}
+.vtext-desc{font-size:13px;color:var(--muted2);line-height:1.65;font-weight:300}
+
+/* PHONE */
+.vphone{display:flex;flex-direction:column;align-items:center;gap:24px}
+.phone-outer{
+  position:relative;
+  animation:phoneFloat 5s ease-in-out infinite;
+}
+@keyframes phoneFloat{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-14px) rotate(0.5deg)}}
+.phone-glow{
+  position:absolute;inset:-40px;border-radius:50%;
+  filter:blur(60px);opacity:0.2;z-index:-1;pointer-events:none;
+  transition:background 1s ease;
+}
+.phone{
+  width:256px;
+  background:#0a0a0a;border-radius:44px;
+  border:2px solid rgba(255,255,255,0.1);
+  overflow:hidden;
+  box-shadow:0 0 0 1px rgba(255,255,255,0.04),0 60px 120px rgba(0,0,0,0.8);
+  cursor:grab;user-select:none;
+}
+.phone:active{cursor:grabbing}
+.phone-notch{
+  position:relative;z-index:10;
+  width:90px;height:26px;background:#0a0a0a;
+  margin:0 auto;border-radius:0 0 18px 18px;
+}
+.phone-screen{height:548px;overflow:hidden}
+.reel-wrap{display:flex;flex-direction:column;transition:transform 0.55s cubic-bezier(0.4,0,0.2,1)}
+.reel{
+  width:100%;height:548px;flex-shrink:0;
+  position:relative;overflow:hidden;display:flex;
+  align-items:center;justify-content:center;
+}
+.r1{background:linear-gradient(160deg,#0a0800,#1a1000)}
+.r2{background:linear-gradient(160deg,#00060f,#08001a)}
+.r3{background:linear-gradient(160deg,#001008,#001a04)}
+.reel-vis{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:20px;text-align:center;gap:6px;
+}
+.reel-cat{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);font-weight:600}
+.reel-title{
+  font-family:'Syne',sans-serif;font-size:15px;
+  font-weight:800;letter-spacing:-0.3px;line-height:1.25;
+}
+.reel-footer{
+  position:absolute;bottom:0;left:0;right:0;
+  padding:32px 14px 16px;
+  background:linear-gradient(to top,rgba(0,0,0,0.9),transparent);
+}
+.reel-ch{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.reel-av{
+  width:26px;height:26px;border-radius:50%;
+  border:1.5px solid rgba(255,255,255,0.3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:9px;font-weight:700;color:#000;flex-shrink:0;
+}
+.reel-chname{font-size:11px;font-weight:600}
+.reel-cdesc{font-size:10px;color:rgba(255,255,255,0.65);line-height:1.4}
+.reel-side{
+  position:absolute;right:8px;bottom:70px;
+  display:flex;flex-direction:column;gap:14px;align-items:center;
+}
+.reel-btn{display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer}
+.reel-btn-icon{
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(255,255,255,0.08);backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;font-size:14px;
+}
+.reel-btn-n{font-size:8px;color:rgba(255,255,255,0.6)}
+.rdots{display:flex;gap:5px}
+.rdot{
+  width:4px;height:4px;border-radius:50%;
+  background:rgba(255,255,255,0.25);transition:all 0.3s;
+}
+.rdot.on{background:var(--gold);width:14px;border-radius:3px}
+.phone-nav{display:flex;gap:12px}
+.phone-nav-btn{
+  width:44px;height:44px;border-radius:50%;
+  background:rgba(255,255,255,0.04);border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all 0.2s;font-size:16px;color:var(--muted2);
+  user-select:none;
+}
+.phone-nav-btn:hover{background:rgba(250,204,21,0.1);border-color:rgba(250,204,21,0.3);color:var(--gold)}
+
+/* ===================== BOOK CALL ===================== */
+#book{
+  position:relative;z-index:2;
+  padding:120px 48px;
+}
+.book-inner{max-width:1100px;margin:0 auto}
+.book-grid{
   display:grid;grid-template-columns:1fr 1fr;
   gap:80px;align-items:center;
 }
-.phone-text{}
-.phone-wrap{
-  display:flex;justify-content:center;
-  position:relative;
-}
-.phone-glow{
-  position:absolute;
-  width:400px;height:700px;
-  border-radius:50%;
-  filter:blur(80px);
-  opacity:0.3;
-  pointer-events:none;
-  transition:background 0.8s;
-  top:50%;left:50%;
-  transform:translate(-50%,-50%);
-  z-index:0;
-}
-.phone-frame{
-  position:relative;z-index:1;
-  width:260px;
-  background:#0d0d0d;
-  border-radius:44px;
-  border:2px solid rgba(255,255,255,0.12);
-  overflow:hidden;
-  box-shadow:
-    0 0 0 1px rgba(255,255,255,0.05),
-    0 40px 120px rgba(0,0,0,0.8),
-    0 0 60px rgba(250,204,21,0.05);
-  animation:phoneFloat 4s ease-in-out infinite;
-  cursor:grab;
-}
-.phone-frame:active{cursor:grabbing}
-@keyframes phoneFloat{
-  0%,100%{transform:translateY(0) rotateX(2deg) rotateY(-2deg)}
-  50%{transform:translateY(-16px) rotateX(-1deg) rotateY(1deg)}
-}
-.phone-notch{
-  position:absolute;top:0;left:50%;transform:translateX(-50%);
-  width:100px;height:28px;
-  background:#0d0d0d;
-  border-radius:0 0 20px 20px;
-  z-index:10;
-}
-.phone-screen{
-  height:560px;
-  overflow:hidden;
-  position:relative;
-}
-.reel-container{
-  display:flex;flex-direction:column;
-  transition:transform 0.5s cubic-bezier(0.4,0,0.2,1);
-}
-.reel{
-  width:100%;height:560px;
-  flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-  position:relative;
-  overflow:hidden;
-}
-.reel-1{background:linear-gradient(160deg,#0a0a0a,#1a0a00)}
-.reel-2{background:linear-gradient(160deg,#000a1a,#0a0010)}
-.reel-3{background:linear-gradient(160deg,#0a1a00,#001a0a)}
-.reel-icon{
-  font-size:72px;opacity:0.15;
-  position:absolute;
-}
-.reel-bottom{
-  position:absolute;bottom:0;left:0;right:0;
-  padding:20px 16px;
-  background:linear-gradient(to top,rgba(0,0,0,0.95) 0%,transparent 100%);
-}
-.reel-channel{
-  display:flex;align-items:center;gap:8px;margin-bottom:8px;
-}
-.reel-avatar{
-  width:28px;height:28px;border-radius:50%;
-  border:1.5px solid rgba(255,255,255,0.4);
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
-  display:flex;align-items:center;justify-content:center;
-  font-size:10px;font-weight:700;color:#000;
-}
-.reel-name{font-size:12px;font-weight:600}
-.reel-desc{font-size:11px;color:rgba(255,255,255,0.7);line-height:1.5}
-.reel-right{
-  position:absolute;right:10px;bottom:80px;
-  display:flex;flex-direction:column;gap:16px;align-items:center;
-}
-.reel-action{
-  display:flex;flex-direction:column;align-items:center;gap:3px;
-  cursor:pointer;
-}
-.reel-action-icon{
-  width:34px;height:34px;
-  border-radius:50%;
-  background:rgba(255,255,255,0.1);
-  backdrop-filter:blur(8px);
-  display:flex;align-items:center;justify-content:center;
-  font-size:16px;
-}
-.reel-action-count{font-size:9px;color:rgba(255,255,255,0.7)}
-.reel-counter{
-  position:absolute;top:28px;right:12px;
-  display:flex;gap:4px;
-}
-.reel-dot{
-  width:4px;height:4px;border-radius:50%;
-  background:rgba(255,255,255,0.3);
-  transition:all 0.3s;
-}
-.reel-dot.active{
-  background:var(--gold);
-  width:16px;border-radius:4px;
-}
-.phone-nav{
-  display:flex;gap:12px;margin-top:24px;justify-content:center;
-}
-.phone-nav-btn{
-  width:44px;height:44px;border-radius:50%;
-  background:rgba(255,255,255,0.05);
-  border:1px solid var(--border);
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;
-  transition:all 0.2s;
-  color:#fff;font-size:18px;
-  user-select:none;
-}
-.phone-nav-btn:hover{
-  background:rgba(250,204,21,0.15);
-  border-color:rgba(250,204,21,0.4);
-  color:var(--gold);
-}
-
-/* ===== BOOK CALL ===== */
-#book{
-  background:#050505;
-  border-top:1px solid var(--border);
-}
-.book-inner{
-  max-width:1100px;margin:0 auto;
-  padding:100px 60px;
-  text-align:center;
-}
+.book-left{}
 .book-h2{
   font-family:'Syne',sans-serif;
-  font-size:clamp(36px,5vw,72px);
-  font-weight:800;
-  letter-spacing:-3px;
-  line-height:1.05;
-  max-width:700px;
-  margin:0 auto 20px;
+  font-size:clamp(40px,5vw,72px);
+  font-weight:800;letter-spacing:-3px;line-height:0.97;
+  margin-bottom:24px;
 }
-.book-sub{
-  color:var(--muted);font-size:17px;line-height:1.6;
-  max-width:480px;margin:0 auto 48px;
+.book-h2 em{font-style:normal;color:var(--gold)}
+.book-sub{font-size:16px;color:var(--muted2);line-height:1.75;font-weight:300;margin-bottom:40px;max-width:380px}
+.book-perks{display:flex;flex-direction:column;gap:14px}
+.book-perk{
+  display:flex;align-items:center;gap:14px;
+  font-size:14px;color:var(--muted2);
 }
-.calendly-wrap{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:24px;
-  overflow:hidden;
-  box-shadow:0 0 80px rgba(250,204,21,0.06);
-  transition:all 0.4s;
-  position:relative;
-}
-.calendly-wrap::before{
-  content:'';
-  position:absolute;inset:-1px;
-  border-radius:24px;
-  background:linear-gradient(135deg,rgba(250,204,21,0.2),transparent,rgba(250,204,21,0.1));
-  z-index:-1;pointer-events:none;
-}
-.calendly-inner{
-  padding:60px 40px;
-  display:flex;flex-direction:column;align-items:center;gap:24px;
-}
-.calendly-icon{
-  width:72px;height:72px;border-radius:20px;
-  background:rgba(250,204,21,0.1);
-  border:1px solid rgba(250,204,21,0.25);
+.book-perk-icon{
+  width:32px;height:32px;border-radius:8px;
+  background:rgba(250,204,21,0.08);border:1px solid rgba(250,204,21,0.15);
   display:flex;align-items:center;justify-content:center;
-  font-size:32px;
+  flex-shrink:0;font-size:15px;
 }
-.calendly-h3{
-  font-family:'Syne',sans-serif;
-  font-size:28px;font-weight:800;letter-spacing:-1px;
+.book-right{}
+.book-card{
+  background:var(--card);border:1px solid var(--border2);
+  border-radius:20px;padding:48px 40px;
+  position:relative;overflow:hidden;
 }
-.calendly-sub{color:var(--muted);font-size:15px;max-width:400px;line-height:1.6}
-.calendly-cta{
-  background:var(--gold);
-  color:#000;
-  border:none;padding:18px 48px;
-  border-radius:100px;
-  font-weight:700;font-size:16px;
-  cursor:pointer;
-  transition:all 0.25s;
-  margin-top:8px;
-  letter-spacing:0.2px;
+.book-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(250,204,21,0.5),transparent);
 }
-.calendly-cta:hover{
-  background:#fff;
-  transform:translateY(-3px);
-  box-shadow:0 0 60px rgba(250,204,21,0.4);
+.book-card-label{
+  font-size:10px;font-weight:700;letter-spacing:3px;
+  text-transform:uppercase;color:var(--gold);margin-bottom:8px;
 }
-.calendly-perks{
-  display:flex;gap:32px;margin-top:8px;
-  flex-wrap:wrap;justify-content:center;
+.book-card-title{
+  font-family:'Syne',sans-serif;font-size:28px;
+  font-weight:800;letter-spacing:-1px;margin-bottom:8px;
 }
-.calendly-perk{
-  display:flex;align-items:center;gap:8px;
-  font-size:13px;color:var(--muted);
+.book-card-sub{font-size:14px;color:var(--muted2);line-height:1.6;margin-bottom:36px}
+.book-slots{display:flex;flex-direction:column;gap:10px;margin-bottom:32px}
+.book-slot{
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(255,255,255,0.03);border:1px solid var(--border);
+  border-radius:10px;padding:14px 18px;cursor:pointer;
+  transition:all 0.2s;
 }
-.perk-dot{
-  width:6px;height:6px;border-radius:50%;
-  background:var(--gold);flex-shrink:0;
+.book-slot:hover{border-color:rgba(250,204,21,0.25);background:rgba(250,204,21,0.04)}
+.book-slot-day{font-size:13px;font-weight:500}
+.book-slot-time{font-size:12px;color:var(--muted)}
+.book-slot-pick{
+  font-size:11px;font-weight:600;color:var(--gold);
+  padding:4px 12px;border-radius:4px;
+  background:rgba(250,204,21,0.1);border:1px solid rgba(250,204,21,0.2);
 }
+.book-cta{
+  width:100%;background:var(--gold);color:#000;
+  border:none;padding:18px;border-radius:10px;
+  font-weight:800;font-size:15px;cursor:pointer;
+  transition:all 0.25s;letter-spacing:0.2px;
+  position:relative;overflow:hidden;
+}
+.book-cta::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.15),transparent);
+  opacity:0;transition:opacity 0.3s;
+}
+.book-cta:hover{background:var(--gold3);transform:translateY(-2px);box-shadow:0 8px 40px rgba(250,204,21,0.3)}
+.book-cta:hover::after{opacity:1}
+.book-note{text-align:center;margin-top:16px;font-size:12px;color:var(--muted)}
 
-/* ===== FOOTER ===== */
+/* ===================== FOOTER ===================== */
 footer{
   position:relative;z-index:2;
   border-top:1px solid var(--border);
-  padding:40px 60px;
+  padding:40px 48px;
   display:flex;justify-content:space-between;align-items:center;
-  max-width:1200px;margin:0 auto;
+  max-width:100%;
 }
-.footer-logo{
-  font-family:'Syne',sans-serif;
-  font-weight:700;font-size:18px;
-}
+.footer-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:16px}
 .footer-logo span{color:var(--gold)}
+.footer-mid{font-size:12px;color:var(--muted)}
 .footer-links{display:flex;gap:24px}
-.footer-links a{
-  font-size:13px;color:var(--muted);
-  text-decoration:none;transition:color 0.2s;
-}
+.footer-links a{font-size:12px;color:var(--muted);text-decoration:none;transition:color 0.2s}
 .footer-links a:hover{color:#fff}
 
-/* ===== DIVIDER ===== */
-.divider{
-  height:1px;
-  background:linear-gradient(90deg,transparent,rgba(250,204,21,0.2),transparent);
-  margin:0 60px;
-}
+/* ===================== SCROLL ANIMATIONS ===================== */
+.sa{opacity:0;transform:translateY(40px);transition:opacity 0.8s cubic-bezier(0.22,1,0.36,1),transform 0.8s cubic-bezier(0.22,1,0.36,1)}
+.sa.visible{opacity:1;transform:translateY(0)}
+.sa-left{opacity:0;transform:translateX(-40px);transition:opacity 0.8s cubic-bezier(0.22,1,0.36,1),transform 0.8s cubic-bezier(0.22,1,0.36,1)}
+.sa-left.visible{opacity:1;transform:translateX(0)}
+.sa-right{opacity:0;transform:translateX(40px);transition:opacity 0.8s cubic-bezier(0.22,1,0.36,1),transform 0.8s cubic-bezier(0.22,1,0.36,1)}
+.sa-right.visible{opacity:1;transform:translateX(0)}
 
-/* ===== ANIMATIONS ===== */
-@keyframes fadeUp{
-  from{opacity:0;transform:translateY(24px)}
-  to{opacity:1;transform:translateY(0)}
-}
-.reveal{
-  opacity:0;transform:translateY(30px);
-  transition:all 0.7s cubic-bezier(0.4,0,0.2,1);
-}
-.reveal.visible{opacity:1;transform:translateY(0)}
+/* ===================== KEYFRAMES ===================== */
+@keyframes slideRight{from{opacity:0;transform:translateX(-32px)}to{opacity:1;transform:translateX(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
 
-/* ===== SCROLLBAR ===== */
-::-webkit-scrollbar{width:6px}
+/* ===================== SCROLLBAR ===================== */
+::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-track{background:#050505}
-::-webkit-scrollbar-thumb{background:rgba(250,204,21,0.3);border-radius:3px}
+::-webkit-scrollbar-thumb{background:rgba(250,204,21,0.25);border-radius:2px}
 
-/* ===== RESPONSIVE ===== */
-@media(max-width:900px){
-  nav{padding:16px 24px}
-  .nav-links{display:none}
-  .section-inner{padding:70px 24px}
-  .testimonials-grid{grid-template-columns:1fr}
-  .cs-grid{grid-template-columns:1fr}
-  .cs-card{position:static}
-  .metrics-grid{grid-template-columns:1fr 1fr}
-  .phone-section-inner{grid-template-columns:1fr;padding:70px 24px;gap:40px}
-  .book-inner{padding:70px 24px}
-  footer{flex-direction:column;gap:16px;text-align:center}
-  .divider{margin:0 24px}
-}
-
-/* ===== REEL LABELS ===== */
-.reel-visual{
-  position:absolute;inset:0;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  gap:8px;
-}
-.reel-visual .rvtitle{
-  font-family:'Syne',sans-serif;
-  font-size:18px;font-weight:800;
-  letter-spacing:-0.5px;
-  text-align:center;
-  padding:0 20px;
-  line-height:1.2;
-  text-shadow:0 2px 20px rgba(0,0,0,0.8);
-}
-.reel-visual .rvcat{
-  font-size:10px;letter-spacing:2px;
-  text-transform:uppercase;
-  color:var(--gold);
-  font-weight:600;
-}
-.reel-bg-anim{
-  position:absolute;inset:0;
-  overflow:hidden;
-}
-.reel-particle{
-  position:absolute;
-  border-radius:50%;
-  opacity:0.15;
-  animation:particleFloat linear infinite;
-}
-@keyframes particleFloat{
-  0%{transform:translateY(100%) scale(0.5);opacity:0}
-  20%{opacity:0.2}
-  80%{opacity:0.1}
-  100%{transform:translateY(-100%) scale(1.5);opacity:0}
+/* ===================== RESPONSIVE ===================== */
+@media(max-width:960px){
+  nav{padding:0 24px}
+  .nav-center{display:none}
+  #hero{grid-template-columns:1fr;padding:80px 24px 60px}
+  .hero-right{height:auto;padding:40px 0}
+  .vsl-float-card,.vsl-float-card2{display:none}
+  #testimonials{padding:80px 24px}
+  .t-header{flex-direction:column;gap:16px}
+  .t-header-right{text-align:left}
+  .tgrid{grid-template-columns:1fr}
+  #features{padding:0 24px 80px}
+  .feat-grid{grid-template-columns:1fr}
+  .feat-card.large{grid-column:span 1}
+  #casestudy{padding:0 24px 80px}
+  .cs-wrap{grid-template-columns:1fr}
+  .cs-left{position:static}
+  #videos{padding:80px 24px}
+  .videos-inner{grid-template-columns:1fr;gap:48px}
+  #book{padding:80px 24px}
+  .book-grid{grid-template-columns:1fr;gap:48px}
+  footer{flex-direction:column;gap:16px;padding:32px 24px;text-align:center}
 }
 </style>
 </head>
 <body>
 
 <canvas id="bg-canvas"></canvas>
-<div id="cursor-glow"></div>
+<div id="cur"></div>
 
-<!-- NAV -->
-<nav>
-  <div class="nav-logo">Alex<span>.</span>Chen</div>
-  <ul class="nav-links">
-    <li><a href="#testimonials">Work</a></li>
-    <li><a href="#case-study">Results</a></li>
+<!-- ===== NAV ===== -->
+<nav id="nav">
+  <div class="nav-logo" onclick="scrollTo(0,0)">Alex<span>.</span>Chen</div>
+  <ul class="nav-center">
+    <li><a href="#testimonials">Reviews</a></li>
+    <li><a href="#features">Services</a></li>
+    <li><a href="#casestudy">Results</a></li>
     <li><a href="#videos">Portfolio</a></li>
-    <li><a href="#book">Contact</a></li>
   </ul>
-  <button class="nav-cta" onclick="document.getElementById('book').scrollIntoView({behavior:'smooth'})">Book A Call</button>
+  <div class="nav-right">
+    <div class="nav-avail">Available now</div>
+    <button class="nav-cta" onclick="document.getElementById('book').scrollIntoView({behavior:'smooth'})">Book A Call</button>
+  </div>
 </nav>
 
-<!-- HERO -->
+<!-- ===== HERO — ASYMMETRIC ===== -->
 <section id="hero">
-  <div class="hero-badge">✦ Available for New Projects in July 2025</div>
-  <h1 class="hero-h1">I Help Creators Turn<br><em>Views Into Revenue.</em></h1>
-  <p class="hero-sub">Cinematic video editing, storytelling and short-form content designed to grow your audience and increase conversions.</p>
-  <div class="hero-btns">
-    <button class="btn-primary" onclick="document.getElementById('videos').scrollIntoView({behavior:'smooth'})">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><polygon points="5,3 13,8 5,13" fill="currentColor"/></svg>
-      Watch My Work
-    </button>
-    <button class="btn-secondary" onclick="document.getElementById('book').scrollIntoView({behavior:'smooth'})">Book A Call →</button>
+  <!-- LEFT -->
+  <div class="hero-left">
+    <div class="hero-eyebrow">
+      <div class="hero-eyebrow-line"></div>
+      <span class="hero-eyebrow-text">Cinematic Video Editor</span>
+    </div>
+    <h1 class="hero-h1">
+      I Help Creators<br>
+      <span class="line2">Turn Views</span>
+      <span class="line3">Into Revenue.</span>
+    </h1>
+    <p class="hero-sub">Cinematic editing, storytelling and short-form content engineered to grow your audience and convert viewers into customers.</p>
+    <div class="hero-btns">
+      <button class="btn-gold" onclick="document.getElementById('videos').scrollIntoView({behavior:'smooth'})">
+        <svg width="14" height="14" viewBox="0 0 14 14"><polygon points="3,1 13,7 3,13" fill="currentColor"/></svg>
+        Watch My Work
+      </button>
+      <button class="btn-ghost" onclick="document.getElementById('book').scrollIntoView({behavior:'smooth'})">
+        <div class="arrow">→</div>
+        Book A Call
+      </button>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="hero-stat-num">4.7M+</div>
+        <div class="hero-stat-label">Views Generated</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">$1.2M</div>
+        <div class="hero-stat-label">Revenue Driven</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">38+</div>
+        <div class="hero-stat-label">Creators Scaled</div>
+      </div>
+    </div>
   </div>
 
-  <!-- VSL -->
-  <div class="vsl-wrap">
-    <div class="vsl-card" id="vsl-card">
-      <div class="vsl-inner">
-        <div class="reel-bg-anim" id="vsl-bg"></div>
-        <div class="vsl-play">
-          <svg width="22" height="22" viewBox="0 0 22 22"><polygon points="7,3 19,11 7,19"/></svg>
-        </div>
-        <div class="vsl-label">Watch Showreel — 2 min</div>
+  <!-- RIGHT -->
+  <div class="hero-right">
+    <div class="vsl-container">
+      <!-- Floating card 1 -->
+      <div class="vsl-float-card">
+        <div class="vfc-label">Avg. Watch Time</div>
+        <div class="vfc-val">6:40</div>
+        <div class="vfc-sub">up from 1:20 baseline</div>
       </div>
-      <div class="vsl-progress"><div class="vsl-progress-fill"></div></div>
+      <!-- VSL Card -->
+      <div class="vsl-card" id="vsl">
+        <div class="vsl-bg"></div>
+        <div id="vsl-particles"></div>
+        <div class="vsl-overlay">
+          <div class="vsl-play-ring">
+            <svg class="vsl-play-icon" width="22" height="22" viewBox="0 0 22 22"><polygon points="7,3 19,11 7,19"/></svg>
+          </div>
+          <div class="vsl-tag">Watch Showreel — 2:14</div>
+        </div>
+        <div class="vsl-bottom">
+          <div class="vsl-bottom-title">2024 Showreel</div>
+          <div class="vsl-bottom-sub">Brands · Creators · Coaches</div>
+        </div>
+        <div class="vsl-progress"><div class="vsl-bar"></div></div>
+      </div>
+      <!-- Floating card 2 -->
+      <div class="vsl-float-card2">
+        <div class="vfc2-row">
+          <div class="vfc2-dot"></div>
+          <div class="vfc2-text">Open for projects</div>
+        </div>
+        <div class="vfc2-sub">3 spots left in July</div>
+      </div>
     </div>
-    <p class="vsl-caption">↑ Click to watch the full showreel</p>
   </div>
 </section>
 
-<!-- TESTIMONIALS -->
+<!-- ===== SOCIAL PROOF TICKER ===== -->
+<div id="proof">
+  <div class="proof-track" id="ticker">
+    <div class="proof-item"><span class="proof-num">4.7M+</span><span class="proof-label">Views Generated</span></div>
+    <div class="proof-item"><span class="proof-num">$1.2M</span><span class="proof-label">Revenue Impact</span></div>
+    <div class="proof-item"><span class="proof-num">38+</span><span class="proof-label">Creators Scaled</span></div>
+    <div class="proof-item"><span class="proof-num">380%</span><span class="proof-label">Avg Subscriber Growth</span></div>
+    <div class="proof-item"><span class="proof-num">73%</span><span class="proof-label">Retention Lift</span></div>
+    <div class="proof-item"><span class="proof-num">5★</span><span class="proof-label">Client Rating</span></div>
+    <div class="proof-item"><span class="proof-num">4.7M+</span><span class="proof-label">Views Generated</span></div>
+    <div class="proof-item"><span class="proof-num">$1.2M</span><span class="proof-label">Revenue Impact</span></div>
+    <div class="proof-item"><span class="proof-num">38+</span><span class="proof-label">Creators Scaled</span></div>
+    <div class="proof-item"><span class="proof-num">380%</span><span class="proof-label">Avg Subscriber Growth</span></div>
+    <div class="proof-item"><span class="proof-num">73%</span><span class="proof-label">Retention Lift</span></div>
+    <div class="proof-item"><span class="proof-num">5★</span><span class="proof-label">Client Rating</span></div>
+  </div>
+</div>
+
+<!-- ===== TESTIMONIALS ===== -->
 <section id="testimonials">
-  <div class="section-inner">
-    <div class="testimonials-header reveal">
-      <div class="section-label">Client Results</div>
-      <h2 class="section-h2">What Creators Are Saying</h2>
-      <p class="section-sub" style="margin:16px auto 0">Real results from real creators who trusted their content to a different level of editing.</p>
+  <div class="t-header sa">
+    <div class="t-header-left">
+      <div class="section-eyebrow"><div class="section-eyebrow-line"></div><span class="section-eyebrow-text">Client Results</span></div>
+      <h2 class="section-h2">What Creators<br>Are Saying</h2>
     </div>
-    <div class="testimonials-grid">
-      <div class="tcard reveal" style="transition-delay:0.1s">
-        <div class="stars">★★★★★</div>
-        <div class="tcard-quote">Alex completely transformed how my content performs. My watch time doubled in the first month, and my sponsorship rates went up 3x. This isn't just editing — it's growth strategy through video.</div>
-        <div class="tcard-result">+320% Watch Time</div>
-        <div class="tcard-author" style="margin-top:16px">
-          <div class="tcard-avatar">MK</div>
-          <div>
-            <div class="tcard-name">Marcus Klein</div>
-            <div class="tcard-role">Lifestyle Creator — 890K Subscribers</div>
-          </div>
+    <div class="t-header-right">
+      <p>Real results from real creators who trusted their content to a completely different level of editing quality.</p>
+    </div>
+  </div>
+  <div class="tgrid">
+    <div class="tcard sa" style="transition-delay:0.05s">
+      <div class="stars">★★★★★</div>
+      <p class="tquote">Alex completely transformed how my content performs. Watch time doubled in the first month, and my sponsorship rates went up 3x. This isn't just editing — it's growth strategy through video.</p>
+      <div class="tbottom">
+        <div class="tauthor">
+          <div class="tavatar" style="background:linear-gradient(135deg,#FACC15,#F59E0B)">MK</div>
+          <div><div class="tname">Marcus Klein</div><div class="trole">Lifestyle · 890K Subs</div></div>
         </div>
+        <div class="tresult">+320% Watch Time</div>
       </div>
-      <div class="tcard reveal" style="transition-delay:0.2s">
-        <div class="stars">★★★★★</div>
-        <div class="tcard-quote">I was skeptical at first, but the results speak for themselves. Two of my reels went viral after Alex reedited them. My agency noticed and now I'm booking 5-figure brand deals.</div>
-        <div class="tcard-result">$80K in Brand Deals</div>
-        <div class="tcard-author" style="margin-top:16px">
-          <div class="tcard-avatar" style="background:linear-gradient(135deg,#a78bfa,#7c3aed)">SR</div>
-          <div>
-            <div class="tcard-name">Sofia Reyes</div>
-            <div class="tcard-role">Fashion & Lifestyle — 2.1M Followers</div>
-          </div>
+    </div>
+    <div class="tcard sa" style="transition-delay:0.12s">
+      <div class="stars">★★★★★</div>
+      <p class="tquote">Two of my reels went viral after Alex reedited them. My agency noticed and now I'm booking 5-figure brand deals consistently. The storytelling is on another level.</p>
+      <div class="tbottom">
+        <div class="tauthor">
+          <div class="tavatar" style="background:linear-gradient(135deg,#a78bfa,#7c3aed)">SR</div>
+          <div><div class="tname">Sofia Reyes</div><div class="trole">Fashion · 2.1M Followers</div></div>
         </div>
+        <div class="tresult">$80K Brand Deals</div>
       </div>
-      <div class="tcard reveal" style="transition-delay:0.3s">
-        <div class="stars">★★★★★</div>
-        <div class="tcard-quote">Our course launch video edited by Alex generated $240K in revenue in 72 hours. The storytelling, pacing, and emotional hooks are at a level I've never experienced before from any editor.</div>
-        <div class="tcard-result">$240K Launch Revenue</div>
-        <div class="tcard-author" style="margin-top:16px">
-          <div class="tcard-avatar" style="background:linear-gradient(135deg,#34d399,#059669)">JT</div>
-          <div>
-            <div class="tcard-name">James Theron</div>
-            <div class="tcard-role">Business Coach — 450K Community</div>
-          </div>
+    </div>
+    <div class="tcard sa" style="transition-delay:0.19s">
+      <div class="stars">★★★★★</div>
+      <p class="tquote">Our course launch video generated $240K in revenue in 72 hours. The emotional hooks and pacing are at a level I've never experienced from any other editor.</p>
+      <div class="tbottom">
+        <div class="tauthor">
+          <div class="tavatar" style="background:linear-gradient(135deg,#34d399,#059669)">JT</div>
+          <div><div class="tname">James Theron</div><div class="trole">Business Coach · 450K</div></div>
         </div>
+        <div class="tresult">$240K Launch</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- CASE STUDY -->
-<section id="case-study">
-  <div class="section-inner">
-    <div class="reveal">
-      <div class="section-label">Deep Dive</div>
-      <h2 class="section-h2">Case Study</h2>
-      <p class="section-sub">A full breakdown of one transformation — from struggling channel to content powerhouse.</p>
+<!-- ===== FEATURES GRID ===== -->
+<section id="features">
+  <div class="feat-header sa">
+    <div class="section-eyebrow"><div class="section-eyebrow-line"></div><span class="section-eyebrow-text">What I Do</span></div>
+    <h2 class="section-h2">Every Frame.<br>Engineered to Convert.</h2>
+  </div>
+  <div class="feat-grid">
+    <div class="feat-card large highlight sa">
+      <div class="feat-icon">🎬</div>
+      <div class="feat-num">01</div>
+      <div class="feat-title">Cinematic Long-Form Editing</div>
+      <div class="feat-desc">Full YouTube video production — from raw footage to publish-ready. Color grading, motion graphics, sound design, thumbnail direction, and strategic storytelling that keeps viewers watching past the 5-minute mark.</div>
+      <div class="feat-tag">YouTube · Podcast · Documentary</div>
     </div>
-    <div class="cs-grid" style="margin-top:56px">
-      <!-- LEFT -->
-      <div class="cs-card reveal">
-        <div class="cs-visual">
-          <div class="reel-bg-anim" id="cs-bg"></div>
-          <span class="cs-badge">Featured Case Study</span>
-          <div class="cs-logo-big">TF</div>
+    <div class="feat-card sa" style="transition-delay:0.08s">
+      <div class="feat-icon">⚡</div>
+      <div class="feat-num">02</div>
+      <div class="feat-title">Short-Form Reels</div>
+      <div class="feat-desc">Instagram, TikTok and YouTube Shorts engineered for maximum reach. Hook-first structure with pattern interrupts every 7 seconds.</div>
+      <div class="feat-tag">Reels · TikTok · Shorts</div>
+    </div>
+    <div class="feat-card sa" style="transition-delay:0.04s">
+      <div class="feat-icon">🚀</div>
+      <div class="feat-num">03</div>
+      <div class="feat-title">VSL & Sales Videos</div>
+      <div class="feat-desc">High-converting video sales letters that move viewers from watch to buy. Emotional arc, proof sequencing, and CTA engineering.</div>
+      <div class="feat-tag">Courses · Coaching · SaaS</div>
+    </div>
+    <div class="feat-card sa" style="transition-delay:0.12s">
+      <div class="feat-icon">🎨</div>
+      <div class="feat-num">04</div>
+      <div class="feat-title">Brand Identity in Motion</div>
+      <div class="feat-desc">Custom intros, lower thirds, transitions and branded templates that make your channel immediately recognizable.</div>
+      <div class="feat-tag">Motion Graphics · Templates</div>
+    </div>
+    <div class="feat-card large sa" style="transition-delay:0.16s">
+      <div class="feat-icon">📊</div>
+      <div class="feat-num">05</div>
+      <div class="feat-title">Retention-Optimized Storytelling</div>
+      <div class="feat-desc">I study your analytics and reverse-engineer your retention curves. Every edit decision is made with the algorithm in mind — pacing, hook structures, and pattern interrupts designed to signal quality content to YouTube, Instagram and TikTok simultaneously.</div>
+      <div class="feat-tag">Analytics-Driven · Data-Backed</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CASE STUDY ===== -->
+<section id="casestudy">
+  <div class="section-eyebrow sa"><div class="section-eyebrow-line"></div><span class="section-eyebrow-text">Deep Dive</span></div>
+  <h2 class="section-h2 sa" style="margin-bottom:56px">Case Study</h2>
+  <div class="cs-wrap">
+    <div class="cs-left sa-left">
+      <div class="cs-left-card">
+        <div class="cs-vis">
+          <div id="cs-particles"></div>
+          <div class="cs-badge-wrap"><div class="cs-badge">Featured · 2024</div></div>
+          <div class="cs-vis-text">TF</div>
         </div>
         <div class="cs-info">
-          <div class="cs-client-name">TechFounder Media</div>
-          <div class="cs-client-type">B2B SaaS Brand / YouTube Channel</div>
-          <div class="tcard-result" style="display:inline-block;margin-top:12px">2024 — Q2 Campaign</div>
+          <div class="cs-name">TechFounder Media</div>
+          <div class="cs-type">B2B SaaS · YouTube Channel · 90-Day Campaign</div>
         </div>
       </div>
-      <!-- RIGHT -->
-      <div class="cs-right reveal" style="transition-delay:0.1s">
-        <div class="metrics-grid">
-          <div class="metric-card">
-            <div class="metric-num" data-target="4.7">0</div>
-            <div class="metric-label">Million Views Generated</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-num" data-target="380" data-suffix="%">0%</div>
-            <div class="metric-label">Subscriber Growth</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-num" data-target="73" data-suffix="%">0%</div>
-            <div class="metric-label">Retention Improvement</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-num" data-prefix="$" data-target="1.2">0</div>
-            <div class="metric-label">Million Revenue Impact</div>
-          </div>
+    </div>
+    <div class="cs-right sa-right">
+      <div class="cs-metrics">
+        <div class="cs-metric">
+          <div class="cs-metric-val" data-target="4.7" data-suffix="M">0</div>
+          <div class="cs-metric-label">Views Generated</div>
         </div>
-
-        <div class="cs-section">
-          <div class="cs-sec-label">The Problem</div>
-          <div class="cs-sec-text">TechFounder had great product knowledge but zero retention. Videos dropped off at the 30-second mark. Despite strong SEO, viewers weren't staying — and YouTube's algorithm penalized them for it. Revenue from sponsorships had stalled at $8K/month for 6 months.</div>
+        <div class="cs-metric">
+          <div class="cs-metric-val" data-target="380" data-suffix="%">0%</div>
+          <div class="cs-metric-label">Subscriber Growth</div>
         </div>
-        <div class="cs-section">
-          <div class="cs-sec-label">The Solution</div>
-          <div class="cs-sec-text">I rebuilt their entire content architecture. Rewrote hooks, restructured narrative flow with cinematic storytelling techniques, introduced pattern-interrupt edits every 7 seconds, and created a unique visual identity with custom motion graphics, color grading and branded sound design.</div>
+        <div class="cs-metric">
+          <div class="cs-metric-val" data-target="73" data-suffix="%">0%</div>
+          <div class="cs-metric-label">Retention Improvement</div>
         </div>
-        <div class="cs-section">
-          <div class="cs-sec-label">The Outcome</div>
-          <div class="cs-sec-text">Within 90 days: 4 videos crossed 1M views, channel subscribers grew from 48K to 230K, average watch time went from 1:20 to 6:40, and their main sponsor doubled the deal value. The channel became a recognized brand in the B2B SaaS space.</div>
+        <div class="cs-metric">
+          <div class="cs-metric-val" data-prefix="$" data-target="1.2" data-suffix="M">$0</div>
+          <div class="cs-metric-label">Revenue Impact</div>
         </div>
+      </div>
+      <div class="cs-block">
+        <div class="cs-block-label">The Problem</div>
+        <div class="cs-block-text">TechFounder had great product knowledge but zero retention. Videos dropped at the 30-second mark. Despite strong SEO, the algorithm penalized them. Revenue from sponsorships had stalled at $8K/month for 6 consecutive months.</div>
+      </div>
+      <div class="cs-block">
+        <div class="cs-block-label">The Solution</div>
+        <div class="cs-block-text">I rebuilt their entire content architecture. Rewrote hooks, restructured narrative flow with cinematic storytelling, introduced pattern interrupts every 7 seconds, and created a visual identity with custom motion graphics, color grading and branded sound design.</div>
+      </div>
+      <div class="cs-block">
+        <div class="cs-block-label">The Outcome</div>
+        <div class="cs-block-text">Within 90 days: 4 videos crossed 1M views, subscribers grew from 48K → 230K, average watch time went from 1:20 → 6:40, and their main sponsor doubled the deal value. The channel became a recognized brand in B2B SaaS.</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- VIDEO EXAMPLES / PHONE -->
+<!-- ===== VIDEOS / PHONE ===== -->
 <section id="videos">
-  <div class="phone-section-inner">
-    <!-- TEXT LEFT -->
-    <div class="phone-text reveal">
-      <div class="section-label">Portfolio</div>
-      <h2 class="section-h2" style="font-family:'Syne',sans-serif">Short-Form<br><span class="gold">That Converts</span></h2>
-      <p class="section-sub" style="margin-top:16px">Swipe through recent reels and short-form content — each one engineered for maximum retention, reach, and revenue.</p>
-      <div style="margin-top:40px;display:flex;flex-direction:column;gap:16px">
-        <div style="display:flex;align-items:center;gap:14px">
-          <div style="width:36px;height:36px;border-radius:10px;background:rgba(250,204,21,0.1);border:1px solid rgba(250,204,21,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-            <svg width="16" height="16" fill="none" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" stroke="#FACC15" stroke-width="1.5"/><path d="M6 5.5l4 2.5-4 2.5V5.5z" fill="#FACC15"/></svg>
-          </div>
-          <div>
-            <div style="font-size:14px;font-weight:600">Hook Engineering</div>
-            <div style="font-size:12px;color:var(--muted);margin-top:2px">First 3 seconds that stop the scroll</div>
-          </div>
+  <div class="videos-inner">
+    <div class="vtext sa-left">
+      <div class="section-eyebrow"><div class="section-eyebrow-line"></div><span class="section-eyebrow-text">Portfolio</span></div>
+      <h2 class="section-h2">Short-Form<br><span style="color:var(--gold)">That Converts</span></h2>
+      <div class="vtext-list">
+        <div class="vtext-item">
+          <div class="vtext-num">01</div>
+          <div><div class="vtext-title">Hook Engineering</div><div class="vtext-desc">First 3 seconds crafted to stop the scroll — pattern interrupt, curiosity gap, visual dissonance.</div></div>
         </div>
-        <div style="display:flex;align-items:center;gap:14px">
-          <div style="width:36px;height:36px;border-radius:10px;background:rgba(250,204,21,0.1);border:1px solid rgba(250,204,21,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-            <svg width="16" height="16" fill="none" viewBox="0 0 16 16"><path d="M2 4h12M2 8h8M2 12h10" stroke="#FACC15" stroke-width="1.5" stroke-linecap="round"/></svg>
-          </div>
-          <div>
-            <div style="font-size:14px;font-weight:600">Narrative Architecture</div>
-            <div style="font-size:12px;color:var(--muted);margin-top:2px">Story structure that drives action</div>
-          </div>
+        <div class="vtext-item">
+          <div class="vtext-num">02</div>
+          <div><div class="vtext-title">Narrative Architecture</div><div class="vtext-desc">Story structure borrowed from cinema — setup, tension, payoff — applied to 60-second content.</div></div>
         </div>
-        <div style="display:flex;align-items:center;gap:14px">
-          <div style="width:36px;height:36px;border-radius:10px;background:rgba(250,204,21,0.1);border:1px solid rgba(250,204,21,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-            <svg width="16" height="16" fill="none" viewBox="0 0 16 16"><rect x="2" y="2" width="5" height="5" rx="1" stroke="#FACC15" stroke-width="1.5"/><rect x="9" y="2" width="5" height="5" rx="1" stroke="#FACC15" stroke-width="1.5"/><rect x="2" y="9" width="5" height="5" rx="1" stroke="#FACC15" stroke-width="1.5"/><rect x="9" y="9" width="5" height="5" rx="1" stroke="#FACC15" stroke-width="1.5"/></svg>
-          </div>
-          <div>
-            <div style="font-size:14px;font-weight:600">Color & Sound Design</div>
-            <div style="font-size:12px;color:var(--muted);margin-top:2px">Cinematic grade, custom audio</div>
-          </div>
+        <div class="vtext-item">
+          <div class="vtext-num">03</div>
+          <div><div class="vtext-title">Color & Sound Design</div><div class="vtext-desc">Cinematic grade + custom audio layering that subconsciously elevates perceived production value.</div></div>
         </div>
-      </div>
-      <!-- NAV BUTTONS -->
-      <div class="phone-nav" style="justify-content:flex-start;margin-top:40px">
-        <div class="phone-nav-btn" id="prev-btn">←</div>
-        <div class="phone-nav-btn" id="next-btn">→</div>
       </div>
     </div>
-
-    <!-- PHONE RIGHT -->
-    <div class="phone-wrap reveal" style="transition-delay:0.2s">
-      <div class="phone-glow" id="phone-glow" style="background:radial-gradient(ellipse,#FACC15,transparent 70%)"></div>
-      <div class="phone-frame" id="phone-frame">
-        <div class="phone-notch"></div>
-        <div class="phone-screen">
-          <div class="reel-container" id="reel-container">
-
-            <!-- REEL 1 -->
-            <div class="reel reel-1">
-              <div class="reel-bg-anim" id="r1bg"></div>
-              <div class="reel-visual">
-                <div class="rvcat">Tech & Finance</div>
-                <div class="rvtitle">How I Made $500K With One YouTube Video</div>
-              </div>
-              <div class="reel-right">
-                <div class="reel-action"><div class="reel-action-icon">❤️</div><div class="reel-action-count">94K</div></div>
-                <div class="reel-action"><div class="reel-action-icon">💬</div><div class="reel-action-count">2.1K</div></div>
-                <div class="reel-action"><div class="reel-action-icon">↗</div><div class="reel-action-count">Share</div></div>
-              </div>
-              <div class="reel-bottom">
-                <div class="reel-channel">
-                  <div class="reel-avatar">TF</div>
-                  <div class="reel-name">techfounder.io</div>
+    <div class="vphone sa-right">
+      <div class="phone-outer">
+        <div class="phone-glow" id="pglow"></div>
+        <div class="phone" id="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="reel-wrap" id="reels">
+              <!-- REEL 1 -->
+              <div class="reel r1">
+                <div id="rp1"></div>
+                <div class="reel-vis">
+                  <div class="reel-cat">Tech & Finance</div>
+                  <div class="reel-title">How I Made $500K With One YouTube Video</div>
                 </div>
-                <div class="reel-desc">The exact strategy that generated $500K... 🎯 #finance #startup</div>
+                <div class="reel-side">
+                  <div class="reel-btn"><div class="reel-btn-icon">❤️</div><div class="reel-btn-n">94K</div></div>
+                  <div class="reel-btn"><div class="reel-btn-icon">💬</div><div class="reel-btn-n">2.1K</div></div>
+                  <div class="reel-btn"><div class="reel-btn-icon">↗</div><div class="reel-btn-n">Share</div></div>
+                </div>
+                <div class="reel-footer">
+                  <div class="reel-ch">
+                    <div class="reel-av" style="background:linear-gradient(135deg,#FACC15,#F59E0B)">TF</div>
+                    <div class="reel-chname">techfounder.io</div>
+                  </div>
+                  <div class="reel-cdesc">The exact strategy that generated $500K 🎯 #finance #startup</div>
+                </div>
+              </div>
+              <!-- REEL 2 -->
+              <div class="reel r2">
+                <div id="rp2"></div>
+                <div class="reel-vis">
+                  <div class="reel-cat">Lifestyle</div>
+                  <div class="reel-title">Day in My Life: Milan Fashion Week</div>
+                </div>
+                <div class="reel-side">
+                  <div class="reel-btn"><div class="reel-btn-icon">❤️</div><div class="reel-btn-n">218K</div></div>
+                  <div class="reel-btn"><div class="reel-btn-icon">💬</div><div class="reel-btn-n">4.7K</div></div>
+                  <div class="reel-btn"><div class="reel-btn-icon">↗</div><div class="reel-btn-n">Share</div></div>
+                </div>
+                <div class="reel-footer">
+                  <div class="reel-ch">
+                    <div class="reel-av" style="background:linear-gradient(135deg,#a78bfa,#7c3aed)">SR</div>
+                    <div class="reel-chname">sofiastyle</div>
+                  </div>
+                  <div class="reel-cdesc">Milan was everything ✨ Outfit deets in bio! #fashion</div>
+                </div>
+              </div>
+              <!-- REEL 3 -->
+              <div class="reel r3">
+                <div id="rp3"></div>
+                <div class="reel-vis">
+                  <div class="reel-cat">Business</div>
+                  <div class="reel-title">3 Things That Transform Your Business in 2025</div>
+                </div>
+                <div class="reel-side">
+                  <div class="reel-btn"><div class="reel-btn-icon">❤️</div><div class="reel-btn-n">156K</div></div>
+                  <div class="reel-btn"><div class="reel-btn-icon">💬</div><div class="reel-btn-n">8.3K</div></div>
+                  <div class="reel-btn"><div class="reel-btn-icon">↗</div><div class="reel-btn-n">Share</div></div>
+                </div>
+                <div class="reel-footer">
+                  <div class="reel-ch">
+                    <div class="reel-av" style="background:linear-gradient(135deg,#34d399,#059669)">JT</div>
+                    <div class="reel-chname">jamestheron</div>
+                  </div>
+                  <div class="reel-cdesc">Stop sleeping on these growth levers 🚀 #business</div>
+                </div>
               </div>
             </div>
-
-            <!-- REEL 2 -->
-            <div class="reel reel-2">
-              <div class="reel-bg-anim" id="r2bg"></div>
-              <div class="reel-visual">
-                <div class="rvcat">Lifestyle</div>
-                <div class="rvtitle">Day in My Life: Milan Fashion Week</div>
-              </div>
-              <div class="reel-right">
-                <div class="reel-action"><div class="reel-action-icon">❤️</div><div class="reel-action-count">218K</div></div>
-                <div class="reel-action"><div class="reel-action-icon">💬</div><div class="reel-action-count">4.7K</div></div>
-                <div class="reel-action"><div class="reel-action-icon">↗</div><div class="reel-action-count">Share</div></div>
-              </div>
-              <div class="reel-bottom">
-                <div class="reel-channel">
-                  <div class="reel-avatar" style="background:linear-gradient(135deg,#a78bfa,#7c3aed)">SR</div>
-                  <div class="reel-name">sofiastyle</div>
-                </div>
-                <div class="reel-desc">Milan was everything ✨ Outfit deets in bio! #fashion #ootd</div>
-              </div>
-            </div>
-
-            <!-- REEL 3 -->
-            <div class="reel reel-3">
-              <div class="reel-bg-anim" id="r3bg"></div>
-              <div class="reel-visual">
-                <div class="rvcat">Business</div>
-                <div class="rvtitle">3 Things That Will Transform Your Business in 2025</div>
-              </div>
-              <div class="reel-right">
-                <div class="reel-action"><div class="reel-action-icon">❤️</div><div class="reel-action-count">156K</div></div>
-                <div class="reel-action"><div class="reel-action-icon">💬</div><div class="reel-action-count">8.3K</div></div>
-                <div class="reel-action"><div class="reel-action-icon">↗</div><div class="reel-action-count">Share</div></div>
-              </div>
-              <div class="reel-bottom">
-                <div class="reel-channel">
-                  <div class="reel-avatar" style="background:linear-gradient(135deg,#34d399,#059669)">JT</div>
-                  <div class="reel-name">jamestheron</div>
-                </div>
-                <div class="reel-desc">Stop sleeping on these growth levers 🚀 #business #mindset</div>
-              </div>
-            </div>
-
-          </div>
-          <!-- DOTS -->
-          <div class="reel-counter">
-            <div class="reel-dot active" id="dot0"></div>
-            <div class="reel-dot" id="dot1"></div>
-            <div class="reel-dot" id="dot2"></div>
           </div>
         </div>
+      </div>
+      <div class="rdots" id="rdots">
+        <div class="rdot on" id="d0"></div>
+        <div class="rdot" id="d1"></div>
+        <div class="rdot" id="d2"></div>
+      </div>
+      <div class="phone-nav">
+        <div class="phone-nav-btn" id="pbprev">↑</div>
+        <div class="phone-nav-btn" id="pbnext">↓</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- BOOK CALL -->
+<!-- ===== BOOK CALL ===== -->
 <section id="book">
   <div class="book-inner">
-    <div class="reveal">
-      <div class="section-label" style="text-align:center">Book A Call</div>
-      <h2 class="book-h2">Let's Create Content<br>People <em style="color:var(--gold);font-style:normal">Remember.</em></h2>
-      <p class="book-sub">Book a quick strategy call and let's discuss how we can elevate your content to a completely different level.</p>
-    </div>
-    <div class="calendly-wrap reveal" style="transition-delay:0.1s">
-      <div class="calendly-inner">
-        <div class="calendly-icon">📅</div>
-        <h3 class="calendly-h3">Free 30-Min Strategy Call</h3>
-        <p class="calendly-sub">We'll audit your current content, identify the biggest growth opportunities, and map out a 90-day content plan.</p>
-        <button class="calendly-cta" onclick="window.open('https://calendly.com','_blank')">
-          Schedule Your Call — It's Free →
-        </button>
-        <div class="calendly-perks">
-          <div class="calendly-perk"><div class="perk-dot"></div>No commitment required</div>
-          <div class="calendly-perk"><div class="perk-dot"></div>Limited spots available</div>
-          <div class="calendly-perk"><div class="perk-dot"></div>Actionable insights guaranteed</div>
+    <div class="book-grid">
+      <div class="book-left sa-left">
+        <div class="section-eyebrow"><div class="section-eyebrow-line"></div><span class="section-eyebrow-text">Book A Call</span></div>
+        <h2 class="book-h2">Let's Create<br>Content People<br><em>Remember.</em></h2>
+        <p class="book-sub">Book a quick strategy call. We'll audit your content, find the biggest growth opportunities, and map out a 90-day plan together.</p>
+        <div class="book-perks">
+          <div class="book-perk"><div class="book-perk-icon">⚡</div>30-minute strategy session</div>
+          <div class="book-perk"><div class="book-perk-icon">🎯</div>Full content audit included</div>
+          <div class="book-perk"><div class="book-perk-icon">🗓️</div>90-day roadmap delivered</div>
+          <div class="book-perk"><div class="book-perk-icon">🔒</div>No commitment required</div>
+        </div>
+      </div>
+      <div class="book-right sa-right">
+        <div class="book-card">
+          <div class="book-card-label">Free Strategy Call</div>
+          <div class="book-card-title">Choose Your Time</div>
+          <div class="book-card-sub">Limited slots available each week — pick a time that works for you.</div>
+          <div class="book-slots">
+            <div class="book-slot">
+              <div><div class="book-slot-day">Tuesday, July 8</div><div class="book-slot-time">10:00 AM — 10:30 AM EST</div></div>
+              <div class="book-slot-pick">Select</div>
+            </div>
+            <div class="book-slot">
+              <div><div class="book-slot-day">Wednesday, July 9</div><div class="book-slot-time">2:00 PM — 2:30 PM EST</div></div>
+              <div class="book-slot-pick">Select</div>
+            </div>
+            <div class="book-slot">
+              <div><div class="book-slot-day">Friday, July 11</div><div class="book-slot-time">11:00 AM — 11:30 AM EST</div></div>
+              <div class="book-slot-pick">Select</div>
+            </div>
+          </div>
+          <button class="book-cta" onclick="window.open('https://calendly.com','_blank')">Schedule My Free Call →</button>
+          <div class="book-note">No spam. No sales pressure. Just strategy.</div>
         </div>
       </div>
     </div>
@@ -1060,10 +1114,9 @@ footer{
 </section>
 
 <!-- FOOTER -->
-<div class="divider"></div>
 <footer>
   <div class="footer-logo">Alex<span>.</span>Chen</div>
-  <div style="font-size:13px;color:var(--muted)">© 2025 Alex Chen. All rights reserved.</div>
+  <div class="footer-mid">© 2025 Alex Chen. All rights reserved.</div>
   <div class="footer-links">
     <a href="#">Instagram</a>
     <a href="#">YouTube</a>
@@ -1072,333 +1125,203 @@ footer{
 </footer>
 
 <script>
-// ===== ANIMATED BACKGROUND — SLOW ORGANIC SMOKE/FLAME =====
+// ===== CANVAS — SLOW ORGANIC SMOKE =====
 const canvas = document.getElementById('bg-canvas');
 const ctx = canvas.getContext('2d');
 let W, H;
+function resize(){W=canvas.width=innerWidth;H=canvas.height=innerHeight}
+resize();addEventListener('resize',resize);
 
-function resize() {
-  W = canvas.width = window.innerWidth;
-  H = canvas.height = window.innerHeight;
-}
-resize();
-window.addEventListener('resize', resize);
+let mxT=W*0.5,myT=H*0.7,mxS=W*0.5,myS=H*0.7;
+document.addEventListener('mousemove',e=>{mxT=e.clientX;myT=e.clientY});
 
-// Mouse tracking — smooth lerp target
-let mouseX = W * 0.5, mouseY = H * 0.7;
-let targetMX = mouseX, targetMY = mouseY;
-document.addEventListener('mousemove', e => {
-  targetMX = e.clientX;
-  targetMY = e.clientY;
-});
-
-// Each tendril: a slow organic smoke arm
-class Tendril {
-  constructor(baseX, baseY, seedPhase) {
-    this.baseX = baseX;   // 0..1 normalized
-    this.baseY = baseY;   // 0..1 normalized
-    this.phase = seedPhase;
-    this.speedA = 0.00018 + Math.random() * 0.00012; // very slow base drift
-    this.speedB = 0.00010 + Math.random() * 0.00008;
-    this.ampX   = 0.06 + Math.random() * 0.10;  // horizontal sway
-    this.ampX2  = 0.03 + Math.random() * 0.05;
-    this.freqY  = 1.2 + Math.random() * 1.4;
-    this.alpha  = 0.05 + Math.random() * 0.10;
-    this.thick  = 0.006 + Math.random() * 0.018;
-    this.len    = 0.55 + Math.random() * 0.55;  // how tall the arm reaches (0..1 of H)
-    this.color  = Math.random() < 0.75 ? 'gold' : 'amber';
-    // cursor influence strength
-    this.cursorStr = 0.04 + Math.random() * 0.06;
+class Tendril{
+  constructor(bx,by,ph){
+    this.bx=bx;this.by=by;this.ph=ph;
+    this.sa=0.00012+Math.random()*0.00010;
+    this.sb=0.00008+Math.random()*0.00007;
+    this.ax=0.05+Math.random()*0.09;
+    this.ax2=0.02+Math.random()*0.04;
+    this.fy=1.0+Math.random()*1.5;
+    this.al=0.04+Math.random()*0.09;
+    this.tw=0.005+Math.random()*0.016;
+    this.cs=0.03+Math.random()*0.05;
+    this.amber=Math.random()>0.7;
   }
-
-  draw(t, cx, cy) {
-    // cx, cy = smoothed cursor 0..1
-    const pts = [];
-    const steps = 80;
-
-    for (let i = 0; i <= steps; i++) {
-      const p = i / steps;  // 0=bottom, 1=top
-      const worldY = (this.baseY + (1 - this.baseY) * p) * H; // travels upward
-
-      // Base horizontal position
-      const bx = this.baseX * W;
-
-      // Organic sine sway
-      const sway1 = Math.sin(p * this.freqY * Math.PI + this.phase + t * this.speedA) * this.ampX * W;
-      const sway2 = Math.sin(p * this.freqY * 1.7 * Math.PI + this.phase * 1.4 + t * this.speedB) * this.ampX2 * W;
-
-      // Cursor attraction — pulls tendril toward cursor the higher up it goes
-      const pullX = (cx * W - bx) * this.cursorStr * p * p;
-      const pullY = (cy * H - worldY) * this.cursorStr * 0.08 * p;
-
-      const x = bx + sway1 + sway2 + pullX;
-      const y = worldY + pullY;
-      pts.push({x, y, p});
+  draw(t,cx,cy){
+    const pts=[];
+    for(let i=0;i<=90;i++){
+      const p=i/90;
+      const y=(this.by+(1-this.by)*p)*H;
+      const bx=this.bx*W;
+      const s1=Math.sin(p*this.fy*Math.PI+this.ph+t*this.sa)*this.ax*W;
+      const s2=Math.sin(p*this.fy*1.8*Math.PI+this.ph*1.5+t*this.sb)*this.ax2*W;
+      const px=(cx*W-bx)*this.cs*p*p;
+      const py=(cy*H-y)*this.cs*0.05*p;
+      pts.push({x:bx+s1+s2+px,y:y+py});
     }
-
-    // Draw smooth bezier curve
-    const grad = ctx.createLinearGradient(0, pts[pts.length-1].y, 0, pts[0].y);
-    if (this.color === 'gold') {
-      grad.addColorStop(0,   'rgba(250,204,21,0)');
-      grad.addColorStop(0.15,`rgba(250,204,21,${this.alpha})`);
-      grad.addColorStop(0.4, `rgba(251,191,36,${this.alpha * 0.85})`);
-      grad.addColorStop(0.7, `rgba(245,158,11,${this.alpha * 0.5})`);
-      grad.addColorStop(1,   'rgba(250,204,21,0)');
-    } else {
-      grad.addColorStop(0,   'rgba(253,186,116,0)');
-      grad.addColorStop(0.2, `rgba(253,186,116,${this.alpha * 0.7})`);
-      grad.addColorStop(0.55,`rgba(249,115,22,${this.alpha * 0.5})`);
-      grad.addColorStop(1,   'rgba(253,186,116,0)');
+    const g=ctx.createLinearGradient(0,pts[pts.length-1].y,0,pts[0].y);
+    if(!this.amber){
+      g.addColorStop(0,'rgba(250,204,21,0)');
+      g.addColorStop(0.15,`rgba(250,204,21,${this.al})`);
+      g.addColorStop(0.45,`rgba(251,191,36,${this.al*0.8})`);
+      g.addColorStop(0.75,`rgba(245,158,11,${this.al*0.4})`);
+      g.addColorStop(1,'rgba(250,204,21,0)');
+    }else{
+      g.addColorStop(0,'rgba(253,186,116,0)');
+      g.addColorStop(0.2,`rgba(253,186,116,${this.al*0.65})`);
+      g.addColorStop(0.6,`rgba(249,115,22,${this.al*0.4})`);
+      g.addColorStop(1,'rgba(253,186,116,0)');
     }
-
     ctx.save();
-    ctx.globalCompositeOperation = 'screen';
-    ctx.strokeStyle = grad;
-    ctx.lineWidth = this.thick * W;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    ctx.beginPath();
-    ctx.moveTo(pts[0].x, pts[0].y);
-    for (let i = 1; i < pts.length - 1; i++) {
-      const mx = (pts[i].x + pts[i+1].x) * 0.5;
-      const my = (pts[i].y + pts[i+1].y) * 0.5;
-      ctx.quadraticCurveTo(pts[i].x, pts[i].y, mx, my);
+    ctx.globalCompositeOperation='screen';
+    ctx.strokeStyle=g;ctx.lineWidth=this.tw*W;
+    ctx.lineCap='round';ctx.lineJoin='round';
+    ctx.beginPath();ctx.moveTo(pts[0].x,pts[0].y);
+    for(let i=1;i<pts.length-1;i++){
+      const mx=(pts[i].x+pts[i+1].x)*0.5,my=(pts[i].y+pts[i+1].y)*0.5;
+      ctx.quadraticCurveTo(pts[i].x,pts[i].y,mx,my);
     }
-    ctx.stroke();
-    ctx.restore();
+    ctx.stroke();ctx.restore();
   }
 }
 
-// Spawn tendrils spread across the bottom — clusters left, center, right like photo
-const tendrils = [];
-const spawnPoints = [
-  // left cluster
-  {x:0.02, y:1.0}, {x:0.06, y:1.0}, {x:0.10, y:0.98}, {x:0.14, y:1.0}, {x:0.18, y:0.99},
-  // center-left
-  {x:0.28, y:1.0}, {x:0.33, y:0.99},
-  // center
-  {x:0.44, y:1.0}, {x:0.50, y:1.0}, {x:0.56, y:1.0},
-  // center-right
-  {x:0.65, y:0.99}, {x:0.70, y:1.0},
-  // right cluster
-  {x:0.80, y:1.0}, {x:0.85, y:0.98}, {x:0.88, y:1.0}, {x:0.92, y:0.99}, {x:0.96, y:1.0},
-];
-spawnPoints.forEach((sp, i) => {
-  tendrils.push(new Tendril(sp.x, sp.y, i * 0.72 + Math.random() * 1.5));
-});
+const tendrils=[];
+[0.03,0.07,0.11,0.16,0.21,0.30,0.36,0.44,0.50,0.56,0.63,0.70,0.78,0.83,0.88,0.92,0.96]
+  .forEach((x,i)=>tendrils.push(new Tendril(x,1.0,i*0.65+Math.random()*2)));
 
-// Cursor trail particles — short-lived glow orbs
-const particles = [];
-class Particle {
-  constructor(x, y) {
-    this.x = x; this.y = y;
-    this.vx = (Math.random() - 0.5) * 0.8;
-    this.vy = -0.5 - Math.random() * 1.5;
-    this.life = 1;
-    this.decay = 0.012 + Math.random() * 0.018;
-    this.r = 30 + Math.random() * 60;
-  }
-  update() {
-    this.x += this.vx;
-    this.y += this.vy;
-    this.vy *= 0.98;
-    this.life -= this.decay;
-  }
-  draw() {
-    if (this.life <= 0) return;
-    const g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.r);
-    g.addColorStop(0, `rgba(250,204,21,${this.life * 0.18})`);
-    g.addColorStop(0.5,`rgba(245,158,11,${this.life * 0.08})`);
-    g.addColorStop(1,  'rgba(250,204,21,0)');
-    ctx.save();
-    ctx.globalCompositeOperation = 'screen';
-    ctx.fillStyle = g;
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.r, 0, Math.PI*2);
-    ctx.fill();
-    ctx.restore();
+// Cursor particles
+const parts=[];
+class Part{
+  constructor(x,y){this.x=x;this.y=y;this.vx=(Math.random()-0.5)*0.9;this.vy=-0.6-Math.random()*1.8;this.l=1;this.d=0.010+Math.random()*0.016;this.r=25+Math.random()*55}
+  update(){this.x+=this.vx;this.y+=this.vy;this.vy*=0.98;this.l-=this.d}
+  draw(){
+    if(this.l<=0)return;
+    const g=ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.r);
+    g.addColorStop(0,`rgba(250,204,21,${this.l*0.15})`);
+    g.addColorStop(0.5,`rgba(245,158,11,${this.l*0.06})`);
+    g.addColorStop(1,'rgba(250,204,21,0)');
+    ctx.save();ctx.globalCompositeOperation='screen';
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fill();ctx.restore();
   }
 }
+let lastPart=0;
+document.addEventListener('mousemove',e=>{const n=performance.now();if(n-lastPart>40){parts.push(new Part(e.clientX,e.clientY));lastPart=n}});
 
-let lastParticle = 0;
-document.addEventListener('mousemove', e => {
-  const now = performance.now();
-  if (now - lastParticle > 35) {
-    particles.push(new Particle(e.clientX, e.clientY));
-    lastParticle = now;
+// Reel particle background
+function spawnReelParticles(id,colors){
+  const el=document.getElementById(id);if(!el)return;
+  el.style.cssText='position:absolute;inset:0;overflow:hidden;pointer-events:none';
+  for(let i=0;i<7;i++){
+    const p=document.createElement('div');
+    const s=50+Math.random()*90;
+    p.style.cssText=`position:absolute;width:${s}px;height:${s}px;border-radius:50%;left:${Math.random()*100}%;background:${colors[Math.floor(Math.random()*colors.length)]};opacity:0.12;animation:pf ${4+Math.random()*7}s ${-Math.random()*8}s linear infinite`;
+    el.appendChild(p);
   }
-});
-
-// Smooth cursor lerp
-let smoothCX = 0.5, smoothCY = 0.7;
-
-let lastTs = 0;
-function animate(ts) {
-  const dt = Math.min(ts - lastTs, 50); lastTs = ts;
-
-  // Lerp mouse
-  mouseX += (targetMX - mouseX) * 0.03;
-  mouseY += (targetMY - mouseY) * 0.03;
-  smoothCX = mouseX / W;
-  smoothCY = mouseY / H;
-
-  ctx.clearRect(0, 0, W, H);
-
-  // Draw tendrils
-  tendrils.forEach(t2 => t2.draw(ts, smoothCX, smoothCY));
-
-  // Update & draw particles
-  for (let i = particles.length - 1; i >= 0; i--) {
-    particles[i].update();
-    particles[i].draw();
-    if (particles[i].life <= 0) particles.splice(i, 1);
-  }
-
-  requestAnimationFrame(animate);
 }
-requestAnimationFrame(animate);
+const style=document.createElement('style');
+style.textContent='@keyframes pf{0%{transform:translateY(100%) scale(0.4);opacity:0}20%{opacity:0.15}80%{opacity:0.08}100%{transform:translateY(-120%) scale(1.6);opacity:0}}';
+document.head.appendChild(style);
+spawnReelParticles('vsl-particles',['rgba(250,204,21,1)','rgba(245,158,11,1)']);
+spawnReelParticles('cs-particles',['rgba(250,204,21,1)','rgba(245,158,11,1)']);
+spawnReelParticles('rp1',['rgba(250,204,21,1)','rgba(245,158,11,1)']);
+spawnReelParticles('rp2',['rgba(167,139,250,1)','rgba(124,58,237,1)']);
+spawnReelParticles('rp3',['rgba(52,211,153,1)','rgba(5,150,105,1)']);
+
+let lastTs=0;
+function loop(ts){
+  const dt=Math.min(ts-lastTs,50);lastTs=ts;
+  mxS+=(mxT-mxS)*0.025;myS+=(myT-myS)*0.025;
+  ctx.clearRect(0,0,W,H);
+  tendrils.forEach(t=>t.draw(ts,mxS/W,myS/H));
+  for(let i=parts.length-1;i>=0;i--){parts[i].update();parts[i].draw();if(parts[i].l<=0)parts.splice(i,1)}
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
 
 // ===== CURSOR GLOW =====
-const glow = document.getElementById('cursor-glow');
-let gx = W/2, gy = H/2;
-function updateGlow() {
-  gx += (mouseX - gx) * 0.06;
-  gy += (mouseY - gy) * 0.06;
-  glow.style.left = gx + 'px';
-  glow.style.top = gy + 'px';
-  requestAnimationFrame(updateGlow);
-}
-updateGlow();
+const cur=document.getElementById('cur');
+let cgx=W/2,cgy=H/2;
+function moveCur(){cgx+=(mxS-cgx)*0.07;cgy+=(myS-cgy)*0.07;cur.style.left=cgx+'px';cur.style.top=cgy+'px';requestAnimationFrame(moveCur)}
+moveCur();
 
-// ===== REEL PARTICLES =====
-function createParticles(container, colors) {
-  for (let i = 0; i < 8; i++) {
-    const p = document.createElement('div');
-    p.className = 'reel-particle';
-    const size = 40 + Math.random() * 80;
-    p.style.cssText = `
-      width:${size}px;height:${size}px;
-      left:${Math.random()*100}%;
-      background:${colors[Math.floor(Math.random()*colors.length)]};
-      animation-duration:${4+Math.random()*6}s;
-      animation-delay:${-Math.random()*8}s;
-    `;
-    container.appendChild(p);
-  }
-}
-const colorSets = [
-  ['rgba(250,204,21,0.6)','rgba(245,158,11,0.4)','rgba(251,191,36,0.5)'],
-  ['rgba(167,139,250,0.6)','rgba(124,58,237,0.4)','rgba(196,181,253,0.5)'],
-  ['rgba(52,211,153,0.6)','rgba(5,150,105,0.4)','rgba(110,231,183,0.5)'],
-];
-createParticles(document.getElementById('r1bg'), colorSets[0]);
-createParticles(document.getElementById('r2bg'), colorSets[1]);
-createParticles(document.getElementById('r3bg'), colorSets[2]);
-createParticles(document.getElementById('cs-bg'), colorSets[0]);
-createParticles(document.getElementById('vsl-bg'), colorSets[0]);
+// ===== NAV SCROLL =====
+const nav=document.getElementById('nav');
+addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>60));
 
 // ===== PHONE REELS =====
-const reelContainer = document.getElementById('reel-container');
-const glowEl = document.getElementById('phone-glow');
-const dots = [document.getElementById('dot0'),document.getElementById('dot1'),document.getElementById('dot2')];
-const glowColors = [
-  'radial-gradient(ellipse,rgba(250,204,21,0.6),transparent 70%)',
-  'radial-gradient(ellipse,rgba(167,139,250,0.6),transparent 70%)',
-  'radial-gradient(ellipse,rgba(52,211,153,0.6),transparent 70%)',
+const reelEl=document.getElementById('reels');
+const pglow=document.getElementById('pglow');
+const phone=document.getElementById('phone');
+const glowCols=['rgba(250,204,21,0.7)','rgba(167,139,250,0.7)','rgba(52,211,153,0.7)'];
+const bgGlows=[
+  'radial-gradient(ellipse,rgba(250,204,21,0.4),transparent 70%)',
+  'radial-gradient(ellipse,rgba(167,139,250,0.4),transparent 70%)',
+  'radial-gradient(ellipse,rgba(52,211,153,0.4),transparent 70%)',
 ];
-let currentReel = 0;
-const totalReels = 3;
-
-function goToReel(n) {
-  n = ((n % totalReels) + totalReels) % totalReels;
-  currentReel = n;
-  reelContainer.style.transform = `translateY(-${n * 560}px)`;
-  glowEl.style.background = glowColors[n];
-  dots.forEach((d,i) => {
-    d.classList.toggle('active', i===n);
-  });
-}
-
-document.getElementById('prev-btn').addEventListener('click', () => goToReel(currentReel - 1));
-document.getElementById('next-btn').addEventListener('click', () => goToReel(currentReel + 1));
-
-// Touch swipe
-let startY = 0;
-const pf = document.getElementById('phone-frame');
-pf.addEventListener('touchstart', e => startY = e.touches[0].clientY, {passive:true});
-pf.addEventListener('touchend', e => {
-  const dy = startY - e.changedTouches[0].clientY;
-  if (Math.abs(dy) > 40) goToReel(currentReel + (dy > 0 ? 1 : -1));
-}, {passive:true});
-
-// Keyboard
-document.addEventListener('keydown', e => {
-  if (e.key === 'ArrowDown') goToReel(currentReel + 1);
-  if (e.key === 'ArrowUp') goToReel(currentReel - 1);
-});
-
-// Wheel on phone
-pf.addEventListener('wheel', e => {
-  e.preventDefault();
-  goToReel(currentReel + (e.deltaY > 0 ? 1 : -1));
-}, {passive:false});
-
-// Auto advance
-setInterval(() => goToReel(currentReel + 1), 4000);
-
-// ===== 3D PHONE TILT =====
-document.addEventListener('mousemove', e => {
-  const nx = (e.clientX / W - 0.5) * 2;
-  const ny = (e.clientY / H - 0.5) * 2;
-  pf.style.transform = `rotateY(${nx * 8}deg) rotateX(${-ny * 5}deg)`;
-});
-
-// ===== COUNTER ANIMATION =====
-function animateCounter(el, target, prefix='', suffix='') {
-  const decimals = String(target).includes('.') ? 1 : 0;
-  let start = null;
-  const duration = 2000;
-  function step(ts) {
-    if (!start) start = ts;
-    const p = Math.min((ts - start) / duration, 1);
-    const ease = 1 - Math.pow(1 - p, 3);
-    const val = target * ease;
-    el.textContent = prefix + (decimals ? val.toFixed(1) : Math.round(val)) + suffix;
-    if (p < 1) requestAnimationFrame(step);
-    else el.textContent = prefix + target + suffix;
+let cur_r=0;const tot=3;
+function dots(){
+  for(let i=0;i<tot;i++){
+    const d=document.getElementById('d'+i);
+    d.className='rdot'+(i===cur_r?' on':'');
   }
-  requestAnimationFrame(step);
 }
+function goReel(n){
+  cur_r=((n%tot)+tot)%tot;
+  reelEl.style.transform=`translateY(-${cur_r*548}px)`;
+  pglow.style.background=bgGlows[cur_r];
+  dots();
+}
+document.getElementById('pbprev').onclick=()=>goReel(cur_r-1);
+document.getElementById('pbnext').onclick=()=>goReel(cur_r+1);
+let ty=0;
+phone.addEventListener('touchstart',e=>ty=e.touches[0].clientY,{passive:true});
+phone.addEventListener('touchend',e=>{const d=ty-e.changedTouches[0].clientY;if(Math.abs(d)>35)goReel(cur_r+(d>0?1:-1))},{passive:true});
+phone.addEventListener('wheel',e=>{e.preventDefault();goReel(cur_r+(e.deltaY>0?1:-1))},{passive:false});
+document.addEventListener('keydown',e=>{if(e.key==='ArrowDown')goReel(cur_r+1);if(e.key==='ArrowUp')goReel(cur_r-1)});
+setInterval(()=>goReel(cur_r+1),4500);
 
-// ===== INTERSECTION OBSERVER =====
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-      // Counters
-      entry.target.querySelectorAll('[data-target]').forEach(el => {
-        const t = parseFloat(el.dataset.target);
-        const pre = el.dataset.prefix || '';
-        const suf = el.dataset.suffix || '';
-        animateCounter(el, t, pre, suf);
+// 3D tilt
+document.addEventListener('mousemove',e=>{
+  const nx=(e.clientX/innerWidth-0.5)*2;
+  const ny=(e.clientY/innerHeight-0.5)*2;
+  phone.style.transform=`rotateY(${nx*8}deg) rotateX(${-ny*5}deg)`;
+});
+
+// ===== SCROLL ANIMATIONS =====
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(en=>{
+    if(en.isIntersecting){
+      en.target.classList.add('visible');
+      en.target.querySelectorAll('[data-target]').forEach(el=>{
+        const tgt=parseFloat(el.dataset.target);
+        const pre=el.dataset.prefix||'';
+        const suf=el.dataset.suffix||'';
+        const dec=String(tgt).includes('.')?1:0;
+        let st=null;
+        const dur=2000;
+        function step(ts){
+          if(!st)st=ts;
+          const p=Math.min((ts-st)/dur,1);
+          const e=1-Math.pow(1-p,3);
+          el.textContent=pre+(dec?( tgt*e).toFixed(1):Math.round(tgt*e))+suf;
+          if(p<1)requestAnimationFrame(step);
+          else el.textContent=pre+tgt+suf;
+        }
+        requestAnimationFrame(step);
       });
     }
   });
-}, {threshold:0.15});
-
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+},{threshold:0.12});
+document.querySelectorAll('.sa,.sa-left,.sa-right').forEach(el=>io.observe(el));
 
 // ===== MAGNETIC BUTTONS =====
-document.querySelectorAll('.btn-primary,.btn-secondary,.nav-cta,.calendly-cta').forEach(btn => {
-  btn.addEventListener('mousemove', e => {
-    const r = btn.getBoundingClientRect();
-    const bx = e.clientX - r.left - r.width/2;
-    const by = e.clientY - r.top - r.height/2;
-    btn.style.transform = `translate(${bx*0.15}px,${by*0.15}px) scale(1.04)`;
+document.querySelectorAll('.btn-gold,.btn-ghost,.nav-cta,.book-cta').forEach(btn=>{
+  btn.addEventListener('mousemove',e=>{
+    const r=btn.getBoundingClientRect();
+    btn.style.transform=`translate(${(e.clientX-r.left-r.width/2)*0.12}px,${(e.clientY-r.top-r.height/2)*0.12}px)`;
   });
-  btn.addEventListener('mouseleave', () => {
-    btn.style.transform = '';
-  });
+  btn.addEventListener('mouseleave',()=>btn.style.transform='');
 });
 </script>
 </body>
