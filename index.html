@@ -31,6 +31,7 @@ nav{
   background:rgba(5,5,5,0.8);backdrop-filter:blur(24px);
   border-bottom:1px solid var(--border);
   transition:all 0.3s;
+  position:fixed;
 }
 nav.scrolled{background:rgba(5,5,5,0.95);border-color:var(--border2)}
 .nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:18px;letter-spacing:-0.5px;cursor:pointer}
@@ -59,22 +60,52 @@ nav.scrolled{background:rgba(5,5,5,0.95);border-color:var(--border2)}
 }
 .nav-cta:hover{background:var(--gold3);transform:translateY(-1px)}
 
+/* NAV ZOU LOGO */
+.nav-zou{
+  position:absolute;left:50%;
+  transform:translateX(-50%);
+  display:flex;align-items:center;gap:0;
+  cursor:pointer;
+  transition:transform 0.05s linear;
+  transform-origin:center center;
+}
+.nav-zou:hover{opacity:0.8}
+.nz-letter{
+  font-family:'Syne',sans-serif;
+  font-size:22px;font-weight:400;
+  color:var(--gold);letter-spacing:4px;
+  padding:0 10px;
+  transition:all 0.05s linear;
+  background:linear-gradient(160deg,#FACC15 0%,#F59E0B 50%,#d4820a 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.nz-div{
+  width:1px;height:18px;
+  background:linear-gradient(to bottom,transparent,var(--gold),transparent);
+  opacity:0.5;
+  transition:height 0.05s linear;
+}
+
 /* ===================== HERO — ASYMMETRIC ===================== */
 #hero{
   position:relative;z-index:2;
   min-height:100vh;
-  display:grid;
-  grid-template-columns:1fr 1fr;
+  display:flex;
   align-items:center;
+  justify-content:center;
   padding:0 48px;
-  gap:0;
   overflow:hidden;
+  text-align:left;
 }
 .hero-left{
-  padding:120px 60px 80px 0;
+  padding:120px 0 80px;
   display:flex;flex-direction:column;
   align-items:flex-start;
+  width:100%;
+  max-width:900px;
 }
+.hero-center{display:none}
+.hero-right{display:none}
 .hero-eyebrow{
   display:flex;align-items:center;gap:12px;
   margin-bottom:36px;
@@ -87,20 +118,22 @@ nav.scrolled{background:rgba(5,5,5,0.95);border-color:var(--border2)}
 }
 .hero-h1{
   font-family:'Syne',sans-serif;
-  font-size:clamp(52px,5.5vw,84px);
-  font-weight:800;line-height:0.97;
-  letter-spacing:-4px;
+  font-size:clamp(60px,8vw,120px);
+  font-weight:800;line-height:0.95;
+  letter-spacing:-5px;
   margin-bottom:32px;
   opacity:0;animation:slideRight 0.9s 0.2s cubic-bezier(0.22,1,0.36,1) forwards;
+  background:linear-gradient(160deg,#FACC15 0%,#F59E0B 30%,#d4820a 60%,#1a1000 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
 }
 .hero-h1 .line2{
   display:block;
-  color:transparent;
-  -webkit-text-stroke:1px rgba(255,255,255,0.25);
   font-style:italic;
   letter-spacing:-3px;
 }
-.hero-h1 .line3{display:block;color:var(--gold)}
+.hero-h1 .line3{display:block}
 .hero-sub{
   font-size:16px;line-height:1.75;color:var(--muted2);
   max-width:420px;margin-bottom:48px;font-weight:300;
@@ -712,13 +745,19 @@ footer{
 
 <!-- ===== NAV ===== -->
 <nav id="nav">
-  <div class="nav-logo" onclick="scrollTo(0,0)">Alex<span>.</span>Chen</div>
-  <ul class="nav-center">
+  <ul class="nav-center" style="justify-content:flex-start">
     <li><a href="#testimonials">Reviews</a></li>
     <li><a href="#features">Services</a></li>
     <li><a href="#casestudy">Results</a></li>
     <li><a href="#videos">Portfolio</a></li>
   </ul>
+  <div class="nav-zou" id="nav-zou" onclick="scrollTo(0,0)">
+    <span class="nz-letter">Z</span>
+    <div class="nz-div"></div>
+    <span class="nz-letter">O</span>
+    <div class="nz-div"></div>
+    <span class="nz-letter">U</span>
+  </div>
   <div class="nav-right">
     <div class="nav-avail">Available now</div>
     <button class="nav-cta" onclick="document.getElementById('book').scrollIntoView({behavior:'smooth'})">Book A Call</button>
@@ -765,41 +804,19 @@ footer{
     </div>
   </div>
 
-  <!-- RIGHT -->
-  <div class="hero-right">
-    <div class="vsl-container">
-      <!-- Floating card 1 -->
-      <div class="vsl-float-card">
-        <div class="vfc-label">Avg. Watch Time</div>
-        <div class="vfc-val">6:40</div>
-        <div class="vfc-sub">up from 1:20 baseline</div>
-      </div>
-      <!-- VSL Card -->
-      <div class="vsl-card" id="vsl">
-        <div class="vsl-bg"></div>
-        <div id="vsl-particles"></div>
-        <div class="vsl-overlay">
-          <div class="vsl-play-ring">
-            <svg class="vsl-play-icon" width="22" height="22" viewBox="0 0 22 22"><polygon points="7,3 19,11 7,19"/></svg>
-          </div>
-          <div class="vsl-tag">Watch Showreel — 2:14</div>
-        </div>
-        <div class="vsl-bottom">
-          <div class="vsl-bottom-title">2024 Showreel</div>
-          <div class="vsl-bottom-sub">Brands · Creators · Coaches</div>
-        </div>
-        <div class="vsl-progress"><div class="vsl-bar"></div></div>
-      </div>
-      <!-- Floating card 2 -->
-      <div class="vsl-float-card2">
-        <div class="vfc2-row">
-          <div class="vfc2-dot"></div>
-          <div class="vfc2-text">Open for projects</div>
-        </div>
-        <div class="vfc2-sub">3 spots left in July</div>
-      </div>
+  <!-- CENTER — ZOU LOGO -->
+  <div class="hero-center">
+    <div class="zou-logo">
+      <div class="zou-glow"></div>
+      <span class="zou-letter">Z</span>
+      <div class="zou-divider"></div>
+      <span class="zou-letter">O</span>
+      <div class="zou-divider"></div>
+      <span class="zou-letter">U</span>
     </div>
   </div>
+
+  <!-- RIGHT removed -->
 </section>
 
 <!-- ===== SOCIAL PROOF TICKER ===== -->
@@ -1247,6 +1264,23 @@ moveCur();
 
 // ===== NAV SCROLL =====
 const nav=document.getElementById('nav');
+
+// ===== ZOU NAV SUBTLE GROW ON SCROLL =====
+const navZou = document.getElementById('nav-zou');
+window.addEventListener('scroll', () => {
+  const progress = Math.min(window.scrollY / 400, 1);
+  const size = 22 + progress * 14; // 22px → 36px
+  const spacing = 4 + progress * 8; // letter-spacing grows
+  const divH = 18 + progress * 16; // dividers get taller
+  navZou.querySelectorAll('.nz-letter').forEach(l => {
+    l.style.fontSize = size + 'px';
+    l.style.letterSpacing = spacing + 'px';
+  });
+  navZou.querySelectorAll('.nz-div').forEach(d => {
+    d.style.height = divH + 'px';
+  });
+}, {passive:true});
+
 addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>60));
 
 // ===== PHONE REELS =====
