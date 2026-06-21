@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ZOU — Cinematic Video Editor</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -15,7 +15,7 @@
   --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.1);
 }
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:#fff;font-family:'Inter',sans-serif;overflow-x:hidden}
+body{background:var(--bg);color:#fff;font-family:'Plus Jakarta Sans',sans-serif;overflow-x:hidden}
 
 /* CANVAS */
 #bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
@@ -34,7 +34,7 @@ nav{
   position:fixed;
 }
 nav.scrolled{background:rgba(5,5,5,0.95);border-color:var(--border2)}
-.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:18px;letter-spacing:-0.5px;cursor:pointer}
+.nav-logo{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:18px;letter-spacing:-0.5px;cursor:pointer}
 .nav-logo span{color:var(--gold)}
 .nav-center{display:flex;gap:0;list-style:none}
 .nav-center li a{
@@ -71,7 +71,7 @@ nav.scrolled{background:rgba(5,5,5,0.95);border-color:var(--border2)}
 }
 .nav-zou:hover{opacity:0.8}
 .nz-letter{
-  font-family:'Syne',sans-serif;
+  font-family:'Plus Jakarta Sans',sans-serif;
   font-size:22px;font-weight:400;
   color:var(--gold);letter-spacing:4px;
   padding:0 10px;
@@ -118,16 +118,17 @@ nav.scrolled{background:rgba(5,5,5,0.95);border-color:var(--border2)}
   text-transform:uppercase;color:var(--gold);
 }
 .hero-h1{
-  font-family:'Syne',sans-serif;
+  font-family:'Plus Jakarta Sans',sans-serif;
   font-size:clamp(48px,5.5vw,80px);
-  font-weight:800;line-height:1.05;
+  font-weight:800;line-height:1.2;
   letter-spacing:-3px;
   margin-bottom:28px;
   opacity:0;animation:slideRight 0.9s 0.2s cubic-bezier(0.22,1,0.36,1) forwards;
-  background:linear-gradient(160deg,#FACC15 0%,#F59E0B 30%,#d4820a 60%,#1a1000 100%);
+  background:linear-gradient(to bottom,#92400e 0%,#F59E0B 45%,#FACC15 75%,#FDE68A 100%);
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
   background-clip:text;
+  padding-bottom:6px;
 }
 .hero-h1 .line2{
   display:block;
@@ -181,7 +182,7 @@ nav.scrolled{background:rgba(5,5,5,0.95);border-color:var(--border2)}
   opacity:0;animation:slideRight 0.9s 0.5s cubic-bezier(0.22,1,0.36,1) forwards;
 }
 .hero-stat-num{
-  font-family:'Syne',sans-serif;
+  font-family:'Plus Jakarta Sans',sans-serif;
   font-size:36px;font-weight:800;letter-spacing:-2px;
   color:var(--gold);line-height:1;margin-bottom:4px;
 }
@@ -247,7 +248,7 @@ nav.scrolled{background:rgba(5,5,5,0.95);border-color:var(--border2)}
   background:linear-gradient(to top,rgba(5,5,5,0.95) 0%,transparent 100%);
 }
 .vsl-bottom-title{
-  font-family:'Syne',sans-serif;font-size:18px;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;
   font-weight:700;margin-bottom:4px;
 }
 .vsl-bottom-sub{font-size:12px;color:var(--muted2)}
@@ -266,7 +267,7 @@ nav.scrolled{background:rgba(5,5,5,0.95);border-color:var(--border2)}
 }
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
 .vfc-label{font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
-.vfc-val{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--gold);letter-spacing:-1px;line-height:1}
+.vfc-val{font-family:'Plus Jakarta Sans',sans-serif;font-size:28px;font-weight:800;color:var(--gold);letter-spacing:-1px;line-height:1}
 .vfc-sub{font-size:11px;color:var(--muted2);margin-top:4px}
 
 .vsl-float-card2{
@@ -301,7 +302,7 @@ nav.scrolled{background:rgba(5,5,5,0.95);border-color:var(--border2)}
   flex-shrink:0;
 }
 .proof-num{
-  font-family:'Syne',sans-serif;font-size:22px;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;
   font-weight:800;letter-spacing:-1px;color:var(--gold);
 }
 .proof-label{font-size:13px;color:var(--muted2)}
@@ -320,7 +321,7 @@ nav.scrolled{background:rgba(5,5,5,0.95);border-color:var(--border2)}
 }
 .t-header-left{}
 .section-h2{
-  font-family:'Syne',sans-serif;
+  font-family:'Plus Jakarta Sans',sans-serif;
   font-size:clamp(36px,4vw,60px);font-weight:800;
   letter-spacing:-3px;line-height:1;
 }
@@ -403,7 +404,7 @@ nav.scrolled{background:rgba(5,5,5,0.95);border-color:var(--border2)}
   text-transform:uppercase;color:var(--muted);margin-bottom:12px;
 }
 .feat-title{
-  font-family:'Syne',sans-serif;font-size:20px;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;
   font-weight:700;letter-spacing:-0.5px;margin-bottom:12px;
 }
 .feat-desc{font-size:14px;line-height:1.75;color:var(--muted2);font-weight:300}
@@ -440,7 +441,7 @@ nav.scrolled{background:rgba(5,5,5,0.95);border-color:var(--border2)}
   position:relative;overflow:hidden;
 }
 .cs-vis-text{
-  font-family:'Syne',sans-serif;font-size:100px;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:100px;
   font-weight:800;letter-spacing:-8px;
   color:rgba(250,204,21,0.08);
   user-select:none;
@@ -453,7 +454,7 @@ nav.scrolled{background:rgba(5,5,5,0.95);border-color:var(--border2)}
 }
 .cs-info{padding:28px}
 .cs-name{
-  font-family:'Syne',sans-serif;font-size:26px;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:26px;
   font-weight:800;letter-spacing:-1px;margin-bottom:4px;
 }
 .cs-type{font-size:12px;color:var(--muted);letter-spacing:0.5px}
@@ -475,7 +476,7 @@ nav.scrolled{background:rgba(5,5,5,0.95);border-color:var(--border2)}
 .cs-metric:hover{border-color:rgba(250,204,21,0.15);transform:translateY(-2px)}
 .cs-metric:hover::before{opacity:1}
 .cs-metric-val{
-  font-family:'Syne',sans-serif;font-size:40px;font-weight:800;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:40px;font-weight:800;
   letter-spacing:-2px;color:var(--gold);line-height:1;margin-bottom:6px;
 }
 .cs-metric-label{font-size:12px;color:var(--muted);letter-spacing:0.2px}
@@ -510,7 +511,7 @@ nav.scrolled{background:rgba(5,5,5,0.95);border-color:var(--border2)}
 }
 .vtext-item:last-child{border-bottom:none;padding-bottom:0}
 .vtext-num{
-  font-family:'Syne',sans-serif;font-size:13px;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;
   font-weight:800;color:var(--gold);
   opacity:0.4;flex-shrink:0;padding-top:2px;
   letter-spacing:-0.5px;
@@ -562,7 +563,7 @@ nav.scrolled{background:rgba(5,5,5,0.95);border-color:var(--border2)}
 }
 .reel-cat{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);font-weight:600}
 .reel-title{
-  font-family:'Syne',sans-serif;font-size:15px;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;
   font-weight:800;letter-spacing:-0.3px;line-height:1.25;
 }
 .reel-footer{
@@ -624,7 +625,7 @@ nav.scrolled{background:rgba(5,5,5,0.95);border-color:var(--border2)}
   margin-top:16px;
 }
 .vp-title{
-  font-family:'Syne',sans-serif;
+  font-family:'Plus Jakarta Sans',sans-serif;
   font-size:20px;font-weight:700;
   letter-spacing:-0.5px;
 }
@@ -668,7 +669,7 @@ nav.scrolled{background:rgba(5,5,5,0.95);border-color:var(--border2)}
 }
 .book-left{}
 .book-h2{
-  font-family:'Syne',sans-serif;
+  font-family:'Plus Jakarta Sans',sans-serif;
   font-size:clamp(40px,5vw,72px);
   font-weight:800;letter-spacing:-3px;line-height:0.97;
   margin-bottom:24px;
@@ -701,7 +702,7 @@ nav.scrolled{background:rgba(5,5,5,0.95);border-color:var(--border2)}
   text-transform:uppercase;color:var(--gold);margin-bottom:8px;
 }
 .book-card-title{
-  font-family:'Syne',sans-serif;font-size:28px;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:28px;
   font-weight:800;letter-spacing:-1px;margin-bottom:8px;
 }
 .book-card-sub{font-size:14px;color:var(--muted2);line-height:1.6;margin-bottom:36px}
@@ -744,7 +745,7 @@ footer{
   display:flex;justify-content:space-between;align-items:center;
   max-width:100%;
 }
-.footer-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:16px}
+.footer-logo{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:16px}
 .footer-logo span{color:var(--gold)}
 .footer-mid{font-size:12px;color:var(--muted)}
 .footer-links{display:flex;gap:24px}
@@ -803,7 +804,6 @@ footer{
   <ul class="nav-center" style="justify-content:flex-start">
     <li><a href="#testimonials">Reviews</a></li>
     <li><a href="#features">Services</a></li>
-    <li><a href="#casestudy">Results</a></li>
     <li><a href="#videos">Portfolio</a></li>
   </ul>
   <div class="nav-zou" id="nav-zou" onclick="scrollTo(0,0)">
@@ -825,13 +825,13 @@ footer{
   <div class="hero-left">
     <div class="hero-eyebrow">
       <div class="hero-eyebrow-line"></div>
-      <span class="hero-eyebrow-text">Cinematic Video Editor</span>
+      <span class="hero-eyebrow-text">Video That Sells</span>
     </div>
     <h1 class="hero-h1">
-      I Help Creators<br>
-      <span class="line3">Turn Views Into Revenue.</span>
+      Most Videos Get Views.<br>
+      <span class="line3">Yours Will Get Sales.</span>
     </h1>
-    <p class="hero-sub">Cinematic editing, storytelling and short-form content engineered to grow your audience and convert viewers into customers.</p>
+    <p class="hero-sub">I edit videos for course sellers, SaaS companies, and brands who are tired of posting and getting nothing back.</p>
     <div class="hero-btns">
       <button class="btn-gold" onclick="document.getElementById('videos').scrollIntoView({behavior:'smooth'})">
         <svg width="14" height="14" viewBox="0 0 14 14"><polygon points="3,1 13,7 3,13" fill="currentColor"/></svg>
@@ -845,15 +845,15 @@ footer{
     <div class="hero-stats">
       <div>
         <div class="hero-stat-num">4.7M+</div>
-        <div class="hero-stat-label">Views Generated</div>
+        <div class="hero-stat-label">Video Views Driven</div>
       </div>
       <div>
         <div class="hero-stat-num">$1.2M</div>
-        <div class="hero-stat-label">Revenue Driven</div>
+        <div class="hero-stat-label">Revenue From Video</div>
       </div>
       <div>
         <div class="hero-stat-num">38+</div>
-        <div class="hero-stat-label">Creators Scaled</div>
+        <div class="hero-stat-label">Brands & Courses Scaled</div>
       </div>
     </div>
   </div>
@@ -896,42 +896,42 @@ footer{
   <div class="t-header sa">
     <div class="t-header-left">
       <div class="section-eyebrow"><div class="section-eyebrow-line"></div><span class="section-eyebrow-text">Client Results</span></div>
-      <h2 class="section-h2">What Creators<br>Are Saying</h2>
+      <h2 class="section-h2">Don't Take<br>My Word For It</h2>
     </div>
     <div class="t-header-right">
-      <p>Real results from real creators who trusted their content to a completely different level of editing quality.</p>
+      <p>Real numbers. Real people. Course sellers, coaches, and brands who trusted their video to someone who treats it like a product — not a project.</p>
     </div>
   </div>
   <div class="tgrid">
     <div class="tcard sa" style="transition-delay:0.05s">
       <div class="stars">★★★★★</div>
-      <p class="tquote">Alex completely transformed how my content performs. Watch time doubled in the first month, and my sponsorship rates went up 3x. This isn't just editing — it's growth strategy through video.</p>
+      <p class="tquote">Watch time doubled in month one. Sponsorships tripled. I used to think editing was just cutting clips — now I know it was the reason my channel wasn't growing.</p>
       <div class="tbottom">
         <div class="tauthor">
           <div class="tavatar" style="background:linear-gradient(135deg,#FACC15,#F59E0B)">MK</div>
-          <div><div class="tname">Marcus Klein</div><div class="trole">Lifestyle · 890K Subs</div></div>
+          <div><div class="tname">Marcus Klein</div><div class="trole">YouTube · 890K Subscribers</div></div>
         </div>
         <div class="tresult">+320% Watch Time</div>
       </div>
     </div>
     <div class="tcard sa" style="transition-delay:0.12s">
       <div class="stars">★★★★★</div>
-      <p class="tquote">Two of my reels went viral after Alex reedited them. My agency noticed and now I'm booking 5-figure brand deals consistently. The storytelling is on another level.</p>
+      <p class="tquote">Two videos went viral. My agency came to me. I went from chasing brand deals to turning them down. The edit was the difference — nothing else changed.</p>
       <div class="tbottom">
         <div class="tauthor">
           <div class="tavatar" style="background:linear-gradient(135deg,#a78bfa,#7c3aed)">SR</div>
-          <div><div class="tname">Sofia Reyes</div><div class="trole">Fashion · 2.1M Followers</div></div>
+          <div><div class="tname">Sofia Reyes</div><div class="trole">Instagram · 2.1M Followers</div></div>
         </div>
-        <div class="tresult">$80K Brand Deals</div>
+        <div class="tresult">$80K in Brand Deals</div>
       </div>
     </div>
     <div class="tcard sa" style="transition-delay:0.19s">
       <div class="stars">★★★★★</div>
-      <p class="tquote">Our course launch video generated $240K in revenue in 72 hours. The emotional hooks and pacing are at a level I've never experienced from any other editor.</p>
+      <p class="tquote">$240K in 72 hours from one launch video. My last editor gave me something fine. This gave me something that sold. Big difference.</p>
       <div class="tbottom">
         <div class="tauthor">
           <div class="tavatar" style="background:linear-gradient(135deg,#34d399,#059669)">JT</div>
-          <div><div class="tname">James Theron</div><div class="trole">Business Coach · 450K</div></div>
+          <div><div class="tname">James Theron</div><div class="trole">Online Coach · 450K Community</div></div>
         </div>
         <div class="tresult">$240K Launch</div>
       </div>
@@ -943,99 +943,58 @@ footer{
 <section id="features">
   <div class="feat-header sa">
     <div class="section-eyebrow"><div class="section-eyebrow-line"></div><span class="section-eyebrow-text">What I Do</span></div>
-    <h2 class="section-h2">Every Frame.<br>Engineered to Convert.</h2>
+    <h2 class="section-h2">What I Do.<br>And Why It Works.</h2>
   </div>
   <div class="feat-grid">
     <div class="feat-card large highlight sa">
-      <div class="feat-icon">🎬</div>
+      <div class="feat-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FACC15" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M10 8l5 3-5 3V8z" fill="#FACC15" stroke="none"/></svg>
+      </div>
       <div class="feat-num">01</div>
-      <div class="feat-title">Cinematic Long-Form Editing</div>
-      <div class="feat-desc">Full YouTube video production — from raw footage to publish-ready. Color grading, motion graphics, sound design, thumbnail direction, and strategic storytelling that keeps viewers watching past the 5-minute mark.</div>
+      <div class="feat-title">Long-Form Video Editing</div>
+      <div class="feat-desc">Raw footage in. Publish-ready out. Color, sound, motion graphics — built to keep people watching past 5 minutes.</div>
       <div class="feat-tag">YouTube · Podcast · Documentary</div>
     </div>
     <div class="feat-card sa" style="transition-delay:0.08s">
-      <div class="feat-icon">⚡</div>
+      <div class="feat-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FACC15" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="3"/><path d="M11 6h2M12 18v.01"/><path d="M10 10l3 2-3 2v-4z" fill="#FACC15" stroke="none"/></svg>
+      </div>
       <div class="feat-num">02</div>
-      <div class="feat-title">Short-Form Reels</div>
-      <div class="feat-desc">Instagram, TikTok and YouTube Shorts engineered for maximum reach. Hook-first structure with pattern interrupts every 7 seconds.</div>
+      <div class="feat-title">Short-Form That Stops the Scroll</div>
+      <div class="feat-desc">Reels, TikToks, Shorts. Hooks in 2 seconds. Holds to the end. Most short-form dies in the first 3. Mine doesn't.</div>
       <div class="feat-tag">Reels · TikTok · Shorts</div>
     </div>
     <div class="feat-card sa" style="transition-delay:0.04s">
-      <div class="feat-icon">🚀</div>
+      <div class="feat-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FACC15" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
       <div class="feat-num">03</div>
-      <div class="feat-title">VSL & Sales Videos</div>
-      <div class="feat-desc">High-converting video sales letters that move viewers from watch to buy. Emotional arc, proof sequencing, and CTA engineering.</div>
+      <div class="feat-title">Sales Videos That Close</div>
+      <div class="feat-desc">VSLs, launch videos, demos. Edited so people feel something — then act. If it doesn't sell, it's not doing its job.</div>
       <div class="feat-tag">Courses · Coaching · SaaS</div>
     </div>
     <div class="feat-card sa" style="transition-delay:0.12s">
-      <div class="feat-icon">🎨</div>
+      <div class="feat-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FACC15" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/><path d="M12 2a10 10 0 0 1 0 20" stroke="#FACC15" stroke-opacity="0.3"/></svg>
+      </div>
       <div class="feat-num">04</div>
-      <div class="feat-title">Brand Identity in Motion</div>
-      <div class="feat-desc">Custom intros, lower thirds, transitions and branded templates that make your channel immediately recognizable.</div>
+      <div class="feat-title">Brand Look & Feel</div>
+      <div class="feat-desc">Intros, lower thirds, transitions, templates. Viewers know it's you before they see your face.</div>
       <div class="feat-tag">Motion Graphics · Templates</div>
     </div>
     <div class="feat-card large sa" style="transition-delay:0.16s">
-      <div class="feat-icon">📊</div>
+      <div class="feat-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FACC15" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><path d="M2 20h20"/></svg>
+      </div>
       <div class="feat-num">05</div>
-      <div class="feat-title">Retention-Optimized Storytelling</div>
-      <div class="feat-desc">I study your analytics and reverse-engineer your retention curves. Every edit decision is made with the algorithm in mind — pacing, hook structures, and pattern interrupts designed to signal quality content to YouTube, Instagram and TikTok simultaneously.</div>
+      <div class="feat-title">Editing Based on Your Data</div>
+      <div class="feat-desc">I look at your retention graphs. Find where people drop off. Fix it. Every cut is chosen for a reason — not a feeling.</div>
       <div class="feat-tag">Analytics-Driven · Data-Backed</div>
     </div>
   </div>
 </section>
 
-<!-- ===== CASE STUDY ===== -->
-<section id="casestudy">
-  <div class="section-eyebrow sa"><div class="section-eyebrow-line"></div><span class="section-eyebrow-text">Deep Dive</span></div>
-  <h2 class="section-h2 sa" style="margin-bottom:56px">Case Study</h2>
-  <div class="cs-wrap">
-    <div class="cs-left sa-left">
-      <div class="cs-left-card">
-        <div class="cs-vis">
-          <div id="cs-particles"></div>
-          <div class="cs-badge-wrap"><div class="cs-badge">Featured · 2024</div></div>
-          <div class="cs-vis-text">TF</div>
-        </div>
-        <div class="cs-info">
-          <div class="cs-name">TechFounder Media</div>
-          <div class="cs-type">B2B SaaS · YouTube Channel · 90-Day Campaign</div>
-        </div>
-      </div>
-    </div>
-    <div class="cs-right sa-right">
-      <div class="cs-metrics">
-        <div class="cs-metric">
-          <div class="cs-metric-val" data-target="4.7" data-suffix="M">0</div>
-          <div class="cs-metric-label">Views Generated</div>
-        </div>
-        <div class="cs-metric">
-          <div class="cs-metric-val" data-target="380" data-suffix="%">0%</div>
-          <div class="cs-metric-label">Subscriber Growth</div>
-        </div>
-        <div class="cs-metric">
-          <div class="cs-metric-val" data-target="73" data-suffix="%">0%</div>
-          <div class="cs-metric-label">Retention Improvement</div>
-        </div>
-        <div class="cs-metric">
-          <div class="cs-metric-val" data-prefix="$" data-target="1.2" data-suffix="M">$0</div>
-          <div class="cs-metric-label">Revenue Impact</div>
-        </div>
-      </div>
-      <div class="cs-block">
-        <div class="cs-block-label">The Problem</div>
-        <div class="cs-block-text">TechFounder had great product knowledge but zero retention. Videos dropped at the 30-second mark. Despite strong SEO, the algorithm penalized them. Revenue from sponsorships had stalled at $8K/month for 6 consecutive months.</div>
-      </div>
-      <div class="cs-block">
-        <div class="cs-block-label">The Solution</div>
-        <div class="cs-block-text">I rebuilt their entire content architecture. Rewrote hooks, restructured narrative flow with cinematic storytelling, introduced pattern interrupts every 7 seconds, and created a visual identity with custom motion graphics, color grading and branded sound design.</div>
-      </div>
-      <div class="cs-block">
-        <div class="cs-block-label">The Outcome</div>
-        <div class="cs-block-text">Within 90 days: 4 videos crossed 1M views, subscribers grew from 48K → 230K, average watch time went from 1:20 → 6:40, and their main sponsor doubled the deal value. The channel became a recognized brand in B2B SaaS.</div>
-      </div>
-    </div>
-  </div>
-</section>
+<!-- Case study removed -->
 
 <!-- ===== VIDEOS ===== -->
 <section id="videos" style="position:relative;z-index:2;background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:100px 48px">
@@ -1043,19 +1002,19 @@ footer{
     <!-- TEXT LEFT -->
     <div class="reveal">
       <div class="section-eyebrow" style="margin-bottom:16px"><div class="section-eyebrow-line"></div><span class="section-eyebrow-text">Portfolio</span></div>
-      <h2 class="section-h2" style="margin-bottom:40px">Short-Form<br><span style="color:var(--gold)">That Converts</span></h2>
+      <h2 class="section-h2" style="margin-bottom:40px">See It<br><span style="color:var(--gold)">For Yourself</span></h2>
       <div style="display:flex;flex-direction:column;gap:28px">
         <div style="padding-bottom:28px;border-bottom:1px solid var(--border)">
-          <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:6px">Hook Engineering</div>
-          <div style="font-size:14px;color:var(--muted2);line-height:1.7;font-weight:300">First 3 seconds crafted to stop the scroll — pattern interrupt, curiosity gap, visual dissonance.</div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:700;margin-bottom:6px">The First 3 Seconds Win or Lose</div>
+          <div style="font-size:14px;color:var(--muted2);line-height:1.7;font-weight:300">Most people scroll past. The hook is the only thing that stops them. I build it so they can't look away.</div>
         </div>
         <div style="padding-bottom:28px;border-bottom:1px solid var(--border)">
-          <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:6px">Narrative Architecture</div>
-          <div style="font-size:14px;color:var(--muted2);line-height:1.7;font-weight:300">Story structure borrowed from cinema — setup, tension, payoff — applied to 60-second content.</div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:700;margin-bottom:6px">Story First. Always.</div>
+          <div style="font-size:14px;color:var(--muted2);line-height:1.7;font-weight:300">People don't share clips. They share stories. Every video I edit has a clear beginning, middle, and payoff — even if it's 30 seconds long.</div>
         </div>
         <div>
-          <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:6px">Color & Sound Design</div>
-          <div style="font-size:14px;color:var(--muted2);line-height:1.7;font-weight:300">Cinematic grade + custom audio layering that subconsciously elevates perceived production value.</div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:700;margin-bottom:6px">Looks and Sounds Like Money</div>
+          <div style="font-size:14px;color:var(--muted2);line-height:1.7;font-weight:300">Color grading and sound design that makes you look like you have a full production team — even if it's just you.</div>
         </div>
       </div>
     </div>
@@ -1129,44 +1088,61 @@ footer{
 </section>
 
 <!-- ===== BOOK CALL ===== -->
-<section id="book">
-  <div class="book-inner">
-    <div class="book-grid">
-      <div class="book-left sa-left">
-        <div class="section-eyebrow"><div class="section-eyebrow-line"></div><span class="section-eyebrow-text">Book A Call</span></div>
-        <h2 class="book-h2">Let's Create<br>Content<br>Together<br><em>Remember.</em></h2>
-        <p class="book-sub">Book a quick strategy call. We'll audit your content, find the biggest growth opportunities, and map out a 90-day plan together.</p>
-        <div class="book-perks">
-          <div class="book-perk"><div class="book-perk-icon">⚡</div>30-minute strategy session</div>
-          <div class="book-perk"><div class="book-perk-icon">🎯</div>Full content audit included</div>
-          <div class="book-perk"><div class="book-perk-icon">🗓️</div>90-day roadmap delivered</div>
-          <div class="book-perk"><div class="book-perk-icon">🔒</div>No commitment required</div>
+<section id="book" style="position:relative;z-index:2;padding:120px 48px">
+  <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start">
+
+    <!-- LEFT — BIG TITLE -->
+    <div class="sa-left">
+      <div class="section-eyebrow" style="margin-bottom:24px"><div class="section-eyebrow-line"></div><span class="section-eyebrow-text">Free Call</span></div>
+      <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(48px,5.5vw,80px);font-weight:800;letter-spacing:-3px;line-height:1;margin-bottom:28px">
+        Your Video<br>Could Be<br><span style="color:var(--gold)">Doing More.</span>
+      </h2>
+      <p style="font-size:16px;color:var(--muted2);line-height:1.75;font-weight:300;margin-bottom:40px;max-width:400px">It's a 30-minute call. No pitch. No pressure. I'll look at what you have and tell you exactly what's holding your video back.</p>
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div class="book-perk">
+          <div class="book-perk-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FACC15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          30 minutes. Free. No fluff.
         </div>
-      </div>
-      <div class="book-right sa-right">
-        <div class="book-card">
-          <div class="book-card-label">Free Strategy Call</div>
-          <div class="book-card-title">Choose Your Time</div>
-          <div class="book-card-sub">Limited slots available each week — pick a time that works for you.</div>
-          <div class="book-slots">
-            <div class="book-slot">
-              <div><div class="book-slot-day">Tuesday, July 8</div><div class="book-slot-time">10:00 AM — 10:30 AM EST</div></div>
-              <div class="book-slot-pick">Select</div>
-            </div>
-            <div class="book-slot">
-              <div><div class="book-slot-day">Wednesday, July 9</div><div class="book-slot-time">2:00 PM — 2:30 PM EST</div></div>
-              <div class="book-slot-pick">Select</div>
-            </div>
-            <div class="book-slot">
-              <div><div class="book-slot-day">Friday, July 11</div><div class="book-slot-time">11:00 AM — 11:30 AM EST</div></div>
-              <div class="book-slot-pick">Select</div>
-            </div>
-          </div>
-          <button class="book-cta" onclick="window.open('https://calendly.com','_blank')">Schedule My Free Call →</button>
-          <div class="book-note">No spam. No sales pressure. Just strategy.</div>
+        <div class="book-perk">
+          <div class="book-perk-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FACC15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
+          I'll review your current video
+        </div>
+        <div class="book-perk">
+          <div class="book-perk-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FACC15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+          You'll leave with a clear action plan
+        </div>
+        <div class="book-perk">
+          <div class="book-perk-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FACC15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          Work together or don't — your call
         </div>
       </div>
     </div>
+
+    <!-- RIGHT — CARD -->
+    <div class="sa-right">
+      <div class="book-card">
+        <div class="book-card-label">Free Strategy Call</div>
+        <div class="book-card-title">Pick a Time</div>
+        <div class="book-card-sub">A few spots open each week. First come, first served.</div>
+        <div class="book-slots">
+          <div class="book-slot" onclick="window.open('https://calendly.com','_blank')" style="cursor:pointer">
+            <div><div class="book-slot-day">Monday</div><div class="book-slot-time">10:00 AM — 10:30 AM EST</div></div>
+            <div class="book-slot-pick">Select</div>
+          </div>
+          <div class="book-slot" onclick="window.open('https://calendly.com','_blank')" style="cursor:pointer">
+            <div><div class="book-slot-day">Wednesday</div><div class="book-slot-time">2:00 PM — 2:30 PM EST</div></div>
+            <div class="book-slot-pick">Select</div>
+          </div>
+          <div class="book-slot" onclick="window.open('https://calendly.com','_blank')" style="cursor:pointer">
+            <div><div class="book-slot-day">Friday</div><div class="book-slot-time">11:00 AM — 11:30 AM EST</div></div>
+            <div class="book-slot-pick">Select</div>
+          </div>
+        </div>
+        <button class="book-cta" onclick="window.open('https://calendly.com','_blank')">Book My Free Call →</button>
+        <div class="book-note">No spam. No hard sell. Just an honest conversation.</div>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -1389,10 +1365,11 @@ function goVimeo(n){
 
 document.getElementById('vbprev').onclick=()=>goVimeo(vCur-1);
 document.getElementById('vbnext').onclick=()=>goVimeo(vCur+1);
+
+// Touch swipe
 let vty=0;
 vPhone.addEventListener('touchstart',e=>vty=e.touches[0].clientY,{passive:true});
 vPhone.addEventListener('touchend',e=>{const d=vty-e.changedTouches[0].clientY;if(Math.abs(d)>35)goVimeo(vCur+(d>0?1:-1))},{passive:true});
-vPhone.addEventListener('wheel',e=>{e.preventDefault();goVimeo(vCur+(e.deltaY>0?1:-1))},{passive:false});
 
 // ===== NAV SCROLL =====
 const nav=document.getElementById('nav');
