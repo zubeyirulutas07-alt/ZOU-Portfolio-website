@@ -1275,28 +1275,10 @@ footer{
       </div>
     </div>
 
-    <!-- RIGHT — CARD -->
+    <!-- RIGHT — CALENDLY EMBED -->
     <div class="sa-right">
-      <div class="book-card">
-        <div class="book-card-label">Free Strategy Call</div>
-        <div class="book-card-title">Pick a Time</div>
-        <div class="book-card-sub">A few spots open each week. First come, first served.</div>
-        <div class="book-slots">
-          <div class="book-slot" onclick="window.open('https://calendly.com','_blank')" style="cursor:pointer">
-            <div><div class="book-slot-day">Monday</div><div class="book-slot-time">10:00 AM — 10:30 AM EST</div></div>
-            <div class="book-slot-pick">Select</div>
-          </div>
-          <div class="book-slot" onclick="window.open('https://calendly.com','_blank')" style="cursor:pointer">
-            <div><div class="book-slot-day">Wednesday</div><div class="book-slot-time">2:00 PM — 2:30 PM EST</div></div>
-            <div class="book-slot-pick">Select</div>
-          </div>
-          <div class="book-slot" onclick="window.open('https://calendly.com','_blank')" style="cursor:pointer">
-            <div><div class="book-slot-day">Friday</div><div class="book-slot-time">11:00 AM — 11:30 AM EST</div></div>
-            <div class="book-slot-pick">Select</div>
-          </div>
-        </div>
-        <button class="book-cta" onclick="window.open('https://calendly.com','_blank')">Book My Free Call →</button>
-        <div class="book-note">No spam. No hard sell. Just an honest conversation.</div>
+      <div class="book-card" style="padding:0;overflow:hidden;min-height:660px">
+        <div class="calendly-inline-widget" data-url="https://calendly.com/zubeyir-ulutas07/30min?hide_gdpr_banner=1&background_color=0a0a0a&text_color=ffffff&primary_color=facc15" style="min-width:300px;width:100%;height:660px"></div>
       </div>
     </div>
 
@@ -1676,5 +1658,6 @@ document.querySelectorAll('.btn-gold,.btn-ghost,.nav-cta,.book-cta').forEach(btn
   btn.addEventListener('mouseleave',()=>btn.style.transform='');
 });
 </script>
+<script src="https://assets.calendly.com/assets/external/widget.js" async></script>
 </body>
 </html>
