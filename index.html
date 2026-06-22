@@ -942,13 +942,11 @@ footer{
     <div class="proof-item"><span class="proof-num">300+</span><span class="proof-label">Videos Delivered</span></div>
     <div class="proof-item"><span class="proof-num">5+</span><span class="proof-label">Years Experience</span></div>
     <div class="proof-item"><span class="proof-num">100+</span><span class="proof-label">Brands Served</span></div>
-    <div class="proof-item"><span class="proof-num">Multi-Niche</span><span class="proof-label">E-Com · Courses · SaaS</span></div>
     <div class="proof-item"><span class="proof-num">24h</span><span class="proof-label">Fast Turnaround</span></div>
     <div class="proof-item"><span class="proof-num">100%</span><span class="proof-label">Client Satisfaction</span></div>
     <div class="proof-item"><span class="proof-num">300+</span><span class="proof-label">Videos Delivered</span></div>
     <div class="proof-item"><span class="proof-num">5+</span><span class="proof-label">Years Experience</span></div>
     <div class="proof-item"><span class="proof-num">100+</span><span class="proof-label">Brands Served</span></div>
-    <div class="proof-item"><span class="proof-num">Multi-Niche</span><span class="proof-label">E-Com · Courses · SaaS</span></div>
     <div class="proof-item"><span class="proof-num">24h</span><span class="proof-label">Fast Turnaround</span></div>
     <div class="proof-item"><span class="proof-num">100%</span><span class="proof-label">Client Satisfaction</span></div>
   </div>
@@ -1227,6 +1225,26 @@ footer{
                   style="position:absolute;inset:0;width:100%;height:100%;border:none"
                   allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
               </div>
+              <div style="width:100%;height:620px;flex-shrink:0;position:relative;background:#000">
+                <iframe id="vf3" src="https://player.vimeo.com/video/1203432513?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
+                  style="position:absolute;inset:0;width:100%;height:100%;border:none"
+                  allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
+              </div>
+              <div style="width:100%;height:620px;flex-shrink:0;position:relative;background:#000">
+                <iframe id="vf4" src="https://player.vimeo.com/video/1203432452?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
+                  style="position:absolute;inset:0;width:100%;height:100%;border:none"
+                  allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
+              </div>
+              <div style="width:100%;height:620px;flex-shrink:0;position:relative;background:#000">
+                <iframe id="vf5" src="https://player.vimeo.com/video/1203432951?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
+                  style="position:absolute;inset:0;width:100%;height:100%;border:none"
+                  allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
+              </div>
+              <div style="width:100%;height:620px;flex-shrink:0;position:relative;background:#000">
+                <iframe id="vf6" src="https://player.vimeo.com/video/1203433014?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
+                  style="position:absolute;inset:0;width:100%;height:100%;border:none"
+                  allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
+              </div>
             </div>
           </div>
           <!-- Bottom home indicator -->
@@ -1263,6 +1281,10 @@ footer{
           <div id="vd0" style="width:4px;height:16px;border-radius:3px;background:var(--gold);transition:all 0.3s"></div>
           <div id="vd1" style="width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s"></div>
           <div id="vd2" style="width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s"></div>
+          <div id="vd3" style="width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s"></div>
+          <div id="vd4" style="width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s"></div>
+          <div id="vd5" style="width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s"></div>
+          <div id="vd6" style="width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s"></div>
         </div>
         <div id="vbnext" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:#A1A1AA;user-select:none">↓</div>
       </div>
@@ -1464,10 +1486,14 @@ const vGlows = [
   'radial-gradient(ellipse,rgba(250,204,21,0.25),transparent 70%)',
   'radial-gradient(ellipse,rgba(167,139,250,0.25),transparent 70%)',
   'radial-gradient(ellipse,rgba(52,211,153,0.25),transparent 70%)',
+  'radial-gradient(ellipse,rgba(251,146,60,0.25),transparent 70%)',
+  'radial-gradient(ellipse,rgba(56,189,248,0.25),transparent 70%)',
+  'radial-gradient(ellipse,rgba(232,121,249,0.25),transparent 70%)',
+  'radial-gradient(ellipse,rgba(250,204,21,0.25),transparent 70%)',
 ];
-let vCur = 0; const vTot = 3;
-const mutedState = [true, true, true];
-const volState = [0, 0, 0];
+let vCur = 0; const vTot = 7;
+const mutedState = [true, true, true, true, true, true, true];
+const volState = [0, 0, 0, 0, 0, 0, 0];
 
 // Load Vimeo Player API
 const vimeoScript = document.createElement('script');
@@ -1480,6 +1506,10 @@ vimeoScript.onload = () => {
     new Vimeo.Player(document.getElementById('vf0')),
     new Vimeo.Player(document.getElementById('vf1')),
     new Vimeo.Player(document.getElementById('vf2')),
+    new Vimeo.Player(document.getElementById('vf3')),
+    new Vimeo.Player(document.getElementById('vf4')),
+    new Vimeo.Player(document.getElementById('vf5')),
+    new Vimeo.Player(document.getElementById('vf6')),
   ];
   players[0].play();
   players[0].setMuted(true);
