@@ -907,16 +907,16 @@ footer{
     </div>
     <div class="hero-stats">
       <div>
-        <div class="hero-stat-num">4.7M+</div>
-        <div class="hero-stat-label">Video Views Driven</div>
+        <div class="hero-stat-num">300+</div>
+        <div class="hero-stat-label">Videos Delivered</div>
       </div>
       <div>
-        <div class="hero-stat-num">$1.2M</div>
-        <div class="hero-stat-label">Revenue From Video</div>
+        <div class="hero-stat-num">5+</div>
+        <div class="hero-stat-label">Years Experience</div>
       </div>
       <div>
-        <div class="hero-stat-num">38+</div>
-        <div class="hero-stat-label">Brands & Courses Scaled</div>
+        <div class="hero-stat-num">100+</div>
+        <div class="hero-stat-label">Brands Served</div>
       </div>
     </div>
   </div>
@@ -939,18 +939,18 @@ footer{
 <!-- ===== SOCIAL PROOF TICKER ===== -->
 <div id="proof">
   <div class="proof-track" id="ticker">
-    <div class="proof-item"><span class="proof-num">4.7M+</span><span class="proof-label">Views Generated</span></div>
-    <div class="proof-item"><span class="proof-num">$1.2M</span><span class="proof-label">Revenue Impact</span></div>
-    <div class="proof-item"><span class="proof-num">38+</span><span class="proof-label">Creators Scaled</span></div>
-    <div class="proof-item"><span class="proof-num">380%</span><span class="proof-label">Avg Subscriber Growth</span></div>
-    <div class="proof-item"><span class="proof-num">73%</span><span class="proof-label">Retention Lift</span></div>
-    <div class="proof-item"><span class="proof-num">5★</span><span class="proof-label">Client Rating</span></div>
-    <div class="proof-item"><span class="proof-num">4.7M+</span><span class="proof-label">Views Generated</span></div>
-    <div class="proof-item"><span class="proof-num">$1.2M</span><span class="proof-label">Revenue Impact</span></div>
-    <div class="proof-item"><span class="proof-num">38+</span><span class="proof-label">Creators Scaled</span></div>
-    <div class="proof-item"><span class="proof-num">380%</span><span class="proof-label">Avg Subscriber Growth</span></div>
-    <div class="proof-item"><span class="proof-num">73%</span><span class="proof-label">Retention Lift</span></div>
-    <div class="proof-item"><span class="proof-num">5★</span><span class="proof-label">Client Rating</span></div>
+    <div class="proof-item"><span class="proof-num">300+</span><span class="proof-label">Videos Delivered</span></div>
+    <div class="proof-item"><span class="proof-num">5+</span><span class="proof-label">Years Experience</span></div>
+    <div class="proof-item"><span class="proof-num">100+</span><span class="proof-label">Brands Served</span></div>
+    <div class="proof-item"><span class="proof-num">Multi-Niche</span><span class="proof-label">E-Com · Courses · SaaS</span></div>
+    <div class="proof-item"><span class="proof-num">24h</span><span class="proof-label">Fast Turnaround</span></div>
+    <div class="proof-item"><span class="proof-num">100%</span><span class="proof-label">Client Satisfaction</span></div>
+    <div class="proof-item"><span class="proof-num">300+</span><span class="proof-label">Videos Delivered</span></div>
+    <div class="proof-item"><span class="proof-num">5+</span><span class="proof-label">Years Experience</span></div>
+    <div class="proof-item"><span class="proof-num">100+</span><span class="proof-label">Brands Served</span></div>
+    <div class="proof-item"><span class="proof-num">Multi-Niche</span><span class="proof-label">E-Com · Courses · SaaS</span></div>
+    <div class="proof-item"><span class="proof-num">24h</span><span class="proof-label">Fast Turnaround</span></div>
+    <div class="proof-item"><span class="proof-num">100%</span><span class="proof-label">Client Satisfaction</span></div>
   </div>
 </div>
 
@@ -1603,6 +1603,88 @@ const io=new IntersectionObserver(entries=>{
   });
 },{threshold:0.12});
 document.querySelectorAll('.sa,.sa-left,.sa-right,.reveal').forEach(el=>io.observe(el));
+
+// ===== COUNT-UP ANIMATION =====
+(function(){
+  // Parse a string like "$240K", "300+", "100%", "24h", "+320%", "5+"
+  function parseNum(txt){
+    txt=txt.trim();
+    const m=txt.match(/^([^0-9]*)([0-9]+(?:\.[0-9]+)?)(.*)$/);
+    if(!m) return null;
+    return {prefix:m[1], value:parseFloat(m[2]), suffix:m[3], decimals:m[2].includes('.')?m[2].split('.')[1].length:0};
+  }
+
+  // easeOutExpo for satisfying deceleration
+  function ease(t){return t>=1?1:1-Math.pow(2,-10*t)}
+
+  function animateCount(el,parsed,duration){
+    const start=performance.now();
+    const {prefix,value,suffix,decimals}=parsed;
+    function tick(now){
+      const t=Math.min((now-start)/duration,1);
+      const cur=ease(t)*value;
+      el.textContent=prefix+(decimals?cur.toFixed(decimals):Math.round(cur))+suffix;
+      if(t<1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  // Gather all countable elements
+  const selectors='.hero-stat-num, .proof-num, .tresult, .cs-metric-val, .vfc-val';
+  const els=document.querySelectorAll(selectors);
+  const countMap=new Map();
+
+  els.forEach(el=>{
+    const txt=el.textContent;
+    const parsed=parseNum(txt);
+    if(!parsed) return; // skip "Multi-Niche" etc
+    countMap.set(el,{parsed,original:txt});
+    // set to 0 initially (only hero stats — ticker keeps original since it's always visible scrolling)
+    if(el.classList.contains('hero-stat-num') || el.classList.contains('cs-metric-val') || el.classList.contains('tresult')){
+      el.textContent=parsed.prefix+'0'+parsed.suffix;
+    }
+  });
+
+  // Stagger: hero stats get slight delays
+  const heroNums=document.querySelectorAll('.hero-stat-num');
+
+  const cntObs=new IntersectionObserver((entries)=>{
+    entries.forEach(ent=>{
+      if(!ent.isIntersecting) return;
+      const el=ent.target;
+      const data=countMap.get(el);
+      if(!data || data.done) return;
+      data.done=true;
+      cntObs.unobserve(el);
+
+      // stagger for hero stats
+      let delay=0;
+      const idx=[...heroNums].indexOf(el);
+      if(idx>-1) delay=idx*180;
+
+      // duration based on value magnitude
+      const dur=data.parsed.value>50?2200:1600;
+
+      setTimeout(()=>animateCount(el,data.parsed,dur),delay);
+    });
+  },{threshold:0.3});
+
+  countMap.forEach((_,el)=>cntObs.observe(el));
+
+  // Also animate ticker proof-nums when they first appear
+  // (they start with correct values since ticker is always moving)
+  // We'll do a one-time count on page load for the ticker after a short delay
+  setTimeout(()=>{
+    document.querySelectorAll('.proof-num').forEach(el=>{
+      const data=countMap.get(el);
+      if(data && !data.done){
+        data.done=true;
+        cntObs.unobserve(el);
+        animateCount(el,data.parsed,1800);
+      }
+    });
+  },800);
+})();
 
 // ===== MAGNETIC BUTTONS =====
 document.querySelectorAll('.btn-gold,.btn-ghost,.nav-cta,.book-cta').forEach(btn=>{
