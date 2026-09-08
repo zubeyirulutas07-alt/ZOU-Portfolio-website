@@ -1,0 +1,67 @@
+@use "./variables.scss" as *;
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: $bg;
+  color: $text;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 12px;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+code,
+input,
+select,
+textarea,
+button {
+  font-family: $mono;
+}
+
+button {
+  cursor: pointer;
+  background: $panel2;
+  border: 1px solid $border-light;
+  color: $text;
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 11px;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+button:hover {
+  background: $accent-dim;
+  border-color: $accent;
+}
+
+button:active {
+  filter: brightness(0.9);
+}
+
+button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: $bg;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $border-light;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: $accent-dim;
+}
