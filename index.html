@@ -1308,9 +1308,11 @@ footer{
                   allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
               </div>
               <div style="width:100%;height:620px;flex-shrink:0;position:relative;background:#000">
-                <iframe id="vf7" src="https://www.youtube.com/embed/AiwkLjbZM_Q?autoplay=0&loop=1&mute=0&controls=0&modestbranding=1&rel=0&playsinline=1&playlist=AiwkLjbZM_Q&cc_load_policy=0&iv_load_policy=3"
+                <iframe id="vf7" src="https://www.youtube.com/embed/AiwkLjbZM_Q?autoplay=0&loop=1&mute=0&controls=0&modestbranding=1&rel=0&playsinline=1&playlist=AiwkLjbZM_Q&cc_load_policy=0&iv_load_policy=3&hl=tr"
                   style="position:absolute;inset:0;width:100%;height:100%;border:none"
                   allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
+                <!-- Block YouTube caption area -->
+                <div style="position:absolute;bottom:0;left:0;right:0;height:80px;background:#000;z-index:5;pointer-events:none"></div>
               </div>
             </div>
           </div>
@@ -1638,7 +1640,7 @@ function goVimeo(n){
       const ytFrame = document.getElementById('vf'+vCur);
       if(ytFrame) {
         const base = ytFrame.src.split('?')[0];
-        ytFrame.src = base + '?autoplay=1&loop=1&mute=0&controls=0&modestbranding=1&rel=0&playsinline=1&playlist=AiwkLjbZM_Q&cc_load_policy=0&iv_load_policy=3';
+        ytFrame.src = base + '?autoplay=1&loop=1&mute=0&controls=0&modestbranding=1&rel=0&playsinline=1&playlist=AiwkLjbZM_Q&cc_load_policy=0&iv_load_policy=3&hl=tr';
       }
     }
     document.getElementById('mute-btn').textContent = currentMuted ? '🔇' : '🔊';
