@@ -1263,141 +1263,156 @@ footer{
       </div>
     </div>
     <!-- PHONE RIGHT -->
-    <!-- TAB BUTTONS -->
-    <div id="phone-tab-btns" style="display:flex;justify-content:center;gap:0;margin-bottom:24px;border-radius:12px;overflow:hidden;border:1px solid rgba(250,204,21,0.3);width:fit-content;margin-left:auto;margin-right:auto">
-      <button id="tab-mkt" onclick="switchPhoneTab('mkt')" style="padding:10px 24px;background:#FACC15;color:#000;font-weight:700;font-size:13px;letter-spacing:0.5px;border:none;cursor:pointer;font-family:inherit;transition:all 0.2s">Marketing &amp; Ads</button>
-      <button id="tab-crypto" onclick="switchPhoneTab('crypto')" style="padding:10px 24px;background:transparent;color:#FACC15;font-weight:600;font-size:13px;letter-spacing:0.5px;border:none;cursor:pointer;font-family:inherit;transition:all 0.2s">Crypto</button>
-    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:0">
 
-    <!-- PHONES SLIDER WRAPPER -->
-    <div id="phones-slider-wrap" style="position:relative;overflow:hidden;width:100%;min-height:700px">
-
-      <!-- MARKETING PHONE -->
-      <div id="phone-panel-mkt" style="transform:translateX(0%);transition:transform 0.5s cubic-bezier(0.4,0,0.2,1)">
-        <div class="reveal phone-row" style="display:flex;align-items:center;justify-content:center;gap:16px;transition-delay:0.15s">
-
-      <!-- PHONE -->
-      <div style="position:relative;animation:phoneFloat 5s ease-in-out infinite">
-        <div id="vimeo-glow" style="position:absolute;inset:-40px;border-radius:50%;background:radial-gradient(ellipse,rgba(250,204,21,0.25),transparent 70%);filter:blur(40px);z-index:0;transition:background 0.8s"></div>
-        <div id="vimeo-phone" style="position:relative;z-index:1;width:300px;background:#0a0a0a;border-radius:48px;border:2px solid rgba(255,255,255,0.12);overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,0.04),0 60px 120px rgba(0,0,0,0.8);cursor:grab">
-          <div style="width:100px;height:28px;background:#0a0a0a;margin:0 auto;border-radius:0 0 20px 20px;position:relative;z-index:10"></div>
-          <div style="height:620px;overflow:hidden;position:relative;background:#000">
-            <div id="vimeo-reels" style="display:flex;flex-direction:column;transition:transform 0.55s cubic-bezier(0.4,0,0.2,1)">
-              <div style="width:100%;height:620px;flex-shrink:0;position:relative;background:#000">
-                <iframe id="vf0" src="https://player.vimeo.com/video/1203004574?autoplay=1&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
-                  style="position:absolute;inset:0;width:100%;height:100%;border:none"
-                  allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
-              </div>
-              <div style="width:100%;height:620px;flex-shrink:0;position:relative;background:#000">
-                <iframe id="vf1" src="https://player.vimeo.com/video/1203004588?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
-                  style="position:absolute;inset:0;width:100%;height:100%;border:none"
-                  allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
-              </div>
-              <div style="width:100%;height:620px;flex-shrink:0;position:relative;background:#000">
-                <iframe id="vf2" src="https://player.vimeo.com/video/1203004604?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
-                  style="position:absolute;inset:0;width:100%;height:100%;border:none"
-                  allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
-              </div>
-              <div style="width:100%;height:620px;flex-shrink:0;position:relative;background:#000">
-                <iframe id="vf3" src="https://player.vimeo.com/video/1203432513?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
-                  style="position:absolute;inset:0;width:100%;height:100%;border:none"
-                  allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
-              </div>
-              <div style="width:100%;height:620px;flex-shrink:0;position:relative;background:#000">
-                <iframe id="vf4" src="https://player.vimeo.com/video/1203432452?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
-                  style="position:absolute;inset:0;width:100%;height:100%;border:none"
-                  allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
-              </div>
-              <div style="width:100%;height:620px;flex-shrink:0;position:relative;background:#000">
-                <iframe id="vf5" src="https://player.vimeo.com/video/1203432951?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
-                  style="position:absolute;inset:0;width:100%;height:100%;border:none"
-                  allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
-              </div>
-              <div style="width:100%;height:620px;flex-shrink:0;position:relative;background:#000">
-                <iframe id="vf6" src="https://player.vimeo.com/video/1203433014?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
-                  style="position:absolute;inset:0;width:100%;height:100%;border:none"
-                  allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
-              </div>
-            </div>
-          </div>
-          <!-- TIMELINE BAR -->
-          <div id="vimeo-timeline" style="background:rgba(255,255,255,0.06);height:28px;display:none;align-items:center;padding:0 12px;gap:8px;cursor:pointer;position:relative;z-index:20" onclick="seekVimeo(event)">
-            <span id="vtime-cur" style="font-size:9px;color:var(--muted2);font-family:monospace;min-width:28px">0:00</span>
-            <div style="flex:1;height:4px;background:rgba(255,255,255,0.1);border-radius:2px;position:relative;overflow:hidden">
-              <div id="vtime-bar" style="height:100%;width:0%;background:var(--gold);border-radius:2px;transition:width 0.2s linear"></div>
-            </div>
-            <span id="vtime-dur" style="font-size:9px;color:var(--muted2);font-family:monospace;min-width:28px;text-align:right">0:00</span>
-          </div>
-          <!-- Bottom home indicator -->
-          <div style="background:#0a0a0a;height:28px;display:flex;align-items:center;justify-content:center">
-            <div style="width:80px;height:4px;background:rgba(255,255,255,0.2);border-radius:2px"></div>
-          </div>
-        </div>
+      <!-- TAB BUTTONS -->
+      <div id="phone-tab-btns" style="display:flex;justify-content:center;margin-bottom:24px;border-radius:12px;overflow:hidden;border:1px solid rgba(250,204,21,0.3)">
+        <button id="tab-mkt" onclick="switchPhoneTab('mkt')" style="padding:10px 28px;background:#FACC15;color:#000;font-weight:700;font-size:13px;letter-spacing:0.5px;border:none;cursor:pointer;font-family:inherit;transition:all 0.2s">Marketing &amp; Ads</button>
+        <button id="tab-crypto" onclick="switchPhoneTab('crypto')" style="padding:10px 28px;background:transparent;color:#FACC15;font-weight:600;font-size:13px;letter-spacing:0.5px;border:none;cursor:pointer;font-family:inherit;transition:all 0.2s">Crypto</button>
       </div>
 
-      <!-- VOLUME CONTROLS — right side of phone -->
-      <div style="display:flex;flex-direction:column;align-items:center;gap:12px;padding:16px 0">
-        <button onclick="toggleMute(vCur)" id="mute-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;transition:all 0.2s">🔇</button>
-        <style>
-          #vol-slider-wrap{width:32px;height:180px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.06);border-radius:20px;padding:8px 0;position:relative}
-          #vol-slider{-webkit-appearance:none;appearance:none;writing-mode:vertical-lr;direction:rtl;width:100%;height:100%;cursor:pointer;background:transparent;outline:none;border:none;padding:0;margin:0;position:relative;z-index:2}
-          #vol-slider::-webkit-slider-thumb{-webkit-appearance:none;width:0;height:0;background:transparent;border:none;box-shadow:none;opacity:0}
-          #vol-slider::-moz-range-thumb{width:0;height:0;background:transparent;border:none;box-shadow:none;opacity:0}
-          #vol-slider::-webkit-slider-runnable-track{background:transparent}
-          #vol-slider::-moz-range-track{background:transparent}
-        </style>
-        <div id="vol-slider-wrap" style="position:relative">
-          <!-- Gold fill bar -->
-          <div id="vol-fill" style="position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:16px;height:0%;background:#FACC15;border-radius:10px;transition:height 0.1s;pointer-events:none"></div>
-          <input type="range" min="0" max="1" step="0.05" value="0"
-            oninput="setVol(vCur,this.value);updateVolFill(this.value)" id="vol-slider">
-        </div>
-        <span style="font-size:10px;color:var(--muted);letter-spacing:1px">VOL</span>
-      </div>
+      <!-- PHONES SLIDER WRAPPER -->
+      <div id="phones-slider-wrap" style="position:relative;overflow:hidden;width:100%;min-height:750px">
 
-      <!-- NAV DOTS + BUTTONS -->
-      <div style="display:flex;flex-direction:column;align-items:center;gap:12px">
-        <div id="vbprev" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:#A1A1AA;user-select:none">↑</div>
-        <div style="display:flex;flex-direction:column;gap:6px" id="vimeo-dots">
-          <div id="vd0" style="width:4px;height:16px;border-radius:3px;background:var(--gold);transition:all 0.3s"></div>
-          <div id="vd1" style="width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s"></div>
-          <div id="vd2" style="width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s"></div>
-          <div id="vd3" style="width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s"></div>
-          <div id="vd4" style="width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s"></div>
-          <div id="vd5" style="width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s"></div>
-          <div id="vd6" style="width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s"></div>
-        </div>
-        <div id="vbnext" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:#A1A1AA;user-select:none">↓</div>
-      </div>
+        <!-- MARKETING PHONE PANEL -->
+        <div id="phone-panel-mkt" style="transform:translateX(0%);transition:transform 0.5s cubic-bezier(0.4,0,0.2,1)">
+          <div class="reveal phone-row" style="display:flex;align-items:center;justify-content:center;gap:16px;transition-delay:0.15s">
 
-        </div><!-- end phone-row mkt -->
-      </div><!-- end phone-panel-mkt -->
-
-      <!-- CRYPTO PHONE -->
-      <div id="phone-panel-crypto" style="position:absolute;top:0;left:0;width:100%;transform:translateX(100%);transition:transform 0.5s cubic-bezier(0.4,0,0.2,1)">
-        <div class="phone-row" style="display:flex;align-items:center;justify-content:center;gap:16px">
-          <!-- CRYPTO PHONE DEVICE -->
-          <div style="position:relative;animation:phoneFloat 5s ease-in-out infinite 0.5s">
-            <div style="position:absolute;inset:-40px;border-radius:50%;background:radial-gradient(ellipse,rgba(250,204,21,0.25),transparent 70%);filter:blur(40px);z-index:0"></div>
-            <div style="position:relative;z-index:1;width:300px;background:#0a0a0a;border-radius:48px;border:2px solid rgba(255,255,255,0.12);overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,0.04),0 60px 120px rgba(0,0,0,0.8)">
-              <div style="width:100px;height:28px;background:#0a0a0a;margin:0 auto;border-radius:0 0 20px 20px;position:relative;z-index:10"></div>
-              <div style="height:620px;overflow:hidden;position:relative;background:#000">
-                <iframe id="yt-crypto" src="https://www.youtube.com/embed/AiwkLjbZM_Q?autoplay=1&mute=0&loop=1&playlist=AiwkLjbZM_Q&controls=0&rel=0&iv_load_policy=3&cc_load_policy=0&modestbranding=1"
-                  style="position:absolute;inset:0;width:100%;height:100%;border:none;pointer-events:none"
-                  allow="autoplay;fullscreen" allowfullscreen></iframe>
-                <!-- overlay to block captions -->
-                <div style="position:absolute;bottom:0;left:0;right:0;height:80px;background:#000;z-index:5;pointer-events:none"></div>
-              </div>
-              <!-- Bottom home indicator -->
-              <div style="background:#0a0a0a;height:28px;display:flex;align-items:center;justify-content:center">
-                <div style="width:80px;height:4px;background:rgba(255,255,255,0.2);border-radius:2px"></div>
+            <!-- PHONE -->
+            <div style="position:relative;animation:phoneFloat 5s ease-in-out infinite">
+              <div id="vimeo-glow" style="position:absolute;inset:-40px;border-radius:50%;background:radial-gradient(ellipse,rgba(250,204,21,0.25),transparent 70%);filter:blur(40px);z-index:0;transition:background 0.8s"></div>
+              <div id="vimeo-phone" style="position:relative;z-index:1;width:300px;background:#0a0a0a;border-radius:48px;border:2px solid rgba(255,255,255,0.12);overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,0.04),0 60px 120px rgba(0,0,0,0.8);cursor:grab">
+                <div style="width:100px;height:28px;background:#0a0a0a;margin:0 auto;border-radius:0 0 20px 20px;position:relative;z-index:10"></div>
+                <div style="height:620px;overflow:hidden;position:relative;background:#000">
+                  <div id="vimeo-reels" style="display:flex;flex-direction:column;transition:transform 0.55s cubic-bezier(0.4,0,0.2,1)">
+                    <div style="width:100%;height:620px;flex-shrink:0;position:relative;background:#000">
+                      <iframe id="vf0" src="https://player.vimeo.com/video/1203004574?autoplay=1&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
+                        style="position:absolute;inset:0;width:100%;height:100%;border:none"
+                        allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <div style="width:100%;height:620px;flex-shrink:0;position:relative;background:#000">
+                      <iframe id="vf1" src="https://player.vimeo.com/video/1203004588?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
+                        style="position:absolute;inset:0;width:100%;height:100%;border:none"
+                        allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <div style="width:100%;height:620px;flex-shrink:0;position:relative;background:#000">
+                      <iframe id="vf2" src="https://player.vimeo.com/video/1203004604?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
+                        style="position:absolute;inset:0;width:100%;height:100%;border:none"
+                        allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <div style="width:100%;height:620px;flex-shrink:0;position:relative;background:#000">
+                      <iframe id="vf3" src="https://player.vimeo.com/video/1203432513?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
+                        style="position:absolute;inset:0;width:100%;height:100%;border:none"
+                        allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <div style="width:100%;height:620px;flex-shrink:0;position:relative;background:#000">
+                      <iframe id="vf4" src="https://player.vimeo.com/video/1203432452?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
+                        style="position:absolute;inset:0;width:100%;height:100%;border:none"
+                        allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <div style="width:100%;height:620px;flex-shrink:0;position:relative;background:#000">
+                      <iframe id="vf5" src="https://player.vimeo.com/video/1203432951?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
+                        style="position:absolute;inset:0;width:100%;height:100%;border:none"
+                        allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <div style="width:100%;height:620px;flex-shrink:0;position:relative;background:#000">
+                      <iframe id="vf6" src="https://player.vimeo.com/video/1203433014?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
+                        style="position:absolute;inset:0;width:100%;height:100%;border:none"
+                        allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                  </div>
+                </div>
+                <!-- TIMELINE BAR -->
+                <div id="vimeo-timeline" style="background:rgba(255,255,255,0.06);height:28px;display:none;align-items:center;padding:0 12px;gap:8px;cursor:pointer;position:relative;z-index:20" onclick="seekVimeo(event)">
+                  <span id="vtime-cur" style="font-size:9px;color:var(--muted2);font-family:monospace;min-width:28px">0:00</span>
+                  <div style="flex:1;height:4px;background:rgba(255,255,255,0.1);border-radius:2px;position:relative;overflow:hidden">
+                    <div id="vtime-bar" style="height:100%;width:0%;background:var(--gold);border-radius:2px;transition:width 0.2s linear"></div>
+                  </div>
+                  <span id="vtime-dur" style="font-size:9px;color:var(--muted2);font-family:monospace;min-width:28px;text-align:right">0:00</span>
+                </div>
+                <!-- Bottom home indicator -->
+                <div style="background:#0a0a0a;height:28px;display:flex;align-items:center;justify-content:center">
+                  <div style="width:80px;height:4px;background:rgba(255,255,255,0.2);border-radius:2px"></div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      </div><!-- end phone-panel-crypto -->
 
-    </div><!-- end phones-slider-wrap -->
+            <!-- VOLUME CONTROLS — right side of phone -->
+            <div style="display:flex;flex-direction:column;align-items:center;gap:12px;padding:16px 0">
+              <button onclick="toggleMute(vCur)" id="mute-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;transition:all 0.2s">🔇</button>
+              <style>
+                #vol-slider-wrap{width:32px;height:180px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.06);border-radius:20px;padding:8px 0;position:relative}
+                #vol-slider{-webkit-appearance:none;appearance:none;writing-mode:vertical-lr;direction:rtl;width:100%;height:100%;cursor:pointer;background:transparent;outline:none;border:none;padding:0;margin:0;position:relative;z-index:2}
+                #vol-slider::-webkit-slider-thumb{-webkit-appearance:none;width:0;height:0;background:transparent;border:none;box-shadow:none;opacity:0}
+                #vol-slider::-moz-range-thumb{width:0;height:0;background:transparent;border:none;box-shadow:none;opacity:0}
+                #vol-slider::-webkit-slider-runnable-track{background:transparent}
+                #vol-slider::-moz-range-track{background:transparent}
+              </style>
+              <div id="vol-slider-wrap" style="position:relative">
+                <div id="vol-fill" style="position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:16px;height:0%;background:#FACC15;border-radius:10px;transition:height 0.1s;pointer-events:none"></div>
+                <input type="range" min="0" max="1" step="0.05" value="0"
+                  oninput="setVol(vCur,this.value);updateVolFill(this.value)" id="vol-slider">
+              </div>
+              <span style="font-size:10px;color:var(--muted);letter-spacing:1px">VOL</span>
+            </div>
+
+            <!-- NAV DOTS + BUTTONS -->
+            <div style="display:flex;flex-direction:column;align-items:center;gap:12px">
+              <div id="vbprev" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:#A1A1AA;user-select:none">↑</div>
+              <div style="display:flex;flex-direction:column;gap:6px" id="vimeo-dots">
+                <div id="vd0" style="width:4px;height:16px;border-radius:3px;background:var(--gold);transition:all 0.3s"></div>
+                <div id="vd1" style="width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s"></div>
+                <div id="vd2" style="width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s"></div>
+                <div id="vd3" style="width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s"></div>
+                <div id="vd4" style="width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s"></div>
+                <div id="vd5" style="width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s"></div>
+                <div id="vd6" style="width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s"></div>
+              </div>
+              <div id="vbnext" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:#A1A1AA;user-select:none">↓</div>
+            </div>
+
+          </div>
+        </div><!-- end phone-panel-mkt -->
+
+        <!-- CRYPTO PHONE PANEL -->
+        <div id="phone-panel-crypto" style="position:absolute;top:0;left:0;width:100%;transform:translateX(100%);transition:transform 0.5s cubic-bezier(0.4,0,0.2,1)">
+          <div class="phone-row" style="display:flex;align-items:center;justify-content:center;gap:16px">
+
+            <!-- CRYPTO PHONE DEVICE -->
+            <div style="position:relative;animation:phoneFloat 5s ease-in-out infinite 0.5s">
+              <div style="position:absolute;inset:-40px;border-radius:50%;background:radial-gradient(ellipse,rgba(250,204,21,0.25),transparent 70%);filter:blur(40px);z-index:0"></div>
+              <div style="position:relative;z-index:1;width:300px;background:#0a0a0a;border-radius:48px;border:2px solid rgba(255,255,255,0.12);overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,0.04),0 60px 120px rgba(0,0,0,0.8)">
+                <div style="width:100px;height:28px;background:#0a0a0a;margin:0 auto;border-radius:0 0 20px 20px;position:relative;z-index:10"></div>
+                <div style="height:620px;overflow:hidden;position:relative;background:#000">
+                  <iframe id="yt-crypto" src=""
+                    style="position:absolute;inset:0;width:100%;height:100%;border:none"
+                    allow="autoplay;fullscreen" allowfullscreen></iframe>
+                  <!-- caption overlay -->
+                  <div style="position:absolute;bottom:0;left:0;right:0;height:80px;background:#000;z-index:5;pointer-events:none"></div>
+                  <!-- play/pause tap overlay -->
+                  <div id="yt-tap-overlay" onclick="ytTogglePlay()" style="position:absolute;inset:0;z-index:10;cursor:pointer;display:flex;align-items:center;justify-content:center">
+                    <div id="yt-play-icon" style="width:60px;height:60px;background:rgba(0,0,0,0.5);border-radius:50%;display:none;align-items:center;justify-content:center;font-size:24px">▶</div>
+                  </div>
+                </div>
+                <!-- Bottom home indicator -->
+                <div style="background:#0a0a0a;height:28px;display:flex;align-items:center;justify-content:center">
+                  <div style="width:80px;height:4px;background:rgba(255,255,255,0.2);border-radius:2px"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- CRYPTO CONTROLS -->
+            <div style="display:flex;flex-direction:column;align-items:center;gap:16px;padding:16px 0">
+              <button id="yt-mute-btn" onclick="ytToggleMute()" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;transition:all 0.2s">🔊</button>
+              <button id="yt-play-btn" onclick="ytTogglePlay()" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;transition:all 0.2s">⏸</button>
+            </div>
+
+          </div>
+        </div><!-- end phone-panel-crypto -->
+
+      </div><!-- end phones-slider-wrap -->
+
+    </div><!-- end right column wrapper -->
     </div>
   </div>
 </section>
@@ -1845,6 +1860,46 @@ document.querySelectorAll('.btn-gold,.btn-ghost,.nav-cta,.book-cta').forEach(btn
   btn.addEventListener('mouseleave',()=>btn.style.transform='');
 });
 
+// YouTube state
+var ytPlaying = false;
+var ytMuted = false;
+var ytLoaded = false;
+
+function ytSend(cmd) {
+  var f = document.getElementById('yt-crypto');
+  if (f && f.contentWindow) {
+    f.contentWindow.postMessage(JSON.stringify({event:'command', func:cmd, args:[]}), '*');
+  }
+}
+
+function ytTogglePlay() {
+  if (ytPlaying) {
+    ytSend('pauseVideo');
+    ytPlaying = false;
+    document.getElementById('yt-play-btn').textContent = '▶';
+    var icon = document.getElementById('yt-play-icon');
+    icon.style.display = 'flex';
+  } else {
+    ytSend('playVideo');
+    ytPlaying = true;
+    document.getElementById('yt-play-btn').textContent = '⏸';
+    var icon = document.getElementById('yt-play-icon');
+    icon.style.display = 'none';
+  }
+}
+
+function ytToggleMute() {
+  if (ytMuted) {
+    ytSend('unMute');
+    ytMuted = false;
+    document.getElementById('yt-mute-btn').textContent = '🔊';
+  } else {
+    ytSend('mute');
+    ytMuted = true;
+    document.getElementById('yt-mute-btn').textContent = '🔇';
+  }
+}
+
 // Phone tab switching
 function switchPhoneTab(tab) {
   var mktPanel = document.getElementById('phone-panel-mkt');
@@ -1852,20 +1907,39 @@ function switchPhoneTab(tab) {
   var tabMkt = document.getElementById('tab-mkt');
   var tabCrypto = document.getElementById('tab-crypto');
   if (tab === 'crypto') {
+    // Pause all Vimeo players
+    if (typeof players !== 'undefined') {
+      players.forEach(function(p){ if(p && p.pause) p.pause(); });
+    }
     mktPanel.style.transform = 'translateX(-100%)';
     cryptoPanel.style.transform = 'translateX(0%)';
     tabMkt.style.background = 'transparent';
     tabMkt.style.color = '#FACC15';
     tabCrypto.style.background = '#FACC15';
     tabCrypto.style.color = '#000';
-    // Reload YouTube with autoplay+sound
+    // Load YouTube on first switch
     var ytf = document.getElementById('yt-crypto');
-    if (ytf) {
-      var src = ytf.src;
-      ytf.src = '';
-      setTimeout(function(){ ytf.src = src; }, 50);
+    if (!ytLoaded) {
+      ytf.src = 'https://www.youtube.com/embed/AiwkLjbZM_Q?autoplay=1&mute=0&loop=1&playlist=AiwkLjbZM_Q&controls=0&rel=0&iv_load_policy=3&cc_load_policy=0&modestbranding=1&enablejsapi=1';
+      ytLoaded = true;
+      ytPlaying = true;
+      ytMuted = false;
+      document.getElementById('yt-play-btn').textContent = '⏸';
+      document.getElementById('yt-mute-btn').textContent = '🔊';
+    } else {
+      ytSend('playVideo');
+      ytPlaying = true;
+      document.getElementById('yt-play-btn').textContent = '⏸';
     }
   } else {
+    // Pause YouTube
+    ytSend('pauseVideo');
+    ytPlaying = false;
+    document.getElementById('yt-play-btn').textContent = '▶';
+    // Resume Vimeo current slide
+    if (typeof players !== 'undefined' && players[vCur] && players[vCur].play) {
+      players[vCur].play();
+    }
     mktPanel.style.transform = 'translateX(0%)';
     cryptoPanel.style.transform = 'translateX(100%)';
     tabMkt.style.background = '#FACC15';
