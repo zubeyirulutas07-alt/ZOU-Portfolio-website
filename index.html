@@ -1401,15 +1401,23 @@ footer{
             </div>
 
             <!-- CRYPTO CONTROLS (same layout as Marketing) -->
+            <!-- CRYPTO CONTROLS — identical layout to Marketing phone -->
+            <style>
+              #yt-vol-slider-wrap{width:32px;height:180px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.06);border-radius:20px;padding:8px 0;position:relative}
+              #yt-vol-slider{-webkit-appearance:none;appearance:none;writing-mode:vertical-lr;direction:rtl;width:100%;height:100%;cursor:pointer;background:transparent;outline:none;border:none;padding:0;margin:0;position:relative;z-index:2}
+              #yt-vol-slider::-webkit-slider-thumb{-webkit-appearance:none;width:0;height:0;background:transparent;border:none;box-shadow:none;opacity:0}
+              #yt-vol-slider::-moz-range-thumb{width:0;height:0;background:transparent;border:none;box-shadow:none;opacity:0}
+              #yt-vol-slider::-webkit-slider-runnable-track{background:transparent}
+              #yt-vol-slider::-moz-range-track{background:transparent}
+            </style>
             <div style="display:flex;flex-direction:column;align-items:center;gap:12px;padding:16px 0">
               <button id="yt-mute-btn" onclick="ytToggleMute()" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;transition:all 0.2s">🔊</button>
-              <div id="yt-vol-slider-wrap" style="width:32px;height:180px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.06);border-radius:20px;padding:8px 0;position:relative">
+              <div id="yt-vol-slider-wrap" style="position:relative">
                 <div id="yt-vol-fill" style="position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:16px;height:100%;background:#FACC15;border-radius:10px;transition:height 0.1s;pointer-events:none"></div>
-                <input type="range" min="0" max="100" step="5" value="100"
-                  oninput="ytSetVolume(this.value)"
-                  style="-webkit-appearance:none;appearance:none;writing-mode:vertical-lr;direction:rtl;width:100%;height:100%;cursor:pointer;background:transparent;outline:none;border:none;padding:0;margin:0;position:relative;z-index:2">
+                <input type="range" id="yt-vol-slider" min="0" max="100" step="5" value="100" oninput="ytSetVolume(this.value)">
               </div>
               <span style="font-size:10px;color:var(--muted);letter-spacing:1px">VOL</span>
+              <button id="yt-play-btn" onclick="ytTogglePlay()" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:all 0.2s">⏸</button>
             </div>
 
           </div>
@@ -1870,20 +1878,23 @@ var ytPlaying = false;
 var ytMuted = false;
 var ytLoaded = false;
 
-function ytSend(cmd) {
+function ytSend(cmd, args) {
   var f = document.getElementById('yt-crypto');
   if (f && f.contentWindow) {
-    f.contentWindow.postMessage(JSON.stringify({event:'command', func:cmd, args:[]}), '*');
+    f.contentWindow.postMessage(JSON.stringify({event:'command', func:cmd, args: args || []}), '*');
   }
 }
 
 function ytTogglePlay() {
+  var btn = document.getElementById('yt-play-btn');
   if (ytPlaying) {
     ytSend('pauseVideo');
     ytPlaying = false;
+    if (btn) btn.textContent = '▶';
   } else {
     ytSend('playVideo');
     ytPlaying = true;
+    if (btn) btn.textContent = '⏸';
   }
 }
 
@@ -1900,13 +1911,10 @@ function ytToggleMute() {
 }
 
 function ytSetVolume(val) {
-  var f = document.getElementById('yt-crypto');
-  if (f && f.contentWindow) {
-    f.contentWindow.postMessage(JSON.stringify({event:'command', func:'setVolume', args:[parseInt(val)]}), '*');
-  }
+  ytSend('setVolume', [parseInt(val)]);
   var fill = document.getElementById('yt-vol-fill');
   if (fill) fill.style.height = val + '%';
-  if (val > 0 && ytMuted) {
+  if (parseInt(val) > 0 && ytMuted) {
     ytSend('unMute');
     ytMuted = false;
     document.getElementById('yt-mute-btn').textContent = '🔊';
