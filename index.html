@@ -1401,10 +1401,16 @@ footer{
               </div>
             </div>
 
-            <!-- CRYPTO CONTROLS -->
-            <div style="display:flex;flex-direction:column;align-items:center;gap:16px;padding:16px 0">
+            <!-- CRYPTO CONTROLS (same layout as Marketing) -->
+            <div style="display:flex;flex-direction:column;align-items:center;gap:12px;padding:16px 0">
               <button id="yt-mute-btn" onclick="ytToggleMute()" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;transition:all 0.2s">🔊</button>
-              <button id="yt-play-btn" onclick="ytTogglePlay()" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;transition:all 0.2s">⏸</button>
+              <div id="yt-vol-slider-wrap" style="width:32px;height:180px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.06);border-radius:20px;padding:8px 0;position:relative">
+                <div id="yt-vol-fill" style="position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:16px;height:100%;background:#FACC15;border-radius:10px;transition:height 0.1s;pointer-events:none"></div>
+                <input type="range" min="0" max="100" step="5" value="100"
+                  oninput="ytSetVolume(this.value)"
+                  style="-webkit-appearance:none;appearance:none;writing-mode:vertical-lr;direction:rtl;width:100%;height:100%;cursor:pointer;background:transparent;outline:none;border:none;padding:0;margin:0;position:relative;z-index:2">
+              </div>
+              <span style="font-size:10px;color:var(--muted);letter-spacing:1px">VOL</span>
             </div>
 
           </div>
@@ -1876,13 +1882,11 @@ function ytTogglePlay() {
   if (ytPlaying) {
     ytSend('pauseVideo');
     ytPlaying = false;
-    document.getElementById('yt-play-btn').textContent = '▶';
     var icon = document.getElementById('yt-play-icon');
     icon.style.display = 'flex';
   } else {
     ytSend('playVideo');
     ytPlaying = true;
-    document.getElementById('yt-play-btn').textContent = '⏸';
     var icon = document.getElementById('yt-play-icon');
     icon.style.display = 'none';
   }
@@ -1897,6 +1901,20 @@ function ytToggleMute() {
     ytSend('mute');
     ytMuted = true;
     document.getElementById('yt-mute-btn').textContent = '🔇';
+  }
+}
+
+function ytSetVolume(val) {
+  var f = document.getElementById('yt-crypto');
+  if (f && f.contentWindow) {
+    f.contentWindow.postMessage(JSON.stringify({event:'command', func:'setVolume', args:[parseInt(val)]}), '*');
+  }
+  var fill = document.getElementById('yt-vol-fill');
+  if (fill) fill.style.height = val + '%';
+  if (val > 0 && ytMuted) {
+    ytSend('unMute');
+    ytMuted = false;
+    document.getElementById('yt-mute-btn').textContent = '🔊';
   }
 }
 
@@ -1924,18 +1942,15 @@ function switchPhoneTab(tab) {
       ytLoaded = true;
       ytPlaying = true;
       ytMuted = false;
-      document.getElementById('yt-play-btn').textContent = '⏸';
-      document.getElementById('yt-mute-btn').textContent = '🔊';
+        document.getElementById('yt-mute-btn').textContent = '🔊';
     } else {
       ytSend('playVideo');
       ytPlaying = true;
-      document.getElementById('yt-play-btn').textContent = '⏸';
-    }
+      }
   } else {
     // Pause YouTube
     ytSend('pauseVideo');
     ytPlaying = false;
-    document.getElementById('yt-play-btn').textContent = '▶';
     // Resume Vimeo current slide
     if (typeof players !== 'undefined' && players[vCur] && players[vCur].play) {
       players[vCur].play();
