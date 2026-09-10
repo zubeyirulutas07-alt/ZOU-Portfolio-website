@@ -98,7 +98,7 @@ nav.scrolled{background:rgba(5,5,5,0.95);border-color:var(--border2)}
   text-align:center;
 }
 .hero-left{
-  padding:140px 0 100px;
+  padding:100px 0 60px;
   display:flex;flex-direction:column;
   align-items:center;
   max-width:900px;
@@ -788,7 +788,7 @@ footer{
   .cs-left{position:static}
   #videos{padding:80px 24px}
   .videos-inner{grid-template-columns:minmax(0,1fr);gap:48px}
-  .testimonials-grid{grid-template-columns:1fr !important;gap:40px;max-width:480px;margin:0 auto}
+  .testimonials-grid{grid-template-columns:1fr !important;gap:32px;max-width:100%;margin:0 auto}
   #book{padding:80px 24px}
   .book-grid{grid-template-columns:minmax(0,1fr);gap:48px}
   footer{flex-direction:column;gap:16px;padding:32px 24px;text-align:center}
@@ -802,7 +802,7 @@ footer{
   .nav-cta{padding:8px 15px;font-size:12px}
   .nav-zou{position:static;left:auto;transform:none;margin:0 auto 0 0}
 
-  #hero{padding:88px 20px 52px;min-height:auto}
+  #hero{padding:80px 20px 48px;min-height:auto}
   .hero-left{padding:18px 0 0}
   .hero-eyebrow{margin-bottom:24px}
   .hero-h1{font-size:clamp(30px,8.6vw,42px);letter-spacing:-1.2px;line-height:1.15;margin-bottom:20px}
@@ -820,7 +820,7 @@ footer{
 
   #testimonials{padding:64px 20px}
   .testimonials-grid{gap:32px}
-  .test-video-wrap{max-height:480px !important}
+  .test-video-wrap{max-height:420px !important}
   #features{padding:64px 20px 64px}
   #casestudy{padding:0 20px 64px}
   #videos{padding:64px 20px}
@@ -843,13 +843,19 @@ footer{
 
   /* videos phone group: scale to fit narrow screens */
   .videos-inner{grid-template-columns:minmax(0,1fr) !important;gap:40px !important}
-  .phone-row{gap:10px !important;transform:scale(0.8);transform-origin:top center;margin:-24px 0 -36px;max-width:100%;overflow:visible}
+  .phone-row{gap:10px !important;transform:scale(0.72);transform-origin:top center;margin:-36px 0 -52px;max-width:100%;overflow:visible}
 
   /* book */
   .book-grid{grid-template-columns:minmax(0,1fr) !important;gap:40px !important}
   .book-card{padding:32px 22px}
 
   footer{padding:28px 20px}
+  /* Video controls always visible on mobile */
+  #vid-controls{opacity:1 !important}
+  /* Better touch targets */
+  #vid-playbtn,#vid-mutebtn{min-width:32px;min-height:32px;padding:4px}
+  /* Fix vimeo nav arrows on mobile */
+  #vimeo-dots button,#vimeo-dots [onclick]{min-width:44px;min-height:44px}
 }
 
 /* ===== VERY SMALL ===== */
@@ -1386,7 +1392,7 @@ footer{
     <!-- RIGHT — CALENDLY EMBED -->
     <div class="sa-right">
       <div class="book-card" style="padding:0;overflow:hidden;min-height:660px">
-        <div class="calendly-inline-widget" data-url="https://calendly.com/zubeyir-ulutas07/30min?hide_gdpr_banner=1&background_color=0a0a0a&text_color=ffffff&primary_color=facc15" style="min-width:300px;width:100%;height:660px"></div>
+        <div class="calendly-inline-widget" data-url="https://calendly.com/zubeyir-ulutas07/30min?hide_gdpr_banner=1&background_color=0a0a0a&text_color=ffffff&primary_color=facc15" style="min-width:280px;width:100%;height:640px"></div>
       </div>
     </div>
 
@@ -1883,7 +1889,9 @@ document.querySelectorAll('.btn-gold,.btn-ghost,.nav-cta,.book-cta').forEach(btn
   wrap.addEventListener('mouseenter',function(){controls.style.opacity='1';});
   wrap.addEventListener('mouseleave',function(){controls.style.opacity='0';});
   // On touch: toggle controls
-  wrap.addEventListener('touchstart',function(){controls.style.opacity=controls.style.opacity==='1'?'0':'1';},{passive:true});
+  // On mobile: always show controls
+  if('ontouchstart' in window){controls.style.opacity='1';}
+  wrap.addEventListener('touchstart',function(){controls.style.opacity='1';},{passive:true});
 })();
 </script>
 
