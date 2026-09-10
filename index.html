@@ -858,6 +858,9 @@ footer{
   #vid-playbtn,#vid-mutebtn{min-width:40px;min-height:40px;padding:6px}
   /* Fix vimeo nav arrows on mobile */
   #vimeo-dots button,#vimeo-dots [onclick]{min-width:44px;min-height:44px}
+  /* Hide Vimeo volume slider on mobile (iOS can't control iframe volume) */
+  #vol-slider-wrap,#vol-slider-wrap+*{display:none !important}
+  #mute-btn{width:44px;height:44px;font-size:20px}
 }
 
 /* ===== VERY SMALL ===== */
@@ -1307,7 +1310,7 @@ footer{
             </div>
           </div>
           <!-- TIMELINE BAR -->
-          <div id="vimeo-timeline" style="background:rgba(255,255,255,0.06);height:28px;display:none;align-items:center;padding:0 12px;gap:8px;cursor:pointer;position:relative;z-index:20" onclick="seekVimeo(event)">
+          <div id="vimeo-timeline" style="background:rgba(255,255,255,0.06);height:28px;display:flex;align-items:center;padding:0 12px;gap:8px;cursor:pointer;position:relative;z-index:20" onclick="seekVimeo(event)">
             <span id="vtime-cur" style="font-size:9px;color:var(--muted2);font-family:monospace;min-width:28px">0:00</span>
             <div style="flex:1;height:4px;background:rgba(255,255,255,0.1);border-radius:2px;position:relative;overflow:hidden">
               <div id="vtime-bar" style="height:100%;width:0%;background:var(--gold);border-radius:2px;transition:width 0.2s linear"></div>
