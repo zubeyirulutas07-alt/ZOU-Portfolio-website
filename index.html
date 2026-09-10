@@ -852,8 +852,10 @@ footer{
   footer{padding:28px 20px}
   /* Video controls always visible on mobile */
   #vid-controls{opacity:1 !important}
+  /* Hide volume slider on mobile (iOS doesn't support JS volume control) */
+  #vid-volume{display:none !important}
   /* Better touch targets */
-  #vid-playbtn,#vid-mutebtn{min-width:32px;min-height:32px;padding:4px}
+  #vid-playbtn,#vid-mutebtn{min-width:40px;min-height:40px;padding:6px}
   /* Fix vimeo nav arrows on mobile */
   #vimeo-dots button,#vimeo-dots [onclick]{min-width:44px;min-height:44px}
 }
@@ -1871,8 +1873,7 @@ document.querySelectorAll('.btn-gold,.btn-ghost,.nav-cta,.book-cta').forEach(btn
   // Volume
   volSlider.addEventListener('input',function(e){
     e.stopPropagation();
-    vid.volume=parseFloat(volSlider.value);
-    vid.muted=(vid.volume===0);
+    try{vid.volume=parseFloat(volSlider.value);vid.muted=(vid.volume===0);}catch(err){}
     updateVolUI();
   });
   muteBtn.addEventListener('click',function(e){
