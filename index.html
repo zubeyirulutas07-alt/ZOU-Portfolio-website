@@ -1384,15 +1384,14 @@ footer{
               <div style="position:relative;z-index:1;width:300px;background:#0a0a0a;border-radius:48px;border:2px solid rgba(255,255,255,0.12);overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,0.04),0 60px 120px rgba(0,0,0,0.8)">
                 <div style="width:100px;height:28px;background:#0a0a0a;margin:0 auto;border-radius:0 0 20px 20px;position:relative;z-index:10"></div>
                 <div style="height:620px;overflow:hidden;position:relative;background:#000">
+                  <!-- iframe scaled up slightly so YouTube's letterboxed edges are hidden -->
                   <iframe id="yt-crypto" src=""
-                    style="position:absolute;inset:0;width:100%;height:100%;border:none"
+                    style="position:absolute;top:-10%;left:-5%;width:110%;height:120%;border:none;pointer-events:none"
                     allow="autoplay;fullscreen" allowfullscreen></iframe>
-                  <!-- caption overlay -->
-                  <div style="position:absolute;bottom:0;left:0;right:0;height:80px;background:#000;z-index:5;pointer-events:none"></div>
-                  <!-- play/pause tap overlay -->
-                  <div id="yt-tap-overlay" onclick="ytTogglePlay()" style="position:absolute;inset:0;z-index:10;cursor:pointer;display:flex;align-items:center;justify-content:center">
-                    <div id="yt-play-icon" style="width:60px;height:60px;background:rgba(0,0,0,0.5);border-radius:50%;display:none;align-items:center;justify-content:center;font-size:24px">▶</div>
-                  </div>
+                  <!-- top overlay: hides YouTube title bar / channel info -->
+                  <div style="position:absolute;top:0;left:0;right:0;height:70px;background:#000;z-index:5;pointer-events:none"></div>
+                  <!-- bottom overlay: hides YouTube controls / captions -->
+                  <div style="position:absolute;bottom:0;left:0;right:0;height:100px;background:#000;z-index:5;pointer-events:none"></div>
                 </div>
                 <!-- Bottom home indicator -->
                 <div style="background:#0a0a0a;height:28px;display:flex;align-items:center;justify-content:center">
@@ -1882,13 +1881,9 @@ function ytTogglePlay() {
   if (ytPlaying) {
     ytSend('pauseVideo');
     ytPlaying = false;
-    var icon = document.getElementById('yt-play-icon');
-    icon.style.display = 'flex';
   } else {
     ytSend('playVideo');
     ytPlaying = true;
-    var icon = document.getElementById('yt-play-icon');
-    icon.style.display = 'none';
   }
 }
 
