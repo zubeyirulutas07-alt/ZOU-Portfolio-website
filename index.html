@@ -1308,7 +1308,7 @@ footer{
                   allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
               </div>
               <div style="width:100%;height:620px;flex-shrink:0;position:relative;background:#000">
-                <iframe id="vf7" src="https://www.youtube.com/embed/AiwkLjbZM_Q?autoplay=0&loop=1&mute=1&controls=0&modestbranding=1&rel=0&playsinline=1&playlist=AiwkLjbZM_Q"
+                <iframe id="vf7" src="https://www.youtube.com/embed/AiwkLjbZM_Q?autoplay=0&loop=1&mute=0&controls=0&modestbranding=1&rel=0&playsinline=1&playlist=AiwkLjbZM_Q&cc_load_policy=0&iv_load_policy=3"
                   style="position:absolute;inset:0;width:100%;height:100%;border:none"
                   allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
               </div>
@@ -1633,6 +1633,13 @@ function goVimeo(n){
       players[vCur].play();
       players[vCur].setVolume(currentVol);
       players[vCur].setMuted(currentMuted);
+    } else {
+      // YouTube iframe — reload with autoplay+sound on navigate
+      const ytFrame = document.getElementById('vf'+vCur);
+      if(ytFrame) {
+        const base = ytFrame.src.split('?')[0];
+        ytFrame.src = base + '?autoplay=1&loop=1&mute=0&controls=0&modestbranding=1&rel=0&playsinline=1&playlist=AiwkLjbZM_Q&cc_load_policy=0&iv_load_policy=3';
+      }
     }
     document.getElementById('mute-btn').textContent = currentMuted ? '🔇' : '🔊';
   }
