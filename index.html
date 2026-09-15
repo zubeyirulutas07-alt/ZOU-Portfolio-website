@@ -1384,10 +1384,20 @@ footer{
               <div style="position:relative;z-index:1;width:300px;background:#0a0a0a;border-radius:48px;border:2px solid rgba(255,255,255,0.12);overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,0.04),0 60px 120px rgba(0,0,0,0.8)">
                 <div style="width:100px;height:28px;background:#0a0a0a;margin:0 auto;border-radius:0 0 20px 20px;position:relative;z-index:10"></div>
                 <div style="height:620px;overflow:hidden;position:relative;background:#000">
-                  <!-- iframe scaled up slightly so YouTube's letterboxed edges are hidden -->
-                  <iframe id="yt-crypto" src=""
-                    style="position:absolute;top:-10%;left:-5%;width:110%;height:120%;border:none;pointer-events:none"
-                    allow="autoplay;fullscreen" allowfullscreen></iframe>
+                  <div id="crypto-reels" style="display:flex;flex-direction:column;transition:transform 0.55s cubic-bezier(0.4,0,0.2,1)">
+                    <!-- Slide 0: YouTube -->
+                    <div style="width:100%;height:620px;flex-shrink:0;position:relative;background:#000">
+                      <iframe id="cf0" src=""
+                        style="position:absolute;top:-10%;left:-5%;width:110%;height:120%;border:none;pointer-events:none"
+                        allow="autoplay;fullscreen" allowfullscreen></iframe>
+                    </div>
+                    <!-- Slide 1: Google Drive -->
+                    <div style="width:100%;height:620px;flex-shrink:0;position:relative;background:#000">
+                      <iframe id="cf1" src=""
+                        style="position:absolute;inset:0;width:100%;height:100%;border:none"
+                        allow="autoplay;fullscreen" allowfullscreen></iframe>
+                    </div>
+                  </div>
                 </div>
                 <!-- Bottom home indicator -->
                 <div style="background:#0a0a0a;height:28px;display:flex;align-items:center;justify-content:center">
@@ -1413,11 +1423,12 @@ footer{
                 <input type="range" id="yt-vol-slider" min="0" max="100" step="5" value="100" oninput="ytSetVolume(this.value)">
               </div>
               <span style="font-size:10px;color:var(--muted);letter-spacing:1px">VOL</span>
-              <div onclick="ytTogglePlay()" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:#A1A1AA;user-select:none">↑</div>
+              <div onclick="goCrypto(cCur-1)" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:#A1A1AA;user-select:none">↑</div>
               <div style="display:flex;flex-direction:column;gap:6px">
-                <div style="width:4px;height:16px;border-radius:3px;background:var(--gold)"></div>
+                <div id="cd0" style="width:4px;height:16px;border-radius:3px;background:var(--gold);transition:all 0.3s"></div>
+                <div id="cd1" style="width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s"></div>
               </div>
-              <div onclick="ytTogglePlay()" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:#A1A1AA;user-select:none">↓</div>
+              <div onclick="goCrypto(cCur+1)" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:#A1A1AA;user-select:none">↓</div>
             </div>
 
           </div>
@@ -1873,52 +1884,41 @@ document.querySelectorAll('.btn-gold,.btn-ghost,.nav-cta,.book-cta').forEach(btn
   btn.addEventListener('mouseleave',()=>btn.style.transform='');
 });
 
-// YouTube state
-var ytPlaying = false;
-var ytMuted = false;
-var ytLoaded = false;
+// Crypto slideshow
+var cCur = 0;
+var cTot = 2;
+var cryptoSrcs = [
+  'https://www.youtube.com/embed/AiwkLjbZM_Q?autoplay=1&mute=0&loop=1&playlist=AiwkLjbZM_Q&controls=0&rel=0&iv_load_policy=3&cc_load_policy=0&modestbranding=1',
+  'https://drive.google.com/file/d/1rQg-M0CGtv8nyUJi3McodUEaE6tBXy18/preview'
+];
 
-function ytSend(cmd, args) {
-  var f = document.getElementById('yt-crypto');
-  if (f && f.contentWindow) {
-    f.contentWindow.postMessage(JSON.stringify({event:'command', func:cmd, args: args || []}), '*');
+function goCrypto(n) {
+  if (n < 0 || n >= cTot) return;
+  // clear current iframe src
+  document.getElementById('cf' + cCur).src = '';
+  cCur = n;
+  // update dots
+  for (var i = 0; i < cTot; i++) {
+    var d = document.getElementById('cd' + i);
+    if (!d) continue;
+    if (i === cCur) {
+      d.style.width = '4px'; d.style.height = '16px';
+      d.style.borderRadius = '3px'; d.style.background = 'var(--gold)';
+    } else {
+      d.style.width = '4px'; d.style.height = '4px';
+      d.style.borderRadius = '50%'; d.style.background = 'rgba(255,255,255,0.25)';
+    }
   }
+  // scroll reels
+  document.getElementById('crypto-reels').style.transform = 'translateY(-' + (cCur * 620) + 'px)';
+  // load new iframe
+  document.getElementById('cf' + cCur).src = cryptoSrcs[cCur];
 }
 
-var ytSrc = 'https://drive.google.com/file/d/1rQg-M0CGtv8nyUJi3McodUEaE6tBXy18/preview';
-
-function ytTogglePlay() {
-  var f = document.getElementById('yt-crypto');
-  if (ytPlaying) {
-    f.src = '';
-    ytPlaying = false;
-  } else {
-    f.src = ytSrc;
-    ytPlaying = true;
-  }
-}
-
-function ytToggleMute() {
-  if (ytMuted) {
-    ytSend('unMute');
-    ytMuted = false;
-    document.getElementById('yt-mute-btn').textContent = '🔊';
-  } else {
-    ytSend('mute');
-    ytMuted = true;
-    document.getElementById('yt-mute-btn').textContent = '🔇';
-  }
-}
-
+function ytToggleMute() {}  // Drive/YT mute via native controls
 function ytSetVolume(val) {
-  ytSend('setVolume', [parseInt(val)]);
   var fill = document.getElementById('yt-vol-fill');
   if (fill) fill.style.height = val + '%';
-  if (parseInt(val) > 0 && ytMuted) {
-    ytSend('unMute');
-    ytMuted = false;
-    document.getElementById('yt-mute-btn').textContent = '🔊';
-  }
 }
 
 // Phone tab switching
@@ -1938,19 +1938,13 @@ function switchPhoneTab(tab) {
     tabMkt.style.color = '#FACC15';
     tabCrypto.style.background = '#FACC15';
     tabCrypto.style.color = '#000';
-    // Load / reload YouTube
-    var ytf = document.getElementById('yt-crypto');
-    ytf.src = ytSrc;
-    ytLoaded = true;
-    ytPlaying = true;
-    ytMuted = false;
-    document.getElementById('yt-mute-btn').textContent = '🔊';
+    // Load current crypto slide
+    document.getElementById('cf' + cCur).src = cryptoSrcs[cCur];
   } else {
-    // Stop YouTube completely by clearing src
-    var ytf = document.getElementById('yt-crypto');
-    ytf.src = '';
-    ytLoaded = false;
-    ytPlaying = false;
+    // Stop all crypto iframes
+    for (var i = 0; i < cTot; i++) {
+      document.getElementById('cf' + i).src = '';
+    }
     // Resume Vimeo current slide
     if (typeof players !== 'undefined' && players[vCur] && players[vCur].play) {
       players[vCur].play();
