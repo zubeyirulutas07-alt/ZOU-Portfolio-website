@@ -1889,16 +1889,16 @@ function ytSend(cmd, args) {
   }
 }
 
+var ytSrc = 'https://www.youtube.com/embed/AiwkLjbZM_Q?autoplay=1&mute=0&loop=1&playlist=AiwkLjbZM_Q&controls=0&rel=0&iv_load_policy=3&cc_load_policy=0&modestbranding=1&enablejsapi=1';
+
 function ytTogglePlay() {
-  var btn = document.getElementById('yt-play-btn');
+  var f = document.getElementById('yt-crypto');
   if (ytPlaying) {
-    ytSend('pauseVideo');
+    f.src = '';
     ytPlaying = false;
-    if (btn) btn.textContent = '▶';
   } else {
-    ytSend('playVideo');
+    f.src = ytSrc;
     ytPlaying = true;
-    if (btn) btn.textContent = '⏸';
   }
 }
 
@@ -1944,7 +1944,7 @@ function switchPhoneTab(tab) {
     tabCrypto.style.color = '#000';
     // Load / reload YouTube
     var ytf = document.getElementById('yt-crypto');
-    ytf.src = 'https://www.youtube.com/embed/AiwkLjbZM_Q?autoplay=1&mute=0&loop=1&playlist=AiwkLjbZM_Q&controls=0&rel=0&iv_load_policy=3&cc_load_policy=0&modestbranding=1&enablejsapi=1';
+    ytf.src = ytSrc;
     ytLoaded = true;
     ytPlaying = true;
     ytMuted = false;
