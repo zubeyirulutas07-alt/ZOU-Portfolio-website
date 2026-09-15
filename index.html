@@ -1388,10 +1388,6 @@ footer{
                   <iframe id="yt-crypto" src=""
                     style="position:absolute;top:-10%;left:-5%;width:110%;height:120%;border:none;pointer-events:none"
                     allow="autoplay;fullscreen" allowfullscreen></iframe>
-                  <!-- top overlay: hides YouTube title bar / channel info -->
-                  <div style="position:absolute;top:0;left:0;right:0;height:70px;background:#000;z-index:5;pointer-events:none"></div>
-                  <!-- bottom overlay: hides YouTube controls / captions -->
-                  <div style="position:absolute;bottom:0;left:0;right:0;height:100px;background:#000;z-index:5;pointer-events:none"></div>
                 </div>
                 <!-- Bottom home indicator -->
                 <div style="background:#0a0a0a;height:28px;display:flex;align-items:center;justify-content:center">
@@ -1889,7 +1885,7 @@ function ytSend(cmd, args) {
   }
 }
 
-var ytSrc = 'https://www.youtube.com/embed/AiwkLjbZM_Q?autoplay=1&mute=0&loop=1&playlist=AiwkLjbZM_Q&controls=0&rel=0&iv_load_policy=3&cc_load_policy=0&modestbranding=1&enablejsapi=1';
+var ytSrc = 'https://drive.google.com/file/d/1rQg-M0CGtv8nyUJi3McodUEaE6tBXy18/preview';
 
 function ytTogglePlay() {
   var f = document.getElementById('yt-crypto');
