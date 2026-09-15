@@ -1942,21 +1942,18 @@ function switchPhoneTab(tab) {
     tabMkt.style.color = '#FACC15';
     tabCrypto.style.background = '#FACC15';
     tabCrypto.style.color = '#000';
-    // Load YouTube on first switch
+    // Load / reload YouTube
     var ytf = document.getElementById('yt-crypto');
-    if (!ytLoaded) {
-      ytf.src = 'https://www.youtube.com/embed/AiwkLjbZM_Q?autoplay=1&mute=0&loop=1&playlist=AiwkLjbZM_Q&controls=0&rel=0&iv_load_policy=3&cc_load_policy=0&modestbranding=1&enablejsapi=1';
-      ytLoaded = true;
-      ytPlaying = true;
-      ytMuted = false;
-        document.getElementById('yt-mute-btn').textContent = '🔊';
-    } else {
-      ytSend('playVideo');
-      ytPlaying = true;
-      }
+    ytf.src = 'https://www.youtube.com/embed/AiwkLjbZM_Q?autoplay=1&mute=0&loop=1&playlist=AiwkLjbZM_Q&controls=0&rel=0&iv_load_policy=3&cc_load_policy=0&modestbranding=1&enablejsapi=1';
+    ytLoaded = true;
+    ytPlaying = true;
+    ytMuted = false;
+    document.getElementById('yt-mute-btn').textContent = '🔊';
   } else {
-    // Pause YouTube
-    ytSend('pauseVideo');
+    // Stop YouTube completely by clearing src
+    var ytf = document.getElementById('yt-crypto');
+    ytf.src = '';
+    ytLoaded = false;
     ytPlaying = false;
     // Resume Vimeo current slide
     if (typeof players !== 'undefined' && players[vCur] && players[vCur].play) {
