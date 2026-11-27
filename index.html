@@ -504,6 +504,22 @@ nav.scrolled{background:rgba(5,5,5,0.95);border-color:var(--border2)}
 /* ===== COVERFLOW ===== */
 .cf-block{margin-bottom:84px}
 .cf-block:last-of-type{margin-bottom:0}
+.cf-block[hidden]{display:none}
+
+/* form toggle */
+#form-toggle{display:inline-flex;border-radius:12px;overflow:hidden;border:1px solid rgba(250,204,21,0.3)}
+.form-tab{
+  padding:11px 30px;background:transparent;color:#FACC15;
+  font-family:inherit;font-weight:600;font-size:13px;letter-spacing:0.5px;
+  border:none;cursor:pointer;transition:all 0.25s;white-space:nowrap;
+}
+.form-tab:hover:not(.is-on){background:rgba(250,204,21,0.1)}
+.form-tab.is-on{background:#FACC15;color:#000;font-weight:700}
+
+/* 16:9 cards sit wider and shorter than the 9:16 ones */
+.cf-long .cf-stage{height:360px}
+.cf-long .cf-card{width:520px;height:293px}
+.cf-long .cf-glow{width:560px;height:260px}
 .cf-label{
   display:flex;align-items:center;gap:14px;
   font-family:'Plus Jakarta Sans',sans-serif;
@@ -941,6 +957,10 @@ footer{
   .cf-glow{width:300px;height:220px}
   .cf-controls{gap:12px;margin-top:26px}
   .cf-block{margin-bottom:60px}
+  .form-tab{padding:10px 18px;font-size:12px}
+  .cf-long .cf-stage{height:220px}
+  .cf-long .cf-card{width:286px;height:161px}
+  .cf-long .cf-glow{width:300px;height:160px}
   .cf-label{font-size:12px;letter-spacing:2px;margin-bottom:20px}
   .vpoints{grid-template-columns:minmax(0,1fr);gap:26px;margin-top:48px;padding-top:34px}
 
@@ -1247,75 +1267,12 @@ footer{
       <h2 class="section-h2" style="margin-bottom:0">See It <span style="color:var(--gold)">For Yourself</span></h2>
     </div>
 
-    <!-- Ads &amp; Marketing -->
-    <div class="reveal cf-block" style="transition-delay:0.1s">
-      <div class="cf-label"><span class="cf-label-line"></span>Ads &amp; Marketing</div>
-      <div class="cf-stage" id="stage-ads">
-        <div class="cf-glow" id="glow-ads"></div>
-          <div class="cf-card" id="cfc-ads-0" onclick="CF.ads.tap(0)">
-            <iframe id="vf-ads-0" src="https://www.youtube.com/embed/Be0nZVJQapM?enablejsapi=1&autoplay=0&loop=1&playlist=Be0nZVJQapM&controls=0&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1"
-              allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
-            <div class="cf-veil"></div>
-            <div class="cf-play"><span></span></div>
-          </div>
-          <div class="cf-card" id="cfc-ads-1" onclick="CF.ads.tap(1)">
-            <iframe id="vf-ads-1" src="https://www.youtube.com/embed/zkBeWNW9e9g?enablejsapi=1&autoplay=0&loop=1&playlist=zkBeWNW9e9g&controls=0&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1"
-              allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
-            <div class="cf-veil"></div>
-            <div class="cf-play"><span></span></div>
-          </div>
-          <div class="cf-card" id="cfc-ads-2" onclick="CF.ads.tap(2)">
-            <iframe id="vf-ads-2" src="https://www.youtube.com/embed/ixvTbzefAMo?enablejsapi=1&autoplay=0&loop=1&playlist=ixvTbzefAMo&controls=0&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1"
-              allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
-            <div class="cf-veil"></div>
-            <div class="cf-play"><span></span></div>
-          </div>
-      </div>
-      <div class="cf-controls">
-        <div class="cf-sound">
-          <button id="mute-ads" onclick="CF.ads.toggleMute()">&#128264;</button>
-          <div class="cf-vol-wrap">
-            <div class="cf-vol-fill" id="volfill-ads"></div>
-            <input type="range" min="0" max="1" step="0.05" value="0" id="vol-ads" oninput="CF.ads.setVol(this.value)">
-          </div>
-        </div>
-      </div>
+    <!-- FORM TOGGLE + STRIPS (filled by script) -->
+    <div class="reveal" style="display:flex;justify-content:center;margin-bottom:48px">
+      <div id="form-toggle"></div>
     </div>
+    <div id="cf-strips"></div>
 
-    <!-- Entertainment -->
-    <div class="reveal cf-block" style="transition-delay:0.2s">
-      <div class="cf-label"><span class="cf-label-line"></span>Entertainment</div>
-      <div class="cf-stage" id="stage-ent">
-        <div class="cf-glow" id="glow-ent"></div>
-          <div class="cf-card" id="cfc-ent-0" onclick="CF.ent.tap(0)">
-            <iframe id="vf-ent-0" src="https://www.youtube.com/embed/dX6vvpuTMFc?enablejsapi=1&autoplay=0&loop=1&playlist=dX6vvpuTMFc&controls=0&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1"
-              allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
-            <div class="cf-veil"></div>
-            <div class="cf-play"><span></span></div>
-          </div>
-          <div class="cf-card" id="cfc-ent-1" onclick="CF.ent.tap(1)">
-            <iframe id="vf-ent-1" src="https://www.youtube.com/embed/iGp8hGBS-3Q?enablejsapi=1&autoplay=0&loop=1&playlist=iGp8hGBS-3Q&controls=0&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1"
-              allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
-            <div class="cf-veil"></div>
-            <div class="cf-play"><span></span></div>
-          </div>
-          <div class="cf-card" id="cfc-ent-2" onclick="CF.ent.tap(2)">
-            <iframe id="vf-ent-2" src="https://www.youtube.com/embed/mRhwnxi9yKs?enablejsapi=1&autoplay=0&loop=1&playlist=mRhwnxi9yKs&controls=0&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1"
-              allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
-            <div class="cf-veil"></div>
-            <div class="cf-play"><span></span></div>
-          </div>
-      </div>
-      <div class="cf-controls">
-        <div class="cf-sound">
-          <button id="mute-ent" onclick="CF.ent.toggleMute()">&#128264;</button>
-          <div class="cf-vol-wrap">
-            <div class="cf-vol-fill" id="volfill-ent"></div>
-            <input type="range" min="0" max="1" step="0.05" value="0" id="vol-ent" oninput="CF.ent.setVol(this.value)">
-          </div>
-        </div>
-      </div>
-    </div>
 
     <!-- POINTS -->
     <div class="reveal vpoints" style="transition-delay:0.2s">
@@ -1509,15 +1466,27 @@ moveCur();
 const CF = {};
 const ytReady = {};
 
+// Every clip on the page. Adding one is a single id in the right list.
+const STRIPS = [
+  {key:'short-ads', form:'short', label:'Ads &amp; Marketing', ids:['Be0nZVJQapM','zkBeWNW9e9g','ixvTbzefAMo']},
+  {key:'short-ent', form:'short', label:'Entertainment',       ids:['dX6vvpuTMFc','iGp8hGBS-3Q','mRhwnxi9yKs']},
+  {key:'long-ads',  form:'long',  label:'Ads &amp; Marketing', ids:[]},
+  {key:'long-ent',  form:'long',  label:'Entertainment',       ids:[]},
+];
+const FORMS = [
+  {id:'short', label:'Short-Form'},
+  {id:'long',  label:'Long-Form'},
+];
+
 const GLOWS = [
   'radial-gradient(ellipse,rgba(250,204,21,0.22),transparent 70%)',
   'radial-gradient(ellipse,rgba(167,139,250,0.22),transparent 70%)',
   'radial-gradient(ellipse,rgba(52,211,153,0.22),transparent 70%)',
 ];
 
-function makeStrip(key, n){
+function makeStrip(key, n, form){
   const s = {
-    key, n,
+    key, n, form,
     cur: 0,
     playing: false,
     muted: Array(n).fill(true),
@@ -1607,7 +1576,11 @@ function makeStrip(key, n){
   };
 
   s.layout = () => {
-    const step = window.innerWidth < 760 ? 112 : 208;
+    const narrow = window.innerWidth < 760;
+    // wide 16:9 cards need to clear more ground than the tall ones
+    const step = form === 'long'
+      ? (narrow ? 150 : 330)
+      : (narrow ? 112 : 208);
     for(let i=0;i<n;i++){
       const card = document.getElementById('cfc-' + key + '-' + i);
       if(!card) continue;
@@ -1655,8 +1628,75 @@ function makeStrip(key, n){
   return s;
 }
 
-makeStrip('ads', 3);
-makeStrip('ent', 3);
+// A form only appears if it actually has clips, so the page stays sane
+// while a list is still empty.
+const liveForms = FORMS.filter(f => STRIPS.some(st => st.form === f.id && st.ids.length));
+let form = liveForms.length ? liveForms[0].id : null;
+
+function embed(id){
+  return 'https://www.youtube.com/embed/' + id +
+    '?enablejsapi=1&autoplay=0&loop=1&playlist=' + id +
+    '&controls=0&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1';
+}
+
+function buildStrips(){
+  const host = document.getElementById('cf-strips');
+  host.innerHTML = STRIPS.filter(st => st.ids.length).map((st, n) => `
+    <div class="cf-block cf-${st.form}" data-form="${st.form}" style="transition-delay:${0.1 + n * 0.05}s">
+      <div class="cf-label"><span class="cf-label-line"></span>${st.label}</div>
+      <div class="cf-stage" id="stage-${st.key}">
+        <div class="cf-glow" id="glow-${st.key}"></div>
+        ${st.ids.map((id,i) => `
+          <div class="cf-card" id="cfc-${st.key}-${i}" onclick="CF['${st.key}'].tap(${i})">
+            <iframe id="vf-${st.key}-${i}" src="${embed(id)}"
+              allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
+            <div class="cf-veil"></div>
+            <div class="cf-play"><span></span></div>
+          </div>`).join('')}
+      </div>
+      <div class="cf-controls">
+        <div class="cf-sound">
+          <button id="mute-${st.key}" onclick="CF['${st.key}'].toggleMute()">&#128264;</button>
+          <div class="cf-vol-wrap">
+            <div class="cf-vol-fill" id="volfill-${st.key}"></div>
+            <input type="range" min="0" max="1" step="0.05" value="0" id="vol-${st.key}"
+              oninput="CF['${st.key}'].setVol(this.value)">
+          </div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function buildToggle(){
+  const host = document.getElementById('form-toggle');
+  if(liveForms.length < 2){ host.hidden = true; return; }
+  host.innerHTML = liveForms.map(f =>
+    `<button class="form-tab" data-form="${f.id}" onclick="switchForm('${f.id}')">${f.label}</button>`
+  ).join('');
+}
+
+function paintForm(){
+  document.querySelectorAll('#cf-strips .cf-block').forEach(b => {
+    b.hidden = b.dataset.form !== form;
+  });
+  document.querySelectorAll('.form-tab').forEach(t => {
+    t.classList.toggle('is-on', t.dataset.form === form);
+  });
+}
+
+function switchForm(f){
+  if(f === form) return;
+  // leave nothing playing behind in the form we are hiding
+  Object.values(CF).forEach(s => { if(s.form !== f) s.pause(s.cur); });
+  form = f;
+  paintForm();
+  Object.values(CF).forEach(s => { if(s.form === f) s.layout(); });
+}
+
+buildToggle();
+buildStrips();
+STRIPS.filter(st => st.ids.length).forEach(st => makeStrip(st.key, st.ids.length, st.form));
+paintForm();
 
 window.addEventListener('resize', () => Object.values(CF).forEach(s => s.layout()));
 
