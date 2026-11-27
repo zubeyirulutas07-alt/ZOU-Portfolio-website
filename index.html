@@ -517,9 +517,13 @@ nav.scrolled{background:rgba(5,5,5,0.95);border-color:var(--border2)}
 .form-tab.is-on{background:#FACC15;color:#000;font-weight:700}
 
 /* 16:9 cards sit wider and shorter than the 9:16 ones */
-.cf-long .cf-stage{height:360px}
-.cf-long .cf-card{width:520px;height:293px}
-.cf-long .cf-glow{width:560px;height:260px}
+/* --cf-w is set per strip: a lone clip gets the full width, a fan has to
+   leave room for its neighbours. */
+.cf-long{--cf-w:min(620px,58vw)}
+.cf-long.cf-solo{--cf-w:min(980px,76vw)}
+.cf-long .cf-stage{height:calc(var(--cf-w) * 0.5625 + 46px)}
+.cf-long .cf-card{width:var(--cf-w);height:calc(var(--cf-w) * 0.5625)}
+.cf-long .cf-glow{width:calc(var(--cf-w) * 0.9);height:calc(var(--cf-w) * 0.45)}
 .cf-label{
   display:flex;align-items:center;gap:14px;
   font-family:'Plus Jakarta Sans',sans-serif;
@@ -961,9 +965,8 @@ footer{
   .cf-controls{gap:12px;margin-top:26px}
   .cf-block{margin-bottom:60px}
   .form-tab{padding:10px 18px;font-size:12px}
-  .cf-long .cf-stage{height:220px}
-  .cf-long .cf-card{width:286px;height:161px}
-  .cf-long .cf-glow{width:300px;height:160px}
+  .cf-long{--cf-w:min(300px,78vw)}
+  .cf-long.cf-solo{--cf-w:min(340px,88vw)}
   .cf-label{font-size:12px;letter-spacing:2px;margin-bottom:20px}
   .vpoints{grid-template-columns:minmax(0,1fr);gap:26px;margin-top:48px;padding-top:34px}
 
@@ -1618,10 +1621,11 @@ function makeStrip(key, ids, form){
 
   s.layout = () => {
     const narrow = window.innerWidth < 760;
-    // wide 16:9 cards need to clear more ground than the tall ones
-    const step = form === 'long'
-      ? (narrow ? 150 : 330)
-      : (narrow ? 112 : 208);
+    // derive the fan from the card's rendered width, so changing the card size
+    // in CSS keeps the spacing in proportion
+    const first = document.getElementById('cfc-' + key + '-0');
+    const cw = first ? first.offsetWidth : (form === 'long' ? 620 : 272);
+    const step = form === 'long' ? cw * 0.63 : (narrow ? 112 : 208);
     for(let i=0;i<n;i++){
       const card = document.getElementById('cfc-' + key + '-' + i);
       if(!card) continue;
@@ -1684,7 +1688,7 @@ function playerVars(id){
 function buildStrips(){
   const host = document.getElementById('cf-strips');
   host.innerHTML = STRIPS.filter(st => st.ids.length).map((st, n) => `
-    <div class="cf-block cf-${st.form}" data-form="${st.form}" style="transition-delay:${0.1 + n * 0.05}s">
+    <div class="cf-block cf-${st.form}${st.ids.length === 1 ? ' cf-solo' : ''}" data-form="${st.form}" style="transition-delay:${0.1 + n * 0.05}s">
       <div class="cf-label"><span class="cf-label-line"></span>${st.label}</div>
       <div class="cf-stage" id="stage-${st.key}">
         <div class="cf-glow" id="glow-${st.key}"></div>
