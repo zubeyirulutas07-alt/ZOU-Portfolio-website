@@ -555,6 +555,22 @@ nav.scrolled{background:rgba(5,5,5,0.95);border-color:var(--border2)}
 .cf-nav:hover{background:rgba(250,204,21,0.12);border-color:rgba(250,204,21,0.4);color:var(--gold)}
 #vimeo-dots{display:flex;align-items:center;gap:7px}
 
+/* niche tabs */
+#niche-tabs{
+  display:inline-flex;border-radius:12px;overflow:hidden;
+  border:1px solid rgba(250,204,21,0.3);
+}
+.niche-tab{
+  padding:11px 30px;background:transparent;color:#FACC15;
+  font-family:inherit;font-weight:600;font-size:13px;letter-spacing:0.5px;
+  border:none;cursor:pointer;transition:all 0.25s;white-space:nowrap;
+}
+.niche-tab:hover:not(.is-on){background:rgba(250,204,21,0.1)}
+.niche-tab.is-on{background:#FACC15;color:#000;font-weight:700}
+
+/* only the active niche's cards occupy the stage */
+.cf-set{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+
 #cf-sound{display:flex;align-items:center;gap:12px;margin-left:10px}
 #mute-btn{
   background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);
@@ -929,6 +945,7 @@ footer{
   .cf-card{width:186px;height:331px;border-radius:16px}
   #cf-glow{width:320px;height:240px}
   #cf-controls{gap:12px;margin-top:28px}
+  .niche-tab{padding:10px 18px;font-size:12px}
   .vpoints{grid-template-columns:minmax(0,1fr);gap:26px;margin-top:48px;padding-top:34px}
 
   /* book */
@@ -1360,44 +1377,51 @@ footer{
       <h2 class="section-h2" style="margin-bottom:0">See It <span style="color:var(--gold)">For Yourself</span></h2>
     </div>
 
+    <!-- NICHE TABS -->
+    <div class="reveal" style="display:flex;justify-content:center;margin-bottom:44px">
+      <div id="niche-tabs">
+        <button id="tab-ads" class="niche-tab is-on" onclick="switchNiche('ads')">Ads &amp; Marketing</button>
+        <button id="tab-ent" class="niche-tab" onclick="switchNiche('ent')">Entertainment</button>
+      </div>
+    </div>
+
     <!-- COVERFLOW -->
     <div class="reveal" style="transition-delay:0.1s">
       <div id="coverflow">
         <div id="cf-glow"></div>
-        <div class="cf-card" id="cfc0" onclick="goVimeo(0)">
-          <iframe id="vf0" src="https://player.vimeo.com/video/1203004574?autoplay=1&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
-            allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
-          <div class="cf-veil"></div>
+        <div class="cf-set" id="set-ads">
+          <div class="cf-card" id="cfc-ads-0" onclick="goVimeo(0)">
+            <iframe id="vf-ads-0" src="https://player.vimeo.com/video/1203004574?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
+              allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
+            <div class="cf-veil"></div>
+          </div>
+          <div class="cf-card" id="cfc-ads-1" onclick="goVimeo(1)">
+            <iframe id="vf-ads-1" src="https://player.vimeo.com/video/1203004588?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
+              allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
+            <div class="cf-veil"></div>
+          </div>
+          <div class="cf-card" id="cfc-ads-2" onclick="goVimeo(2)">
+            <iframe id="vf-ads-2" src="https://player.vimeo.com/video/1203004604?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
+              allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
+            <div class="cf-veil"></div>
+          </div>
         </div>
-        <div class="cf-card" id="cfc1" onclick="goVimeo(1)">
-          <iframe id="vf1" src="https://player.vimeo.com/video/1203004588?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
-            allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
-          <div class="cf-veil"></div>
-        </div>
-        <div class="cf-card" id="cfc2" onclick="goVimeo(2)">
-          <iframe id="vf2" src="https://player.vimeo.com/video/1203004604?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
-            allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
-          <div class="cf-veil"></div>
-        </div>
-        <div class="cf-card" id="cfc3" onclick="goVimeo(3)">
-          <iframe id="vf3" src="https://player.vimeo.com/video/1203432513?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
-            allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
-          <div class="cf-veil"></div>
-        </div>
-        <div class="cf-card" id="cfc4" onclick="goVimeo(4)">
-          <iframe id="vf4" src="https://player.vimeo.com/video/1203432452?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
-            allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
-          <div class="cf-veil"></div>
-        </div>
-        <div class="cf-card" id="cfc5" onclick="goVimeo(5)">
-          <iframe id="vf5" src="https://player.vimeo.com/video/1203432951?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
-            allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
-          <div class="cf-veil"></div>
-        </div>
-        <div class="cf-card" id="cfc6" onclick="goVimeo(6)">
-          <iframe id="vf6" src="https://player.vimeo.com/video/1203433014?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
-            allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
-          <div class="cf-veil"></div>
+        <div class="cf-set" id="set-ent" hidden>
+          <div class="cf-card" id="cfc-ent-0" onclick="goVimeo(0)">
+            <iframe id="vf-ent-0" src="https://www.youtube.com/embed/dX6vvpuTMFc?enablejsapi=1&autoplay=0&loop=1&playlist=dX6vvpuTMFc&controls=0&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1"
+              allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
+            <div class="cf-veil"></div>
+          </div>
+          <div class="cf-card" id="cfc-ent-1" onclick="goVimeo(1)">
+            <iframe id="vf-ent-1" src="https://player.vimeo.com/video/1203432513?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
+              allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
+            <div class="cf-veil"></div>
+          </div>
+          <div class="cf-card" id="cfc-ent-2" onclick="goVimeo(2)">
+            <iframe id="vf-ent-2" src="https://player.vimeo.com/video/1203432452?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
+              allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
+            <div class="cf-veil"></div>
+          </div>
         </div>
       </div>
 
@@ -1405,13 +1429,9 @@ footer{
       <div id="cf-controls">
         <div class="cf-nav" id="vbprev">&#8592;</div>
         <div id="vimeo-dots">
-          <div id="vd0" style="width:22px;height:5px;border-radius:3px;background:var(--gold);transition:all 0.3s;cursor:pointer" onclick="goVimeo(0)"></div>
-          <div id="vd1" style="width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s;cursor:pointer" onclick="goVimeo(1)"></div>
-          <div id="vd2" style="width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s;cursor:pointer" onclick="goVimeo(2)"></div>
-          <div id="vd3" style="width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s;cursor:pointer" onclick="goVimeo(3)"></div>
-          <div id="vd4" style="width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s;cursor:pointer" onclick="goVimeo(4)"></div>
-          <div id="vd5" style="width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s;cursor:pointer" onclick="goVimeo(5)"></div>
-          <div id="vd6" style="width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s;cursor:pointer" onclick="goVimeo(6)"></div>
+          <div class="cf-dot" id="vd0" style="width:22px;height:5px;border-radius:3px;background:var(--gold);transition:all 0.3s;cursor:pointer" onclick="goVimeo(0)"></div>
+          <div class="cf-dot" id="vd1" style="width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s;cursor:pointer" onclick="goVimeo(1)"></div>
+          <div class="cf-dot" id="vd2" style="width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s;cursor:pointer" onclick="goVimeo(2)"></div>
         </div>
         <div class="cf-nav" id="vbnext">&#8594;</div>
         <div id="cf-sound">
@@ -1610,105 +1630,150 @@ let cgx=W/2,cgy=H/2;
 function moveCur(){cgx+=(mxS-cgx)*0.07;cgy+=(myS-cgy)*0.07;cur.style.left=cgx+'px';cur.style.top=cgy+'px';requestAnimationFrame(moveCur)}
 moveCur();
 
-// ===== VIMEO PHONE REELS =====
-const vGlow = document.getElementById('cf-glow');
+// ===== PORTFOLIO COVERFLOW =====
+const vGlow  = document.getElementById('cf-glow');
 const cfWrap = document.getElementById('coverflow');
 const vGlows = [
   'radial-gradient(ellipse,rgba(250,204,21,0.25),transparent 70%)',
   'radial-gradient(ellipse,rgba(167,139,250,0.25),transparent 70%)',
   'radial-gradient(ellipse,rgba(52,211,153,0.25),transparent 70%)',
-  'radial-gradient(ellipse,rgba(251,146,60,0.25),transparent 70%)',
-  'radial-gradient(ellipse,rgba(56,189,248,0.25),transparent 70%)',
-  'radial-gradient(ellipse,rgba(232,121,249,0.25),transparent 70%)',
-  'radial-gradient(ellipse,rgba(250,204,21,0.25),transparent 70%)',
 ];
-let vCur = 0; const vTot = 7;
-const mutedState = [true, true, true, true, true, true, true];
-const volState = [0, 0, 0, 0, 0, 0, 0];
 
-// Load Vimeo Player API
+// Two niches, three clips each. `p` is the provider the card's iframe uses.
+const NICHES = {
+  ads: [{p:'vimeo'},{p:'vimeo'},{p:'vimeo'}],
+  ent: [{p:'youtube'},{p:'vimeo'},{p:'vimeo'}],
+};
+let niche = 'ads';
+let vCur  = 0;
+const vTot = 3;
+
+const mutedState = [true,true,true];
+const volState   = [0,0,0];
+
+// Player handles, keyed by card element id
+const players = {};
+const ytReady = {};
+
+function cardId(n,i){ return 'cfc-'+n+'-'+i; }
+function frameId(n,i){ return 'vf-'+n+'-'+i; }
+function handle(n,i){ return players[frameId(n,i)]; }
+
+// --- Vimeo ---
 const vimeoScript = document.createElement('script');
 vimeoScript.src = 'https://player.vimeo.com/api/player.js';
+vimeoScript.onload = () => {
+  Object.keys(NICHES).forEach(n => NICHES[n].forEach((c,i) => {
+    if(c.p !== 'vimeo') return;
+    const el = document.getElementById(frameId(n,i));
+    if(el) players[frameId(n,i)] = {kind:'vimeo', pl:new Vimeo.Player(el)};
+  }));
+  playCard(niche, vCur);
+};
 document.head.appendChild(vimeoScript);
 
-let players = [];
-vimeoScript.onload = () => {
-  players = [
-    new Vimeo.Player(document.getElementById('vf0')),
-    new Vimeo.Player(document.getElementById('vf1')),
-    new Vimeo.Player(document.getElementById('vf2')),
-    new Vimeo.Player(document.getElementById('vf3')),
-    new Vimeo.Player(document.getElementById('vf4')),
-    new Vimeo.Player(document.getElementById('vf5')),
-    new Vimeo.Player(document.getElementById('vf6')),
-  ];
-  players[0].play();
-  players[0].setMuted(true);
-  players[0].setVolume(0);
-  document.getElementById('mute-btn').textContent = '🔇';
-};
+// --- YouTube ---
+const ytScript = document.createElement('script');
+ytScript.src = 'https://www.youtube.com/iframe_api';
+document.head.appendChild(ytScript);
+function onYouTubeIframeAPIReady(){
+  Object.keys(NICHES).forEach(n => NICHES[n].forEach((c,i) => {
+    if(c.p !== 'youtube') return;
+    const id = frameId(n,i);
+    if(!document.getElementById(id)) return;
+    players[id] = {kind:'yt', pl:new YT.Player(id, {events:{onReady:()=>{
+      ytReady[id] = true;
+      if(niche===n && vCur===i) playCard(n,i);
+    }}})};
+  }));
+}
+window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
 
-function updateVolFill(val) {
+// --- provider-agnostic controls ---
+function playCard(n,i){
+  const h = handle(n,i); if(!h) return;
+  const muted = mutedState[i], vol = volState[i];
+  if(h.kind==='vimeo'){
+    h.pl.setMuted(muted); h.pl.setVolume(vol); h.pl.play().catch(()=>{});
+  }else if(ytReady[frameId(n,i)]){
+    muted ? h.pl.mute() : h.pl.unMute();
+    h.pl.setVolume(Math.round(vol*100));
+    h.pl.playVideo();
+  }
+}
+function pauseCard(n,i){
+  const h = handle(n,i); if(!h) return;
+  if(h.kind==='vimeo') h.pl.pause().catch(()=>{});
+  else if(ytReady[frameId(n,i)]) h.pl.pauseVideo();
+}
+function pauseNiche(n){ NICHES[n].forEach((_,i)=>pauseCard(n,i)); }
+
+function applyAudio(i){
+  const h = handle(niche,i); if(!h) return;
+  if(h.kind==='vimeo'){
+    h.pl.setMuted(mutedState[i]); h.pl.setVolume(volState[i]);
+  }else if(ytReady[frameId(niche,i)]){
+    mutedState[i] ? h.pl.mute() : h.pl.unMute();
+    h.pl.setVolume(Math.round(volState[i]*100));
+  }
+  document.getElementById('mute-btn').textContent = mutedState[i] ? '\u{1F507}' : '\u{1F50A}';
+}
+
+function updateVolFill(val){
   const fill = document.getElementById('vol-fill');
   const wrap = document.getElementById('vol-slider-wrap');
-  const innerH = wrap.clientHeight - 16;
-  fill.style.height = (parseFloat(val) * innerH) + 'px';
+  fill.style.width = (parseFloat(val) * (wrap.clientWidth - 14)) + 'px';
 }
 
-function toggleMute(i) {
+function toggleMute(i){
   mutedState[i] = !mutedState[i];
-  if(players[i]) {
-    players[i].setMuted(mutedState[i]);
-    if(!mutedState[i]) {
-      const vol = parseFloat(document.getElementById('vol-slider').value) || 0.7;
-      players[i].setVolume(vol);
-      document.getElementById('vol-slider').value = vol;
-    }
+  if(!mutedState[i] && volState[i] === 0){
+    volState[i] = 0.7;
+    document.getElementById('vol-slider').value = 0.7;
+    updateVolFill(0.7);
   }
-  document.getElementById('mute-btn').textContent = mutedState[i] ? '🔇' : '🔊';
+  applyAudio(i);
 }
 
-function setVol(i, val) {
+function setVol(i,val){
   const v = parseFloat(val);
-  mutedState[i] = v === 0;
   volState[i] = v;
-  if(players[i]) {
-    players[i].setVolume(v);
-    players[i].setMuted(v === 0);
-  }
-  document.getElementById('mute-btn').textContent = v === 0 ? '🔇' : '🔊';
+  mutedState[i] = v === 0;
+  applyAudio(i);
   updateVolFill(v);
 }
 
-function vDots() {
+function vDots(){
   for(let i=0;i<vTot;i++){
     const d = document.getElementById('vd'+i);
-    if(i===vCur){d.style.width='22px';d.style.height='5px';d.style.borderRadius='3px';d.style.background='var(--gold)'}
-    else{d.style.width='5px';d.style.height='5px';d.style.borderRadius='50%';d.style.background='rgba(255,255,255,0.25)'}
+    if(!d) continue;
+    const on = i===vCur;
+    d.style.width  = on ? '22px' : '5px';
+    d.style.height = '5px';
+    d.style.borderRadius = on ? '3px' : '50%';
+    d.style.background   = on ? 'var(--gold)' : 'rgba(255,255,255,0.25)';
   }
 }
 
-// Lay the cards out in 3D around the active one
+// Lay the active niche's cards out in 3D around the active one
 function cfLayout(){
   const narrow = window.innerWidth < 760;
-  const step   = narrow ? 112 : 208;   // px offset per slot
-  const step2  = narrow ? 186 : 364;   // offset for the outer slot
+  const step = narrow ? 112 : 208;
   for(let i=0;i<vTot;i++){
-    const card = document.getElementById('cfc'+i);
+    const card = document.getElementById(cardId(niche,i));
+    if(!card) continue;
+    // wrap the offset so the active card always sits between its neighbours
     let off = i - vCur;
-    // wrap so the strip stays continuous in both directions
     if(off >  vTot/2) off -= vTot;
     if(off < -vTot/2) off += vTot;
     const a = Math.abs(off), dir = Math.sign(off);
     let x, scale, rotY, op, z;
-    if(a===0){      x=0;             scale=1;    rotY=0;         op=1;   z=30; }
-    else if(a===1){ x=dir*step;      scale=0.82; rotY=-dir*38;   op=1;   z=20; }
-    else if(a===2){ x=dir*step2;     scale=0.66; rotY=-dir*44;   op=1;   z=10; }
-    else{           x=dir*(step2+60);scale=0.5;  rotY=-dir*48;   op=0;   z=0;  }
+    if(a===0){      x=0;         scale=1;    rotY=0;       op=1; z=30; }
+    else if(a===1){ x=dir*step;  scale=0.82; rotY=-dir*38; op=1; z=20; }
+    else{           x=dir*step*1.75; scale=0.66; rotY=-dir*44; op=1; z=10; }
     card.style.transform = `translateX(${x}px) scale(${scale}) rotateY(${rotY}deg)`;
     card.style.opacity = op;
     card.style.zIndex = z;
-    card.style.pointerEvents = op ? 'auto' : 'none';
     card.classList.toggle('cf-active', a===0);
   }
 }
@@ -1716,29 +1781,36 @@ window.addEventListener('resize', cfLayout);
 
 function goVimeo(n){
   const prev = vCur;
-  vCur=((n%vTot)+vTot)%vTot;
-  vGlow.style.background=vGlows[vCur];
+  vCur = ((n % vTot) + vTot) % vTot;
+  if(prev !== vCur) pauseCard(niche, prev);
+  // carry the listener's audio choice to the clip they just selected
+  mutedState[vCur] = mutedState[prev];
+  volState[vCur]   = volState[prev];
+  vGlow.style.background = vGlows[vCur];
   vDots();
   cfLayout();
-  // Pause previous, play new — keep volume as is
-  if(players.length) {
-    if(players[prev]) players[prev].pause();
-    const currentVol = parseFloat(document.getElementById('vol-slider').value);
-    const currentMuted = mutedState[prev];
-    mutedState[vCur] = currentMuted;
-    volState[vCur] = currentVol;
-    if(players[vCur]) {
-      players[vCur].play();
-      players[vCur].setVolume(currentVol);
-      players[vCur].setMuted(currentMuted);
-    }
-    document.getElementById('mute-btn').textContent = currentMuted ? '🔇' : '🔊';
-  }
+  playCard(niche, vCur);
+  document.getElementById('mute-btn').textContent = mutedState[vCur] ? '\u{1F507}' : '\u{1F50A}';
+}
+
+function switchNiche(n){
+  if(n === niche) return;
+  pauseNiche(niche);
+  document.getElementById('set-'+niche).hidden = true;
+  niche = n;
+  document.getElementById('set-'+niche).hidden = false;
+  document.getElementById('tab-ads').classList.toggle('is-on', n==='ads');
+  document.getElementById('tab-ent').classList.toggle('is-on', n==='ent');
+  vCur = 0;
+  vGlow.style.background = vGlows[0];
+  vDots();
+  cfLayout();
+  playCard(niche, vCur);
 }
 
 cfLayout();
-document.getElementById('vbprev').onclick=()=>goVimeo(vCur-1);
-document.getElementById('vbnext').onclick=()=>goVimeo(vCur+1);
+document.getElementById('vbprev').onclick = () => goVimeo(vCur-1);
+document.getElementById('vbnext').onclick = () => goVimeo(vCur+1);
 
 // Swipe the coverflow horizontally on touch
 let vtx=0;
