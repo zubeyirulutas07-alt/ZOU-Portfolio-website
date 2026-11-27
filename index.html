@@ -499,10 +499,93 @@ nav.scrolled{background:rgba(5,5,5,0.95);border-color:var(--border2)}
   border-top:1px solid var(--border);border-bottom:1px solid var(--border);
   padding:120px 48px;
 }
-.videos-inner{
-  max-width:1200px;margin:0 auto;
-  display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;
+.videos-inner{max-width:1200px;margin:0 auto}
+
+/* ===== COVERFLOW ===== */
+#coverflow{
+  position:relative;
+  height:520px;
+  perspective:1600px;
+  perspective-origin:50% 50%;
+  display:flex;align-items:center;justify-content:center;
 }
+#cf-glow{
+  position:absolute;width:560px;height:360px;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  background:radial-gradient(ellipse,rgba(250,204,21,0.22),transparent 70%);
+  filter:blur(60px);pointer-events:none;transition:background 0.7s;
+}
+.cf-card{
+  position:absolute;
+  width:272px;height:484px;
+  border-radius:22px;overflow:hidden;
+  background:#000;
+  border:1px solid rgba(255,255,255,0.1);
+  box-shadow:0 30px 70px rgba(0,0,0,0.75);
+  transform-style:preserve-3d;
+  transition:transform 0.6s cubic-bezier(0.4,0,0.2,1),opacity 0.5s,box-shadow 0.5s;
+  cursor:pointer;
+  will-change:transform;
+}
+.cf-card iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
+/* veil dims the off-centre cards and blocks clicks reaching the iframe */
+.cf-veil{
+  position:absolute;inset:0;
+  background:rgba(0,0,0,0.55);
+  transition:background 0.5s;
+}
+.cf-card.cf-active{
+  border-color:rgba(250,204,21,0.45);
+  box-shadow:0 40px 90px rgba(0,0,0,0.85),0 0 0 1px rgba(250,204,21,0.18);
+  cursor:default;
+}
+.cf-card.cf-active .cf-veil{background:transparent;pointer-events:none}
+
+#cf-controls{
+  display:flex;align-items:center;justify-content:center;gap:18px;
+  margin-top:40px;flex-wrap:wrap;
+}
+.cf-nav{
+  width:42px;height:42px;border-radius:50%;
+  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.12);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:16px;color:#A1A1AA;user-select:none;
+  transition:all 0.25s;flex-shrink:0;
+}
+.cf-nav:hover{background:rgba(250,204,21,0.12);border-color:rgba(250,204,21,0.4);color:var(--gold)}
+#vimeo-dots{display:flex;align-items:center;gap:7px}
+
+#cf-sound{display:flex;align-items:center;gap:12px;margin-left:10px}
+#mute-btn{
+  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);
+  border-radius:50%;width:42px;height:42px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:17px;transition:all 0.2s;flex-shrink:0;
+}
+#vol-slider-wrap{
+  width:120px;height:30px;display:flex;align-items:center;
+  background:rgba(255,255,255,0.06);border-radius:16px;
+  padding:0 7px;position:relative;overflow:hidden;
+}
+#vol-fill{
+  position:absolute;left:7px;top:50%;transform:translateY(-50%);
+  width:0;height:10px;background:#FACC15;border-radius:6px;
+  transition:width 0.1s;pointer-events:none;
+}
+#vol-slider{
+  -webkit-appearance:none;appearance:none;width:100%;height:100%;
+  cursor:pointer;background:transparent;outline:none;border:none;
+  margin:0;position:relative;z-index:2;
+}
+#vol-slider::-webkit-slider-thumb{-webkit-appearance:none;width:0;height:0;opacity:0}
+#vol-slider::-moz-range-thumb{width:0;height:0;border:none;opacity:0}
+
+.vpoints{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:40px;
+  margin-top:72px;padding-top:48px;border-top:1px solid var(--border);
+}
+.vpoint-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:700;margin-bottom:8px}
+.vpoint-desc{font-size:14px;color:var(--muted2);line-height:1.7;font-weight:300}
 .vtext{}
 .vtext-list{margin-top:48px;display:flex;flex-direction:column;gap:24px}
 .vtext-item{
@@ -841,9 +924,12 @@ footer{
   #brands .sa{gap:18px !important}
   .brand-bubble{width:128px;height:128px}
 
-  /* videos phone group: scale to fit narrow screens */
-  .videos-inner{grid-template-columns:minmax(0,1fr) !important;gap:40px !important}
-  .phone-row{gap:10px !important;transform:scale(0.72);transform-origin:top center;margin:-36px 0 -52px;max-width:100%;overflow:visible}
+  /* coverflow: smaller cards and a shorter stage on narrow screens */
+  #coverflow{height:360px;perspective:1100px}
+  .cf-card{width:186px;height:331px;border-radius:16px}
+  #cf-glow{width:320px;height:240px}
+  #cf-controls{gap:12px;margin-top:28px}
+  .vpoints{grid-template-columns:minmax(0,1fr);gap:26px;margin-top:48px;padding-top:34px}
 
   /* book */
   .book-grid{grid-template-columns:minmax(0,1fr) !important;gap:40px !important}
@@ -856,18 +942,19 @@ footer{
   #vid-volume{display:none !important}
   /* Better touch targets */
   #vid-playbtn,#vid-mutebtn{min-width:40px;min-height:40px;padding:6px}
-  /* Fix vimeo nav arrows on mobile */
-  #vimeo-dots button,#vimeo-dots [onclick]{min-width:44px;min-height:44px}
-  /* Hide Vimeo volume slider on mobile (iOS can't control iframe volume) */
-  #vol-slider-wrap,#vol-slider-wrap+*{display:none !important}
+  /* Hide the volume slider on mobile (iOS can't set iframe volume) */
+  #vol-slider-wrap{display:none !important}
+  #cf-sound{margin-left:0}
   #mute-btn{width:44px;height:44px;font-size:20px}
+  .cf-nav{width:44px;height:44px}
 }
 
 /* ===== VERY SMALL ===== */
 @media(max-width:380px){
   .hero-stat-num{font-size:21px}
   .brand-bubble{width:118px;height:118px}
-  .phone-row{transform:scale(0.74);margin:-30px 0 -48px}
+  .cf-card{width:168px;height:299px}
+  #coverflow{height:330px}
 }
 </style>
 </head>
@@ -1266,122 +1353,93 @@ footer{
 <!-- ===== VIDEOS ===== -->
 <section id="videos" style="position:relative;z-index:2;background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:100px 48px">
   <div class="videos-inner">
-    <!-- TEXT LEFT -->
-    <div class="reveal">
-      <div class="section-eyebrow" style="margin-bottom:16px"><div class="section-eyebrow-line"></div><span class="section-eyebrow-text">Portfolio</span></div>
-      <h2 class="section-h2" style="margin-bottom:40px">See It<br><span style="color:var(--gold)">For Yourself</span></h2>
-      <div style="display:flex;flex-direction:column;gap:28px">
-        <div style="padding-bottom:28px;border-bottom:1px solid var(--border)">
-          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:700;margin-bottom:6px">The First 3 Seconds Win or Lose</div>
-          <div style="font-size:14px;color:var(--muted2);line-height:1.7;font-weight:300">Most people scroll past. The hook is the only thing that stops them. I build it so they can't look away.</div>
+
+    <!-- HEADING -->
+    <div class="reveal" style="text-align:center;max-width:760px;margin:0 auto 56px">
+      <div class="section-eyebrow" style="justify-content:center;margin-bottom:16px"><div class="section-eyebrow-line"></div><span class="section-eyebrow-text">Portfolio</span></div>
+      <h2 class="section-h2" style="margin-bottom:0">See It <span style="color:var(--gold)">For Yourself</span></h2>
+    </div>
+
+    <!-- COVERFLOW -->
+    <div class="reveal" style="transition-delay:0.1s">
+      <div id="coverflow">
+        <div id="cf-glow"></div>
+        <div class="cf-card" id="cfc0" onclick="goVimeo(0)">
+          <iframe id="vf0" src="https://player.vimeo.com/video/1203004574?autoplay=1&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
+            allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
+          <div class="cf-veil"></div>
         </div>
-        <div style="padding-bottom:28px;border-bottom:1px solid var(--border)">
-          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:700;margin-bottom:6px">Story First. Always.</div>
-          <div style="font-size:14px;color:var(--muted2);line-height:1.7;font-weight:300">People don't share clips. They share stories. Every video I edit has a clear beginning, middle, and payoff — even if it's 30 seconds long.</div>
+        <div class="cf-card" id="cfc1" onclick="goVimeo(1)">
+          <iframe id="vf1" src="https://player.vimeo.com/video/1203004588?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
+            allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
+          <div class="cf-veil"></div>
         </div>
-        <div>
-          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:700;margin-bottom:6px">Looks and Sounds Like Money</div>
-          <div style="font-size:14px;color:var(--muted2);line-height:1.7;font-weight:300">Color grading and sound design that makes you look like you have a full production team — even if it's just you.</div>
+        <div class="cf-card" id="cfc2" onclick="goVimeo(2)">
+          <iframe id="vf2" src="https://player.vimeo.com/video/1203004604?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
+            allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
+          <div class="cf-veil"></div>
+        </div>
+        <div class="cf-card" id="cfc3" onclick="goVimeo(3)">
+          <iframe id="vf3" src="https://player.vimeo.com/video/1203432513?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
+            allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
+          <div class="cf-veil"></div>
+        </div>
+        <div class="cf-card" id="cfc4" onclick="goVimeo(4)">
+          <iframe id="vf4" src="https://player.vimeo.com/video/1203432452?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
+            allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
+          <div class="cf-veil"></div>
+        </div>
+        <div class="cf-card" id="cfc5" onclick="goVimeo(5)">
+          <iframe id="vf5" src="https://player.vimeo.com/video/1203432951?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
+            allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
+          <div class="cf-veil"></div>
+        </div>
+        <div class="cf-card" id="cfc6" onclick="goVimeo(6)">
+          <iframe id="vf6" src="https://player.vimeo.com/video/1203433014?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
+            allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
+          <div class="cf-veil"></div>
+        </div>
+      </div>
+
+      <!-- CONTROLS -->
+      <div id="cf-controls">
+        <div class="cf-nav" id="vbprev">&#8592;</div>
+        <div id="vimeo-dots">
+          <div id="vd0" style="width:22px;height:5px;border-radius:3px;background:var(--gold);transition:all 0.3s;cursor:pointer" onclick="goVimeo(0)"></div>
+          <div id="vd1" style="width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s;cursor:pointer" onclick="goVimeo(1)"></div>
+          <div id="vd2" style="width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s;cursor:pointer" onclick="goVimeo(2)"></div>
+          <div id="vd3" style="width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s;cursor:pointer" onclick="goVimeo(3)"></div>
+          <div id="vd4" style="width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s;cursor:pointer" onclick="goVimeo(4)"></div>
+          <div id="vd5" style="width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s;cursor:pointer" onclick="goVimeo(5)"></div>
+          <div id="vd6" style="width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s;cursor:pointer" onclick="goVimeo(6)"></div>
+        </div>
+        <div class="cf-nav" id="vbnext">&#8594;</div>
+        <div id="cf-sound">
+          <button onclick="toggleMute(vCur)" id="mute-btn">&#128264;</button>
+          <div id="vol-slider-wrap">
+            <div id="vol-fill"></div>
+            <input type="range" min="0" max="1" step="0.05" value="0" oninput="setVol(vCur,this.value);updateVolFill(this.value)" id="vol-slider">
+          </div>
         </div>
       </div>
     </div>
-    <!-- PHONE RIGHT -->
-    <div class="reveal phone-row" style="display:flex;align-items:center;justify-content:center;gap:16px;transition-delay:0.15s">
 
-            <!-- PHONE -->
-            <div style="position:relative;animation:phoneFloat 5s ease-in-out infinite">
-              <div id="vimeo-glow" style="position:absolute;inset:-40px;border-radius:50%;background:radial-gradient(ellipse,rgba(250,204,21,0.25),transparent 70%);filter:blur(40px);z-index:0;transition:background 0.8s"></div>
-              <div id="vimeo-phone" style="position:relative;z-index:1;width:300px;background:#0a0a0a;border-radius:48px;border:2px solid rgba(255,255,255,0.12);overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,0.04),0 60px 120px rgba(0,0,0,0.8);cursor:grab">
-                <div style="width:100px;height:28px;background:#0a0a0a;margin:0 auto;border-radius:0 0 20px 20px;position:relative;z-index:10"></div>
-                <div style="height:620px;overflow:hidden;position:relative;background:#000">
-                  <div id="vimeo-reels" style="display:flex;flex-direction:column;transition:transform 0.55s cubic-bezier(0.4,0,0.2,1)">
-                    <div style="width:100%;height:620px;flex-shrink:0;position:relative;background:#000">
-                      <iframe id="vf0" src="https://player.vimeo.com/video/1203004574?autoplay=1&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
-                        style="position:absolute;inset:0;width:100%;height:100%;border:none"
-                        allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
-                    </div>
-                    <div style="width:100%;height:620px;flex-shrink:0;position:relative;background:#000">
-                      <iframe id="vf1" src="https://player.vimeo.com/video/1203004588?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
-                        style="position:absolute;inset:0;width:100%;height:100%;border:none"
-                        allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
-                    </div>
-                    <div style="width:100%;height:620px;flex-shrink:0;position:relative;background:#000">
-                      <iframe id="vf2" src="https://player.vimeo.com/video/1203004604?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
-                        style="position:absolute;inset:0;width:100%;height:100%;border:none"
-                        allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
-                    </div>
-                    <div style="width:100%;height:620px;flex-shrink:0;position:relative;background:#000">
-                      <iframe id="vf3" src="https://player.vimeo.com/video/1203432513?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
-                        style="position:absolute;inset:0;width:100%;height:100%;border:none"
-                        allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
-                    </div>
-                    <div style="width:100%;height:620px;flex-shrink:0;position:relative;background:#000">
-                      <iframe id="vf4" src="https://player.vimeo.com/video/1203432452?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
-                        style="position:absolute;inset:0;width:100%;height:100%;border:none"
-                        allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
-                    </div>
-                    <div style="width:100%;height:620px;flex-shrink:0;position:relative;background:#000">
-                      <iframe id="vf5" src="https://player.vimeo.com/video/1203432951?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
-                        style="position:absolute;inset:0;width:100%;height:100%;border:none"
-                        allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
-                    </div>
-                    <div style="width:100%;height:620px;flex-shrink:0;position:relative;background:#000">
-                      <iframe id="vf6" src="https://player.vimeo.com/video/1203433014?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
-                        style="position:absolute;inset:0;width:100%;height:100%;border:none"
-                        allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
-                    </div>
-                  </div>
-                </div>
-                <!-- TIMELINE BAR -->
-                <div id="vimeo-timeline" style="background:rgba(255,255,255,0.06);height:28px;display:none;align-items:center;padding:0 12px;gap:8px;cursor:pointer;position:relative;z-index:20" onclick="seekVimeo(event)">
-                  <span id="vtime-cur" style="font-size:9px;color:var(--muted2);font-family:monospace;min-width:28px">0:00</span>
-                  <div style="flex:1;height:4px;background:rgba(255,255,255,0.1);border-radius:2px;position:relative;overflow:hidden">
-                    <div id="vtime-bar" style="height:100%;width:0%;background:var(--gold);border-radius:2px;transition:width 0.2s linear"></div>
-                  </div>
-                  <span id="vtime-dur" style="font-size:9px;color:var(--muted2);font-family:monospace;min-width:28px;text-align:right">0:00</span>
-                </div>
-                <!-- Bottom home indicator -->
-                <div style="background:#0a0a0a;height:28px;display:flex;align-items:center;justify-content:center">
-                  <div style="width:80px;height:4px;background:rgba(255,255,255,0.2);border-radius:2px"></div>
-                </div>
-              </div>
-            </div>
-
-            <!-- VOLUME CONTROLS — right side of phone -->
-            <div style="display:flex;flex-direction:column;align-items:center;gap:12px;padding:16px 0">
-              <button onclick="toggleMute(vCur)" id="mute-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;transition:all 0.2s">🔇</button>
-              <style>
-                #vol-slider-wrap{width:32px;height:180px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.06);border-radius:20px;padding:8px 0;position:relative;overflow:hidden}
-                #vol-slider{-webkit-appearance:none;appearance:none;writing-mode:vertical-lr;direction:rtl;width:100%;height:100%;cursor:pointer;background:transparent;outline:none;border:none;padding:0;margin:0;position:relative;z-index:2}
-                #vol-slider::-webkit-slider-thumb{-webkit-appearance:none;width:0;height:0;background:transparent;border:none;box-shadow:none;opacity:0}
-                #vol-slider::-moz-range-thumb{width:0;height:0;background:transparent;border:none;box-shadow:none;opacity:0}
-                #vol-slider::-webkit-slider-runnable-track{background:transparent}
-                #vol-slider::-moz-range-track{background:transparent}
-              </style>
-              <div id="vol-slider-wrap" style="position:relative">
-                <div id="vol-fill" style="position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:16px;height:0%;background:#FACC15;border-radius:10px;transition:height 0.1s;pointer-events:none"></div>
-                <input type="range" min="0" max="1" step="0.05" value="0"
-                  oninput="setVol(vCur,this.value);updateVolFill(this.value)" id="vol-slider">
-              </div>
-              <span style="font-size:10px;color:var(--muted);letter-spacing:1px">VOL</span>
-            </div>
-
-            <!-- NAV DOTS + BUTTONS -->
-            <div style="display:flex;flex-direction:column;align-items:center;gap:12px">
-              <div id="vbprev" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:#A1A1AA;user-select:none">↑</div>
-              <div style="display:flex;flex-direction:column;gap:6px" id="vimeo-dots">
-                <div id="vd0" style="width:4px;height:16px;border-radius:3px;background:var(--gold);transition:all 0.3s"></div>
-                <div id="vd1" style="width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s"></div>
-                <div id="vd2" style="width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s"></div>
-                <div id="vd3" style="width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s"></div>
-                <div id="vd4" style="width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s"></div>
-                <div id="vd5" style="width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s"></div>
-                <div id="vd6" style="width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s"></div>
-              </div>
-              <div id="vbnext" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:#A1A1AA;user-select:none">↓</div>
-            </div>
-
+    <!-- POINTS -->
+    <div class="reveal vpoints" style="transition-delay:0.2s">
+      <div>
+        <div class="vpoint-title">The First 3 Seconds Win or Lose</div>
+        <div class="vpoint-desc">Most people scroll past. The hook is the only thing that stops them. I build it so they can't look away.</div>
+      </div>
+      <div>
+        <div class="vpoint-title">Story First. Always.</div>
+        <div class="vpoint-desc">People don't share clips. They share stories. Every video I edit has a clear beginning, middle, and payoff &mdash; even if it's 30 seconds long.</div>
+      </div>
+      <div>
+        <div class="vpoint-title">Looks and Sounds Like Money</div>
+        <div class="vpoint-desc">Color grading and sound design that makes you look like you have a full production team &mdash; even if it's just you.</div>
+      </div>
     </div>
+
   </div>
 </section>
 
@@ -1553,9 +1611,8 @@ function moveCur(){cgx+=(mxS-cgx)*0.07;cgy+=(myS-cgy)*0.07;cur.style.left=cgx+'p
 moveCur();
 
 // ===== VIMEO PHONE REELS =====
-const vReels = document.getElementById('vimeo-reels');
-const vGlow = document.getElementById('vimeo-glow');
-const vPhone = document.getElementById('vimeo-phone');
+const vGlow = document.getElementById('cf-glow');
+const cfWrap = document.getElementById('coverflow');
 const vGlows = [
   'radial-gradient(ellipse,rgba(250,204,21,0.25),transparent 70%)',
   'radial-gradient(ellipse,rgba(167,139,250,0.25),transparent 70%)',
@@ -1626,17 +1683,43 @@ function setVol(i, val) {
 function vDots() {
   for(let i=0;i<vTot;i++){
     const d = document.getElementById('vd'+i);
-    if(i===vCur){d.style.height='16px';d.style.borderRadius='3px';d.style.background='var(--gold)'}
-    else{d.style.height='4px';d.style.borderRadius='50%';d.style.background='rgba(255,255,255,0.25)'}
+    if(i===vCur){d.style.width='22px';d.style.height='5px';d.style.borderRadius='3px';d.style.background='var(--gold)'}
+    else{d.style.width='5px';d.style.height='5px';d.style.borderRadius='50%';d.style.background='rgba(255,255,255,0.25)'}
   }
 }
+
+// Lay the cards out in 3D around the active one
+function cfLayout(){
+  const narrow = window.innerWidth < 760;
+  const step   = narrow ? 112 : 208;   // px offset per slot
+  const step2  = narrow ? 186 : 364;   // offset for the outer slot
+  for(let i=0;i<vTot;i++){
+    const card = document.getElementById('cfc'+i);
+    let off = i - vCur;
+    // wrap so the strip stays continuous in both directions
+    if(off >  vTot/2) off -= vTot;
+    if(off < -vTot/2) off += vTot;
+    const a = Math.abs(off), dir = Math.sign(off);
+    let x, scale, rotY, op, z;
+    if(a===0){      x=0;             scale=1;    rotY=0;         op=1;   z=30; }
+    else if(a===1){ x=dir*step;      scale=0.82; rotY=-dir*38;   op=1;   z=20; }
+    else if(a===2){ x=dir*step2;     scale=0.66; rotY=-dir*44;   op=1;   z=10; }
+    else{           x=dir*(step2+60);scale=0.5;  rotY=-dir*48;   op=0;   z=0;  }
+    card.style.transform = `translateX(${x}px) scale(${scale}) rotateY(${rotY}deg)`;
+    card.style.opacity = op;
+    card.style.zIndex = z;
+    card.style.pointerEvents = op ? 'auto' : 'none';
+    card.classList.toggle('cf-active', a===0);
+  }
+}
+window.addEventListener('resize', cfLayout);
 
 function goVimeo(n){
   const prev = vCur;
   vCur=((n%vTot)+vTot)%vTot;
-  vReels.style.transform=`translateY(-${vCur*620}px)`;
   vGlow.style.background=vGlows[vCur];
   vDots();
+  cfLayout();
   // Pause previous, play new — keep volume as is
   if(players.length) {
     if(players[prev]) players[prev].pause();
@@ -1653,40 +1736,17 @@ function goVimeo(n){
   }
 }
 
+cfLayout();
 document.getElementById('vbprev').onclick=()=>goVimeo(vCur-1);
 document.getElementById('vbnext').onclick=()=>goVimeo(vCur+1);
 
-// ===== TIMELINE =====
-function fmtTime(s){s=Math.floor(s);const m=Math.floor(s/60);return m+':'+(s%60<10?'0':'')+(s%60)}
-
-function seekVimeo(e){
-  const tl=document.getElementById('vimeo-timeline');
-  const rect=tl.getBoundingClientRect();
-  // account for padding and time labels (~40px each side)
-  const barLeft=rect.left+40;const barWidth=rect.width-80;
-  const pct=Math.max(0,Math.min(1,(e.clientX-barLeft)/barWidth));
-  if(players[vCur]){
-    players[vCur].getDuration().then(dur=>{
-      players[vCur].setCurrentTime(dur*pct);
-    });
-  }
-}
-
-setInterval(()=>{
-  if(!players.length||!players[vCur])return;
-  Promise.all([players[vCur].getCurrentTime(),players[vCur].getDuration()]).then(([cur,dur])=>{
-    if(dur>0){
-      document.getElementById('vtime-bar').style.width=(cur/dur*100)+'%';
-      document.getElementById('vtime-cur').textContent=fmtTime(cur);
-      document.getElementById('vtime-dur').textContent=fmtTime(dur);
-    }
-  }).catch(()=>{});
-},500);
-
-// Touch swipe
-let vty=0;
-vPhone.addEventListener('touchstart',e=>vty=e.touches[0].clientY,{passive:true});
-vPhone.addEventListener('touchend',e=>{const d=vty-e.changedTouches[0].clientY;if(Math.abs(d)>35)goVimeo(vCur+(d>0?1:-1))},{passive:true});
+// Swipe the coverflow horizontally on touch
+let vtx=0;
+cfWrap.addEventListener('touchstart',e=>vtx=e.touches[0].clientX,{passive:true});
+cfWrap.addEventListener('touchend',e=>{
+  const d=vtx-e.changedTouches[0].clientX;
+  if(Math.abs(d)>40) goVimeo(vCur+(d>0?1:-1));
+},{passive:true});
 
 // ===== NAV SCROLL =====
 const nav=document.getElementById('nav');
