@@ -1394,19 +1394,19 @@ footer{
       <div class="cf-stage" id="stage-ads">
         <div class="cf-glow" id="glow-ads"></div>
           <div class="cf-card" id="cfc-ads-0" onclick="CF.ads.tap(0)">
-            <iframe id="vf-ads-0" src="https://player.vimeo.com/video/1203004574?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
+            <iframe id="vf-ads-0" src="https://www.youtube.com/embed/Be0nZVJQapM?enablejsapi=1&autoplay=0&loop=1&playlist=Be0nZVJQapM&controls=0&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1"
               allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
             <div class="cf-veil"></div>
             <div class="cf-play"><span></span></div>
           </div>
           <div class="cf-card" id="cfc-ads-1" onclick="CF.ads.tap(1)">
-            <iframe id="vf-ads-1" src="https://player.vimeo.com/video/1203004588?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
+            <iframe id="vf-ads-1" src="https://www.youtube.com/embed/zkBeWNW9e9g?enablejsapi=1&autoplay=0&loop=1&playlist=zkBeWNW9e9g&controls=0&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1"
               allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
             <div class="cf-veil"></div>
             <div class="cf-play"><span></span></div>
           </div>
           <div class="cf-card" id="cfc-ads-2" onclick="CF.ads.tap(2)">
-            <iframe id="vf-ads-2" src="https://player.vimeo.com/video/1203004604?autoplay=0&loop=1&title=0&byline=0&portrait=0&muted=1&api=1"
+            <iframe id="vf-ads-2" src="https://www.youtube.com/embed/ixvTbzefAMo?enablejsapi=1&autoplay=0&loop=1&playlist=ixvTbzefAMo&controls=0&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1"
               allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
             <div class="cf-veil"></div>
             <div class="cf-play"><span></span></div>
@@ -1670,10 +1670,9 @@ const GLOWS = [
   'radial-gradient(ellipse,rgba(52,211,153,0.22),transparent 70%)',
 ];
 
-function makeStrip(key, providers){
-  const n = providers.length;
+function makeStrip(key, n){
   const s = {
-    key, providers, n,
+    key, n,
     cur: 0,
     playing: false,
     muted: Array(n).fill(true),
@@ -1685,24 +1684,17 @@ function makeStrip(key, providers){
 
   s.play = i => {
     const h = s.players[i];
-    if(h){
-      if(h.kind === 'vimeo'){
-        h.pl.setMuted(s.muted[i]); h.pl.setVolume(s.vol[i]); h.pl.play().catch(()=>{});
-      }else if(ytReady[frame(i)]){
-        s.muted[i] ? h.pl.mute() : h.pl.unMute();
-        h.pl.setVolume(Math.round(s.vol[i] * 100));
-        h.pl.playVideo();
-      }
+    if(h && ytReady[frame(i)]){
+      s.muted[i] ? h.mute() : h.unMute();
+      h.setVolume(Math.round(s.vol[i] * 100));
+      h.playVideo();
     }
     s.playing = true;
     s.badge();
   };
   s.pause = i => {
     const h = s.players[i];
-    if(h){
-      if(h.kind === 'vimeo') h.pl.pause().catch(()=>{});
-      else if(ytReady[frame(i)]) h.pl.pauseVideo();
-    }
+    if(h && ytReady[frame(i)]) h.pauseVideo();
     s.playing = false;
     s.badge();
   };
@@ -1720,13 +1712,9 @@ function makeStrip(key, providers){
   };
   s.applyAudio = i => {
     const h = s.players[i];
-    if(h){
-      if(h.kind === 'vimeo'){
-        h.pl.setMuted(s.muted[i]); h.pl.setVolume(s.vol[i]);
-      }else if(ytReady[frame(i)]){
-        s.muted[i] ? h.pl.mute() : h.pl.unMute();
-        h.pl.setVolume(Math.round(s.vol[i] * 100));
-      }
+    if(h && ytReady[frame(i)]){
+      s.muted[i] ? h.mute() : h.unMute();
+      h.setVolume(Math.round(s.vol[i] * 100));
     }
     document.getElementById('mute-' + key).textContent = s.muted[i] ? '\u{1F507}' : '\u{1F50A}';
   };
@@ -1838,40 +1826,28 @@ function makeStrip(key, providers){
   return s;
 }
 
-makeStrip('ads', ['vimeo','vimeo','vimeo']);
-makeStrip('ent', ['youtube','youtube','youtube']);
+makeStrip('ads', 3);
+makeStrip('ent', 3);
 
 window.addEventListener('resize', () => Object.values(CF).forEach(s => s.layout()));
 
-// --- Vimeo API ---
-const vimeoScript = document.createElement('script');
-vimeoScript.src = 'https://player.vimeo.com/api/player.js';
-vimeoScript.onload = () => {
-  Object.values(CF).forEach(s => s.providers.forEach((p,i) => {
-    if(p !== 'vimeo') return;
-    const el = document.getElementById('vf-' + s.key + '-' + i);
-    if(el) s.players[i] = {kind:'vimeo', pl:new Vimeo.Player(el)};
-  }));
-  Object.values(CF).forEach(s => s.badge());
-};
-document.head.appendChild(vimeoScript);
-
 // --- YouTube API ---
 window.onYouTubeIframeAPIReady = () => {
-  Object.values(CF).forEach(s => s.providers.forEach((p,i) => {
-    if(p !== 'youtube') return;
-    const id = 'vf-' + s.key + '-' + i;
-    if(!document.getElementById(id)) return;
-    s.players[i] = {kind:'yt', pl:new YT.Player(id, {events:{
-      onReady: () => { ytReady[id] = true; },
-      // keep the badge honest when the viewer uses the player's own controls
-      onStateChange: e => {
-        if(s.cur !== i) return;
-        if(e.data === YT.PlayerState.PLAYING){ s.playing = true; s.badge(); }
-        else if(e.data === YT.PlayerState.PAUSED || e.data === YT.PlayerState.ENDED){ s.playing = false; s.badge(); }
-      },
-    }})};
-  }));
+  Object.values(CF).forEach(s => {
+    for(let i = 0; i < s.n; i++){
+      const id = 'vf-' + s.key + '-' + i;
+      if(!document.getElementById(id)) continue;
+      s.players[i] = new YT.Player(id, {events:{
+        onReady: () => { ytReady[id] = true; },
+        // keep the badge honest when the viewer uses the player's own controls
+        onStateChange: e => {
+          if(s.cur !== i) return;
+          if(e.data === YT.PlayerState.PLAYING){ s.playing = true; s.badge(); }
+          else if(e.data === YT.PlayerState.PAUSED || e.data === YT.PlayerState.ENDED){ s.playing = false; s.badge(); }
+        },
+      }});
+    }
+  });
 };
 const ytScript = document.createElement('script');
 ytScript.src = 'https://www.youtube.com/iframe_api';
