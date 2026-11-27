@@ -570,10 +570,8 @@ nav.scrolled{background:rgba(5,5,5,0.95);border-color:var(--border2)}
   display:flex;align-items:center;justify-content:center;gap:18px;
   margin-top:36px;flex-wrap:wrap;
 }
-.cf-dots{display:flex;align-items:center;gap:7px}
-.cf-dots>div{height:5px}
 
-.cf-sound{display:flex;align-items:center;gap:12px;margin-left:10px}
+.cf-sound{display:flex;align-items:center;gap:12px}
 .cf-sound button{
   background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);
   border-radius:50%;width:42px;height:42px;
@@ -964,7 +962,6 @@ footer{
   #vid-playbtn,#vid-mutebtn{min-width:40px;min-height:40px;padding:6px}
   /* Hide the volume slider on mobile (iOS can't set iframe volume) */
   .cf-vol-wrap{display:none !important}
-  .cf-sound{margin-left:0}
   .cf-sound button{width:44px;height:44px;font-size:20px}
 }
 
@@ -1404,11 +1401,6 @@ footer{
           </div>
       </div>
       <div class="cf-controls">
-        <div class="cf-dots">
-            <div id="dot-ads-0" style="width:22px;height:5px;border-radius:3px;background:var(--gold);transition:all 0.3s;cursor:pointer" onclick="CF.ads.go(0)"></div>
-            <div id="dot-ads-1" style="width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s;cursor:pointer" onclick="CF.ads.go(1)"></div>
-            <div id="dot-ads-2" style="width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s;cursor:pointer" onclick="CF.ads.go(2)"></div>
-        </div>
         <div class="cf-sound">
           <button id="mute-ads" onclick="CF.ads.toggleMute()">&#128264;</button>
           <div class="cf-vol-wrap">
@@ -1444,11 +1436,6 @@ footer{
           </div>
       </div>
       <div class="cf-controls">
-        <div class="cf-dots">
-            <div id="dot-ent-0" style="width:22px;height:5px;border-radius:3px;background:var(--gold);transition:all 0.3s;cursor:pointer" onclick="CF.ent.go(0)"></div>
-            <div id="dot-ent-1" style="width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s;cursor:pointer" onclick="CF.ent.go(1)"></div>
-            <div id="dot-ent-2" style="width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s;cursor:pointer" onclick="CF.ent.go(2)"></div>
-        </div>
         <div class="cf-sound">
           <button id="mute-ent" onclick="CF.ent.toggleMute()">&#128264;</button>
           <div class="cf-vol-wrap">
@@ -1748,17 +1735,6 @@ function makeStrip(key, n){
     s.fill(f);
   };
 
-  s.dots = () => {
-    for(let i=0;i<n;i++){
-      const d = document.getElementById('dot-' + key + '-' + i);
-      if(!d) continue;
-      const on = i === s.cur;
-      d.style.width = on ? '22px' : '5px';
-      d.style.borderRadius = on ? '3px' : '50%';
-      d.style.background = on ? 'var(--gold)' : 'rgba(255,255,255,0.25)';
-    }
-  };
-
   s.layout = () => {
     const step = window.innerWidth < 760 ? 112 : 208;
     for(let i=0;i<n;i++){
@@ -1789,7 +1765,6 @@ function makeStrip(key, n){
       s.vol[s.cur] = s.vol[prev];
     }
     document.getElementById('glow-' + key).style.background = GLOWS[s.cur % GLOWS.length];
-    s.dots();
     s.layout();
     s.badge();
     s.applyAudio(s.cur);
