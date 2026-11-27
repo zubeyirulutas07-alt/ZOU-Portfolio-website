@@ -146,7 +146,38 @@ nav.scrolled{background:rgba(5,5,5,0.95);border-color:var(--border2)}
   display:flex;align-items:center;gap:20px;
   justify-content:center;
   opacity:0;animation:slideRight 0.9s 0.4s cubic-bezier(0.22,1,0.36,1) forwards;
+  /* the opacity animation makes this a stacking context, so the open menu can
+     only clear the stats below if the whole group is lifted */
+  position:relative;z-index:20;
 }
+/* hero watch menu */
+/* the hero clips its own decorations; let the open menu out past that edge */
+#hero.menu-open{z-index:30;overflow:visible}
+.watch-wrap{position:relative}
+.watch-menu{
+  position:absolute;top:calc(100% + 12px);left:50%;
+  transform:translateX(-50%) translateY(-6px);
+  background:#0d0d0d;border:1px solid rgba(250,204,21,0.25);
+  border-radius:14px;padding:10px;
+  box-shadow:0 24px 60px rgba(0,0,0,0.75);
+  display:flex;gap:6px;z-index:40;
+  opacity:0;transition:opacity 0.2s,transform 0.2s;
+}
+.watch-menu.is-open{opacity:1;transform:translateX(-50%) translateY(0)}
+.watch-menu[hidden]{display:none}
+.watch-group{display:flex;flex-direction:column;gap:4px;min-width:156px}
+.watch-group-label{
+  font-size:10px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;
+  color:var(--gold);padding:8px 12px 6px;white-space:nowrap;
+}
+.watch-menu button{
+  background:transparent;border:none;border-radius:8px;
+  padding:10px 12px;text-align:left;cursor:pointer;
+  font-family:inherit;font-size:13px;font-weight:600;color:#fff;
+  transition:background 0.18s,color 0.18s;white-space:nowrap;
+}
+.watch-menu button:hover{background:rgba(250,204,21,0.12);color:var(--gold)}
+
 .btn-gold{
   background:var(--gold);color:#000;border:none;
   padding:16px 36px;border-radius:6px;
@@ -930,6 +961,10 @@ footer{
   .hero-h1{font-size:clamp(26px,7.4vw,44px);letter-spacing:-1.2px;line-height:1.15;margin-bottom:20px}
   .hero-sub{font-size:15px;margin-bottom:32px}
   .hero-btns{flex-direction:column;align-items:stretch;width:100%;gap:14px}
+  .watch-wrap{width:100%}
+  .watch-menu{flex-direction:column;width:100%;left:0;transform:translateY(-6px)}
+  .watch-menu.is-open{transform:translateY(0)}
+  .watch-group{min-width:0}
   .hero-btns .btn-gold{justify-content:center;padding:15px 28px}
   .hero-btns .btn-ghost{justify-content:center}
   .hero-stats{gap:8px;justify-content:space-between;width:100%;margin-top:40px;padding-top:28px}
@@ -1033,10 +1068,13 @@ footer{
     </h1>
     <p class="hero-sub">I edit for creators and brands who want the kind of video people actually finish — and send to their group chat.</p>
     <div class="hero-btns">
-      <button class="btn-gold" onclick="document.getElementById('videos').scrollIntoView({behavior:'smooth'})">
-        <svg width="14" height="14" viewBox="0 0 14 14"><polygon points="3,1 13,7 3,13" fill="currentColor"/></svg>
-        Watch My Work
-      </button>
+      <div class="watch-wrap">
+        <button class="btn-gold" id="watch-btn" aria-expanded="false" aria-haspopup="true" aria-controls="watch-menu">
+          <svg width="14" height="14" viewBox="0 0 14 14"><polygon points="3,1 13,7 3,13" fill="currentColor"/></svg>
+          Watch My Work
+        </button>
+        <div class="watch-menu" id="watch-menu" role="menu" hidden></div>
+      </div>
       <button class="btn-ghost" onclick="document.getElementById('book').scrollIntoView({behavior:'smooth'})">
         <div class="arrow">→</div>
         Book A Call
@@ -1483,10 +1521,10 @@ window.onYouTubeIframeAPIReady = () => {
 
 // Every clip on the page. Adding one is a single id in the right list.
 const STRIPS = [
-  {key:'short-ads', form:'short', label:'Ads &amp; Marketing', ids:['Be0nZVJQapM','zkBeWNW9e9g','ixvTbzefAMo']},
-  {key:'short-ent', form:'short', label:'Entertainment',       ids:['dX6vvpuTMFc','iGp8hGBS-3Q','mRhwnxi9yKs']},
-  {key:'long-ads',  form:'long',  label:'Ads &amp; Marketing', ids:['NtK8KtjAG4o']},
-  {key:'long-ent',  form:'long',  label:'Entertainment',       ids:['dYl76kh_fFE']},
+  {key:'short-ads', form:'short', niche:'ads', label:'Ads &amp; Marketing', ids:['Be0nZVJQapM','zkBeWNW9e9g','ixvTbzefAMo']},
+  {key:'short-ent', form:'short', niche:'ent', label:'Entertainment',       ids:['dX6vvpuTMFc','iGp8hGBS-3Q','mRhwnxi9yKs']},
+  {key:'long-ads',  form:'long',  niche:'ads', label:'Ads &amp; Marketing', ids:['NtK8KtjAG4o']},
+  {key:'long-ent',  form:'long',  niche:'ent', label:'Entertainment',       ids:['dYl76kh_fFE']},
 ];
 const FORMS = [
   {id:'short', label:'Short-Form'},
@@ -1688,7 +1726,7 @@ function playerVars(id){
 function buildStrips(){
   const host = document.getElementById('cf-strips');
   host.innerHTML = STRIPS.filter(st => st.ids.length).map((st, n) => `
-    <div class="cf-block cf-${st.form}${st.ids.length === 1 ? ' cf-solo' : ''}" data-form="${st.form}" style="transition-delay:${0.1 + n * 0.05}s">
+    <div class="cf-block cf-${st.form}${st.ids.length === 1 ? ' cf-solo' : ''}" id="block-${st.key}" data-form="${st.form}" style="transition-delay:${0.1 + n * 0.05}s">
       <div class="cf-label"><span class="cf-label-line"></span>${st.label}</div>
       <div class="cf-stage" id="stage-${st.key}">
         <div class="cf-glow" id="glow-${st.key}"></div>
@@ -1741,8 +1779,70 @@ function switchForm(f){
   Object.values(CF).forEach(s => { if(s.form === f) s.layout(); });
 }
 
+// The hero menu offers only what actually exists, for the same reason the
+// form switch does.
+function buildWatchMenu(){
+  const menu = document.getElementById('watch-menu');
+  const btn  = document.getElementById('watch-btn');
+  const live = STRIPS.filter(st => st.ids.length);
+  if(!live.length){ btn.onclick = () => jumpToSection(); return; }
+
+  const niches = [...new Set(live.map(st => st.niche))];
+  menu.innerHTML = niches.map(nc => {
+    const mine = live.filter(st => st.niche === nc);
+    return `<div class="watch-group">
+      <div class="watch-group-label">${mine[0].label}</div>
+      ${mine.map(st => {
+        const f = FORMS.find(x => x.id === st.form);
+        return `<button role="menuitem" onclick="jumpTo('${st.key}')">${f.label}</button>`;
+      }).join('')}
+    </div>`;
+  }).join('');
+
+  btn.onclick = e => { e.stopPropagation(); toggleWatchMenu(); };
+  // clicking anywhere else, or Escape, puts it away
+  document.addEventListener('click', e => {
+    if(!menu.hidden && !menu.contains(e.target)) closeWatchMenu();
+  });
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') closeWatchMenu(); });
+}
+
+function toggleWatchMenu(){
+  const menu = document.getElementById('watch-menu');
+  menu.hidden ? openWatchMenu() : closeWatchMenu();
+}
+function openWatchMenu(){
+  const menu = document.getElementById('watch-menu');
+  menu.hidden = false;
+  requestAnimationFrame(() => menu.classList.add('is-open'));
+  document.getElementById('watch-btn').setAttribute('aria-expanded', 'true');
+  document.getElementById('hero').classList.add('menu-open');
+}
+function closeWatchMenu(){
+  const menu = document.getElementById('watch-menu');
+  if(menu.hidden) return;
+  menu.classList.remove('is-open');
+  menu.hidden = true;
+  document.getElementById('watch-btn').setAttribute('aria-expanded', 'false');
+  document.getElementById('hero').classList.remove('menu-open');
+}
+
+function jumpToSection(){
+  document.getElementById('videos').scrollIntoView({behavior:'smooth'});
+}
+
+function jumpTo(key){
+  const st = STRIPS.find(x => x.key === key);
+  if(!st) return jumpToSection();
+  closeWatchMenu();
+  switchForm(st.form);
+  const el = document.getElementById('block-' + key);
+  (el || document.getElementById('videos')).scrollIntoView({behavior:'smooth', block:'center'});
+}
+
 buildToggle();
 buildStrips();
+buildWatchMenu();
 STRIPS.filter(st => st.ids.length).forEach(st => makeStrip(st.key, st.ids, st.form));
 paintForm();
 
