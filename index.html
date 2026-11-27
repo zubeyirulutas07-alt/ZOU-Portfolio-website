@@ -548,9 +548,12 @@ nav.scrolled{background:rgba(5,5,5,0.95);border-color:var(--border2)}
   transition:transform 0.6s cubic-bezier(0.4,0,0.2,1),box-shadow 0.5s,border-color 0.4s;
   cursor:pointer;will-change:transform;
 }
-.cf-card iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
+.cf-card iframe,.cf-mount{position:absolute;inset:0;width:100%;height:100%;border:none}
+/* the poster stands in for the embed until the viewer asks to play */
+.cf-poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
+.cf-card.is-loaded .cf-poster{display:none}
 /* the veil dims inactive cards and keeps clicks off their iframes */
-.cf-veil{position:absolute;inset:0;background:rgba(0,0,0,0.55);transition:background 0.5s}
+.cf-veil{position:absolute;inset:0;z-index:2;background:rgba(0,0,0,0.55);transition:background 0.5s}
 .cf-card.cf-active{
   border-color:rgba(250,204,21,0.45);
   box-shadow:0 40px 90px rgba(0,0,0,0.85),0 0 0 1px rgba(250,204,21,0.18);
@@ -1466,6 +1469,15 @@ moveCur();
 const CF = {};
 const ytReady = {};
 
+// Taps can land before the iframe API script has arrived; hold them until it has.
+let ytApiReady = false;
+const ytWaiting = [];
+function whenYT(fn){ ytApiReady ? fn() : ytWaiting.push(fn); }
+window.onYouTubeIframeAPIReady = () => {
+  ytApiReady = true;
+  ytWaiting.splice(0).forEach(fn => fn());
+};
+
 // Every clip on the page. Adding one is a single id in the right list.
 const STRIPS = [
   {key:'short-ads', form:'short', label:'Ads &amp; Marketing', ids:['Be0nZVJQapM','zkBeWNW9e9g','ixvTbzefAMo']},
@@ -1484,9 +1496,10 @@ const GLOWS = [
   'radial-gradient(ellipse,rgba(52,211,153,0.22),transparent 70%)',
 ];
 
-function makeStrip(key, n, form){
+function makeStrip(key, ids, form){
+  const n = ids.length;
   const s = {
-    key, n, form,
+    key, n, ids, form,
     cur: 0,
     playing: false,
     muted: Array(n).fill(true),
@@ -1496,15 +1509,43 @@ function makeStrip(key, n, form){
 
   const frame = i => 'vf-' + key + '-' + i;
 
+  // The embed is only created once the viewer asks for it. Until then the card
+  // shows a plain poster, which keeps YouTube's title bar, channel name and
+  // share buttons off the page entirely.
+  s.mount = i => {
+    const card = document.getElementById('cfc-' + key + '-' + i);
+    s.players[i] = new YT.Player(frame(i), {
+      videoId: s.ids[i],
+      playerVars: playerVars(s.ids[i]),
+      events: {
+        onReady: e => {
+          ytReady[frame(i)] = true;
+          card.classList.add('is-loaded');
+          s.muted[i] ? e.target.mute() : e.target.unMute();
+          e.target.setVolume(Math.round(s.vol[i] * 100));
+          e.target.playVideo();
+        },
+        onStateChange: e => {
+          if(s.cur !== i) return;
+          if(e.data === YT.PlayerState.PLAYING){ s.playing = true; s.badge(); }
+          else if(e.data === YT.PlayerState.PAUSED || e.data === YT.PlayerState.ENDED){ s.playing = false; s.badge(); }
+        },
+      },
+    });
+  };
+
   s.play = i => {
+    s.playing = true;
+    s.badge();
     const h = s.players[i];
     if(h && ytReady[frame(i)]){
       s.muted[i] ? h.mute() : h.unMute();
       h.setVolume(Math.round(s.vol[i] * 100));
       h.playVideo();
+      return;
     }
-    s.playing = true;
-    s.badge();
+    if(h) return;                       // mounted, still starting up
+    whenYT(() => s.mount(i));
   };
   s.pause = i => {
     const h = s.players[i];
@@ -1633,10 +1674,11 @@ function makeStrip(key, n, form){
 const liveForms = FORMS.filter(f => STRIPS.some(st => st.form === f.id && st.ids.length));
 let form = liveForms.length ? liveForms[0].id : null;
 
-function embed(id){
-  return 'https://www.youtube.com/embed/' + id +
-    '?enablejsapi=1&autoplay=0&loop=1&playlist=' + id +
-    '&controls=0&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1';
+// cc_load_policy:0 asks YouTube to leave captions off rather than follow
+// whatever the viewer last set on their own account.
+function playerVars(id){
+  return {autoplay:1, loop:1, playlist:id, controls:0, rel:0,
+          modestbranding:1, iv_load_policy:3, playsinline:1, cc_load_policy:0};
 }
 
 function buildStrips(){
@@ -1648,8 +1690,10 @@ function buildStrips(){
         <div class="cf-glow" id="glow-${st.key}"></div>
         ${st.ids.map((id,i) => `
           <div class="cf-card" id="cfc-${st.key}-${i}" onclick="CF['${st.key}'].tap(${i})">
-            <iframe id="vf-${st.key}-${i}" src="${embed(id)}"
-              allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
+            <div class="cf-mount" id="vf-${st.key}-${i}"></div>
+            <img class="cf-poster" alt="" loading="lazy"
+              src="https://i.ytimg.com/vi/${id}/maxresdefault.jpg"
+              onerror="this.onerror=function(){this.remove()};this.src='https://i.ytimg.com/vi/${id}/mqdefault.jpg'">
             <div class="cf-veil"></div>
             <div class="cf-play"><span></span></div>
           </div>`).join('')}
@@ -1695,29 +1739,11 @@ function switchForm(f){
 
 buildToggle();
 buildStrips();
-STRIPS.filter(st => st.ids.length).forEach(st => makeStrip(st.key, st.ids.length, st.form));
+STRIPS.filter(st => st.ids.length).forEach(st => makeStrip(st.key, st.ids, st.form));
 paintForm();
 
 window.addEventListener('resize', () => Object.values(CF).forEach(s => s.layout()));
 
-// --- YouTube API ---
-window.onYouTubeIframeAPIReady = () => {
-  Object.values(CF).forEach(s => {
-    for(let i = 0; i < s.n; i++){
-      const id = 'vf-' + s.key + '-' + i;
-      if(!document.getElementById(id)) continue;
-      s.players[i] = new YT.Player(id, {events:{
-        onReady: () => { ytReady[id] = true; },
-        // keep the badge honest when the viewer uses the player's own controls
-        onStateChange: e => {
-          if(s.cur !== i) return;
-          if(e.data === YT.PlayerState.PLAYING){ s.playing = true; s.badge(); }
-          else if(e.data === YT.PlayerState.PAUSED || e.data === YT.PlayerState.ENDED){ s.playing = false; s.badge(); }
-        },
-      }});
-    }
-  });
-};
 const ytScript = document.createElement('script');
 ytScript.src = 'https://www.youtube.com/iframe_api';
 document.head.appendChild(ytScript);
