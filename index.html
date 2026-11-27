@@ -570,14 +570,6 @@ nav.scrolled{background:rgba(5,5,5,0.95);border-color:var(--border2)}
   display:flex;align-items:center;justify-content:center;gap:18px;
   margin-top:36px;flex-wrap:wrap;
 }
-.cf-nav{
-  width:42px;height:42px;border-radius:50%;
-  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.12);
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;font-size:16px;color:#A1A1AA;user-select:none;
-  transition:all 0.25s;flex-shrink:0;
-}
-.cf-nav:hover{background:rgba(250,204,21,0.12);border-color:rgba(250,204,21,0.4);color:var(--gold)}
 .cf-dots{display:flex;align-items:center;gap:7px}
 .cf-dots>div{height:5px}
 
@@ -974,7 +966,6 @@ footer{
   .cf-vol-wrap{display:none !important}
   .cf-sound{margin-left:0}
   .cf-sound button{width:44px;height:44px;font-size:20px}
-  .cf-nav{width:44px;height:44px}
 }
 
 /* ===== VERY SMALL ===== */
@@ -1413,13 +1404,11 @@ footer{
           </div>
       </div>
       <div class="cf-controls">
-        <div class="cf-nav" id="prev-ads">&#8592;</div>
         <div class="cf-dots">
             <div id="dot-ads-0" style="width:22px;height:5px;border-radius:3px;background:var(--gold);transition:all 0.3s;cursor:pointer" onclick="CF.ads.go(0)"></div>
             <div id="dot-ads-1" style="width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s;cursor:pointer" onclick="CF.ads.go(1)"></div>
             <div id="dot-ads-2" style="width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s;cursor:pointer" onclick="CF.ads.go(2)"></div>
         </div>
-        <div class="cf-nav" id="next-ads">&#8594;</div>
         <div class="cf-sound">
           <button id="mute-ads" onclick="CF.ads.toggleMute()">&#128264;</button>
           <div class="cf-vol-wrap">
@@ -1455,13 +1444,11 @@ footer{
           </div>
       </div>
       <div class="cf-controls">
-        <div class="cf-nav" id="prev-ent">&#8592;</div>
         <div class="cf-dots">
             <div id="dot-ent-0" style="width:22px;height:5px;border-radius:3px;background:var(--gold);transition:all 0.3s;cursor:pointer" onclick="CF.ent.go(0)"></div>
             <div id="dot-ent-1" style="width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s;cursor:pointer" onclick="CF.ent.go(1)"></div>
             <div id="dot-ent-2" style="width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s;cursor:pointer" onclick="CF.ent.go(2)"></div>
         </div>
-        <div class="cf-nav" id="next-ent">&#8594;</div>
         <div class="cf-sound">
           <button id="mute-ent" onclick="CF.ent.toggleMute()">&#128264;</button>
           <div class="cf-vol-wrap">
@@ -1807,10 +1794,6 @@ function makeStrip(key, n){
     s.badge();
     s.applyAudio(s.cur);
   };
-
-  // wiring
-  document.getElementById('prev-' + key).onclick = () => s.go(s.cur - 1);
-  document.getElementById('next-' + key).onclick = () => s.go(s.cur + 1);
 
   const stage = document.getElementById('stage-' + key);
   let tx = 0;
