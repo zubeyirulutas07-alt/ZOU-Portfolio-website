@@ -941,12 +941,23 @@
         .filter((t) => t !== primary)
         .map((t) => {
           const f = make("figure");
+          // The client's own face sits beside their words, as on the previous site.
+          if (t.image) {
+            const face = new Image();
+            face.src = t.image;
+            face.alt = "";
+            face.loading = "lazy";
+            face.className = "quote-face";
+            f.append(face);
+          }
+          const body = make("div", "quote-body");
           const caption = make("figcaption");
           caption.append(
             t.url ? external(t.name, t.url) : document.createTextNode(t.name),
             document.createTextNode(" / " + t.credit),
           );
-          f.append(make("q", null, t.quote), caption);
+          body.append(make("q", null, t.quote), caption);
+          f.append(body);
           return f;
         }),
     );

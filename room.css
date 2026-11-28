@@ -938,6 +938,21 @@ img {
   padding-top: 0.9rem;
   margin: 0.9rem 0 0;
   border-top: 1px solid #9da291;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0 1.05rem;
+  align-items: start;
+}
+/* The client's face, beside their words. */
+.quote-face {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #d5d6ca;
+}
+#other-quotes .quote-body {
+  min-width: 0;
 }
 #other-quotes q {
   font-size: 1.12rem;
@@ -1315,6 +1330,13 @@ dialog::backdrop {
   }
   #other-quotes {
     margin-top: 1.3rem;
+  }
+  .quote-face {
+    width: 46px;
+    height: 46px;
+  }
+  #other-quotes figure {
+    gap: 0 0.8rem;
   }
   .footer-inner {
     gap: 0.8rem;
